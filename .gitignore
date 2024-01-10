@@ -4,8 +4,8 @@
 !.tests/
 !.tests/config/
 !.tests/config/**
-!.tests/test_input/
-!.tests/test_input/**
+!.tests/test_data/
+!.tests/test_data/**
 !config/
 !config/**
 !resources/
