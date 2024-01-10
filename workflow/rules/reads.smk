@@ -1,6 +1,6 @@
 rule cutadapt__trim_reads_pe:
     input:
-        unpack(get_reads_for_trimming),
+        get_reads_for_trimming,
     output:
         r1=temp("results/reads/trimmed/{sample}_R1.fastq.gz"),
         r2=temp("results/reads/trimmed/{sample}_R2.fastq.gz"),
