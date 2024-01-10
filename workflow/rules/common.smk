@@ -28,6 +28,19 @@ def get_reads_for_trimming(wildcards):
     return pep.sample_table.loc[wildcards.sample][["fq1", "fq2"]]
 
 
+def get_one_fastq_file(sample: str, read_pair="fq1"):
+    return pep.sample_table.loc[sample][[read_pair]]
+
+
+def infer_fastq_path(wildcards):
+    if wildcards.step != "original":
+        return "results/reads/{step}/{sample}_{pair}.fastq.gz"
+    if "pair" not in wildcards or wildcards.pair == "R1":
+        return get_one_fastq_file(wildcards.sample, read_pair="fq1")[0]
+    elif wildcards.pair == "R2":
+        return get_one_fastq_file(wildcards.sample, read_pair="fq2")[0]
+
+
 ### Data input handling independent of wildcards ######################################################################
 
 

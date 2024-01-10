@@ -16,7 +16,7 @@ reads__trimming: # Required only if "trimming" in main "flow" element. See https
     overlap: 3 # Minimum number of bases required to overlap with the adapter (default: 3).
     read_location: "anywhere" # Uses adapters defined in adapters_fasta. Searches for adapters anywhere. Possible values: 'regular', 'front' and "anywhere" (default: "anywhere").
     error_rate: 0.1 # Error tolerance used when searching for adapter (default: 0.1).
-    adapters_fasta: "test_data.fasta" # Adapters fasta used for adapter trimming (no default - must be set if used).
+    adapters_fasta: "test_data/adapters.fa" # Adapters fasta used for adapter trimming (no default - must be set if used).
     times: 1 # How many times to do adapter removal (default: 1).
     keep_trimmed_only: false # Discard reads with no adapters found (default: false).
 

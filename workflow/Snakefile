@@ -8,6 +8,7 @@ localrules:
 
 
 include: "rules/common.smk"
+include: "rules/reads.smk"
 include: "rules/genera_check.smk"
 include: "rules/multiqc.smk"
 include: "rules/unicycler.smk"
