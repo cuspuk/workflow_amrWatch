@@ -1,1 +1,50 @@
-# template for the configuration of the workflow
+reads__trimming: # Required only if "trimming" in main "flow" element. See https://cutadapt.readthedocs.io/en/stable/guide.html#read-processing-stages
+  shorten_to_length: 500 # OPT shorten to this length.
+  max_n_bases: 3 # OPT Discard reads with more than the specified number of bases. The fifth step.
+  max_expected_errors: 3 # OPT - discard reads with more expected errors than this.
+  min_length_r1: 35 # OPT, minimum R1 read length. The fourth step.
+  min_length_r2: 35 # OPT, minimum R2 read length. The fourth step.
+  # cut_from_start: 0 # OPT, removes a specified number of bases from the beginning of the read.
+  # cut_from_end: 0 # OPT, removes a specified number of bases from the end of the read.
+  quality_cutoff_from_5_end_r1: 20 # OPT cutoff on 5' end of R1 read. The second step.
+  quality_cutoff_from_3_end_r1: 20 # OPT cutoff on 3' end of R1 read. The second step.
+  quality_cutoff_from_5_end_r2: 20 # OPT cutoff on 5' end of R2 read. The second step.
+  quality_cutoff_from_3_end_r2: 20 # OPT cutoff on 3' end of R2 read. The second step.
+  adapter_removal:
+    do: true # If true, all below options are required. Else, they are ignored/can be deleted.
+    action: "trim" # Defines an action to perform with the found adapter.
+    overlap: 3 # Minimum number of bases required to overlap with the adapter (default: 3).
+    read_location: "anywhere" # Uses adapters defined in adapters_fasta. Searches for adapters anywhere. Possible values: 'regular', 'front' and "anywhere" (default: "anywhere").
+    error_rate: 0.1 # Error tolerance used when searching for adapter (default: 0.1).
+    adapters_fasta: "{path_to_fasta_with_adapters}" # Adapters fasta used for adapter trimming (no default - must be set if used).
+    times: 1 # How many times to do adapter removal (default: 1).
+    keep_trimmed_only: false # Discard reads with no adapters found (default: false).
+
+foreign_contamination:
+  kraken_dir: "path_to_kraken/{KRAKEN_TAG}" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
+  save_memory: true # If true, kraken limits RAM memory usage but sacrifices speed.
+  read_length: 50 # Distribution will be used from this read length (default: 50).
+  classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
+  threshold: 10 # Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation (default: 10).
+
+assembly__unicycler:
+  min_fasta_length: 200 # Shorter contigs than this are removed (default: 100).
+  bridging_mode: "normal" # Allowed: "conservative", "normal", "bold". Trade-off between contig length and misassembly rate (default: "normal").
+  linear_seqs: 0 # The expected number of linear sequences (default: 0).
+
+### RESOURCES #############################
+
+max_threads: 8
+max_mem_mb: 16384
+
+resources:
+  reads__trimming_mem_mb: 4096
+  fastqc_mem_mb: 2048
+  assembly__unicycler_mem_mb: 8192
+
+threads:
+  reads__trimming: 4
+  fastqc: 1
+  assembly__unicycler: 8
+  kraken: 8
+  bracken: 8
