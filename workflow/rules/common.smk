@@ -135,7 +135,7 @@ def get_outputs():
     sample_names = get_sample_names()
     return {
         "bandage_reports": expand(
-            "result/assembly/{sample}/bandage/bandage.{ext}", sample=sample_names, ext=["info", "svg"]
+            "results/assembly/{sample}/bandage/bandage.{ext}", sample=sample_names, ext=["info", "svg"]
         ),
         "multiqc": expand("results/multiqc/{sample}.html", sample=sample_names),
         "checks": expand("results/checks/{sample}/summary.txt", sample=sample_names),

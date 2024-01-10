@@ -2,8 +2,8 @@ rule unicycler__assemble_reads_into_contigs:
     input:
         paired=["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"],
     output:
-        contigs="result/assembly/{sample}/assembly.fasta",
-        gfa="result/assembly/{sample}/assembly_graph.gfa",
+        contigs="results/assembly/{sample}/assembly.fasta",
+        gfa="results/assembly/{sample}/assembly.gfa",
     params:
         extra=get_unicycler_params(),
     threads: min(config["threads"]["assembly__unicycler"], config["max_threads"])
@@ -17,7 +17,7 @@ rule unicycler__assemble_reads_into_contigs:
 
 # rule quast__evaluate_assembly:
 #     input:
-#         fasta="result/assembly/{sample}/assembly.fasta",
+#         fasta="results/assembly/{sample}/assembly.fasta",
 #     output:
 #         pdf=report(
 #             "results/assembly/{sample}/quast/report.pdf",
@@ -41,10 +41,10 @@ rule unicycler__assemble_reads_into_contigs:
 
 rule bandage__visualise_contig_overlaps:
     input:
-        gfa="result/assembly/{sample}/assembly_graph.gfa",
+        gfa="results/assembly/{sample}/assembly.gfa",
     output:
         svg=report(
-            "result/assembly/{sample}/bandage/bandage.svg",
+            "results/assembly/{sample}/bandage/bandage.svg",
             category="{sample}",
             labels={"Type": "Bandage"},
         ),
@@ -58,9 +58,9 @@ rule bandage__visualise_contig_overlaps:
 
 rule bandage__info:
     input:
-        gfa="result/assembly/{sample}/assembly_graph.gfa",
+        gfa="results/assembly/{sample}/assembly.gfa",
     output:
-        info="result/assembly/{sample}/bandage/bandage.info",
+        info="results/assembly/{sample}/bandage/bandage.info",
     log:
         "logs/bandage/{sample}.log",
     conda:
