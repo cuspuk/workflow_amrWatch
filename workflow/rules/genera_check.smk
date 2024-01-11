@@ -65,6 +65,9 @@ rule check_foreign_contamination:
     log:
         "logs/checks/foreign_contamination/{sample}.log",
     conda:
-        "../envs/bracken.yaml"
+        "../envs/gawk_with_sed.yaml"
     shell:
-        "echo PASS > {output}"  # > {log} 2>&1"
+        """
+        grep -P '\tG\t' {input} | awk ' $1 > 1 ' | awk 'BEGIN { FS = "\t" } ; { print $1 '\t' $6 }' \
+        | sed -re 's/^[[:blank:]]+|[[:blank:]]+$//g' -e 's/[[:blank:]]+/ /g' > {output} 2> {log}'
+        """
