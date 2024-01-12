@@ -51,11 +51,11 @@ rule bandage__visualise_contig_overlaps:
     params:
         dir=lambda wildcards, output: os.path.dirname(output[0]),
     log:
-        "logs/bandage/{sample}.log",
+        "logs/assembly/bandage_svg/{sample}.log",
     conda:
         "../envs/bandage.yaml"
     shell:
-        "mkdir -p {params.dir} && Bandage image {input} {output} > {log} 2>&1"
+        'mkdir -p {params.dir} && mkdir "$(dirname {log})" && Bandage image {input} {output} > {log} 2>&1'
 
 
 rule bandage__info:
@@ -66,8 +66,8 @@ rule bandage__info:
     params:
         dir=lambda wildcards, output: os.path.dirname(output[0]),
     log:
-        "logs/bandage/{sample}.log",
+        "logs/assembly/bandage_info/{sample}.log",
     conda:
         "../envs/bandage.yaml"
     shell:
-        "mkdir -p {params.dir} && Bandage info {input} > {output} 2> {log}"
+        'mkdir -p {params.dir} && mkdir "$(dirname {log})" && Bandage info {input} > {output} 2> {log}'
