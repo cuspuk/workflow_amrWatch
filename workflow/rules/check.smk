@@ -42,9 +42,7 @@ rule check_assembly_quality:
 
 rule summary_all_checks:
     input:
-        bandage_check_if_relevant,
-        foreign_contamination="results/checks/{sample}/foreign_contamination.txt",
-        assembly_check="results/checks/{sample}/assembly_constructed.txt",
+        get_all_checks,
     output:
         "results/checks/{sample}/summary.txt",
     log:

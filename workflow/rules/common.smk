@@ -154,6 +154,18 @@ def check_assembly_construction_success_for_sample(sample: str):
         return f.read().startswith("PASS:")
 
 
+def get_all_checks(wildcards):
+    basic_checks = [
+        "results/checks/{sample}/foreign_contamination.txt",
+        "results/checks/{sample}/assembly_constructed.txt",
+    ]
+
+    if check_assembly_construction_success_for_sample(wildcards.sample):
+        basic_checks.append("results/checks/{sample}/assembly_quality.txt")
+
+    return basic_checks
+
+
 def get_outputs():
     sample_names = get_sample_names()
     return {
