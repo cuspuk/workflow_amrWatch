@@ -55,7 +55,7 @@ rule bandage__visualise_contig_overlaps:
     conda:
         "../envs/bandage.yaml"
     shell:
-        'mkdir -p {params.dir} && mkdir "$(dirname {log})" && Bandage image {input} {output} > {log} 2>&1'
+        "(mkdir -p {params.dir} && Bandage image {input} {output}) > {log} 2>&1"
 
 
 rule bandage__info:
@@ -70,4 +70,4 @@ rule bandage__info:
     conda:
         "../envs/bandage.yaml"
     shell:
-        'mkdir -p {params.dir} && mkdir "$(dirname {log})" && Bandage info {input} > {output} 2> {log}'
+        "(mkdir -p {params.dir} && Bandage info {input} > {output}) 2> {log}"

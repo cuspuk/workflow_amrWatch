@@ -5,6 +5,12 @@ min_version("7.25.0")
 
 localrules:
     all,
+    bandage__info,
+    bandage__visualise_contig_overlaps,
+    request_bandage_if_assembly_exists,
+    assembly_constructed,
+    summary_all_checks,
+    check_foreign_contamination,
 
 
 include: "rules/common.smk"

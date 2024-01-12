@@ -138,6 +138,13 @@ def optional_bandage_outputs(wildcards):
         return ""
 
 
+def bandage_check_if_relevant(wildcards):
+    if check_assembly_construction_success_for_sample(wildcards.sample):
+        return "results/checks/{sample}/assembly_quality.txt"
+    else:
+        return ""
+
+
 def check_assembly_construction_success_for_sample(sample: str):
     with checkpoints.assembly_constructed.get(sample=sample).output[0].open() as f:
         return f.read().strip() == "PASS"
