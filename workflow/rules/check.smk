@@ -13,7 +13,8 @@ checkpoint assembly_constructed:
 
 rule request_bandage_if_assembly_exists:
     input:
-        optional_bandage_outputs,
+        assembly_constructed="results/checks/{sample}/assembly_constructed.txt",
+        optional_bandage_outputs=optional_bandage_outputs,
     output:
         temp("results/checks/{sample}/.bandage_requested.txt"),
     conda:

@@ -151,7 +151,7 @@ def bandage_check_if_relevant(wildcards):
 
 def check_assembly_construction_success_for_sample(sample: str):
     with checkpoints.assembly_constructed.get(sample=sample).output[0].open() as f:
-        return f.read().strip() == "PASS"
+        return f.read().startswith("PASS:")
 
 
 def get_outputs():
