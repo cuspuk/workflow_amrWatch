@@ -262,6 +262,10 @@ definitions:
       type: integer
       default: 1
       description: "Number of threads to use for GTDB-TK classification."
+    abritamr:
+      type: integer
+      default: 1
+      description: "Number of threads to use for AMR detection using abritamr."
     title: Threads
     required:
       - reads__trimming

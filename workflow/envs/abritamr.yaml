@@ -1,0 +1,7 @@
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - abritamr=1.0.14
+  - ncbi-amrfinderplus=3.11.26

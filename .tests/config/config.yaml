@@ -52,3 +52,4 @@ threads:
   kraken: 2
   bracken: 2
   gtdb__classify: 2
+  abritamr: 2

@@ -40,7 +40,7 @@ rule check_assembly_quality:
         "../scripts/check_assembly_quality.py"
 
 
-rule summary_all_checks:
+checkpoint summary_all_checks:
     input:
         get_all_checks,
     output:
@@ -51,3 +51,16 @@ rule summary_all_checks:
         "../envs/bracken.yaml"
     shell:
         "cat {input} > {output} 2>&1"
+
+
+rule get_final_results:
+    input:
+        get_second_phase_results,
+    output:
+        temp("results/checks/{sample}/.final_results_requested.txt"),
+    conda:
+        "../envs/coreutils.yaml"
+    log:
+        "logs/checks/assembly/{sample}.log",
+    shell:
+        "touch {output} 2> {log}"

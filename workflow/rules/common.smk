@@ -154,6 +154,21 @@ def check_assembly_construction_success_for_sample(sample: str):
         return f.read().startswith("PASS:")
 
 
+def check_all_checks_success_for_sample(sample: str):
+    with checkpoints.summary_all_checks.get(sample=sample).output[0].open() as f:
+        return all([line.startswith("PASS:") for line in f.readlines()])
+
+
+def get_second_phase_results(wildcards):
+    base_result = ["results/checks/{sample}/summary.txt"]
+
+    if check_all_checks_success_for_sample(wildcards.sample):
+        base_result.append("results/amr_detect/{sample}/amrfinder")
+        base_result.append("results/amr_detect/{sample}/mlst.tsv")
+
+    return base_result
+
+
 def get_all_checks(wildcards):
     basic_checks = [
         "results/checks/{sample}/foreign_contamination.txt",
