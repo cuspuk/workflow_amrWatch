@@ -139,7 +139,7 @@ def optional_bandage_outputs(wildcards):
             "results/taxonomy/{sample}",
         ]
     else:
-        return ""
+        return "results/checks/{sample}/assembly_constructed.txt"
 
 
 def bandage_check_if_relevant(wildcards):
