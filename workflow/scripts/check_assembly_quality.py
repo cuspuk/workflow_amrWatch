@@ -24,7 +24,7 @@ def get_assembly_quality_decision(bandage_output_file: str, max_dead_ends: int, 
         return f"FAIL: Number of contigs is {contigs} which is greater than threshold {max_contigs}"
     if dead_ends > max_dead_ends:
         return f"WARN: Number of dead ends is {dead_ends} which is greater than threshold {max_dead_ends}"
-    return f"PASS: Assembly quality fulfills criteria, number of contigs ({contigs}<{max_contigs}) and dead ends ({dead_ends}<{max_dead_ends})"
+    return f"PASS: Assembly quality fulfills criteria, number of contigs ({contigs}<={max_contigs}) and dead ends ({dead_ends}<={max_dead_ends})"
 
 
 def evaluate_assembly_quality(bandage_output_file: str, output_path: str, max_dead_ends: int, max_contigs: int):
@@ -45,5 +45,5 @@ if __name__ == "__main__":
         snakemake.input[0],
         snakemake.output[0],
         snakemake.params.max_dead_ends,
-        snakemake.output.max_contigs,
+        snakemake.params.max_contigs,
     )

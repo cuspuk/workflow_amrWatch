@@ -52,4 +52,4 @@ rule summary_all_checks:
     conda:
         "../envs/bracken.yaml"
     shell:
-        "echo PASS > {output}"  # > {log} 2>&1"
+        "cat {input} > {output} 2>&1"

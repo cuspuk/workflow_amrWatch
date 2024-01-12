@@ -63,12 +63,10 @@ rule check_foreign_contamination:
     output:
         "results/checks/{sample}/foreign_contamination.txt",
     params:
-        dir=lambda wildcards, output: os.path.dirname(output[0]),
+        fraction_threshold=0.01,
     log:
         "logs/checks/foreign_contamination/{sample}.log",
     conda:
-        "../envs/gawk_with_sed.yaml"
-    shell:
-        """
-        (mkdir -p {params.dir} && grep -P '\\tG\\t' {input} | awk ' $NF >= 0.1 ' | awk 'BEGIN {{ FS = "\\t" }} ; {{ print $1 "\\t" $NF }}' > {output}) 2> {log}
-        """
+        "../envs/python.yaml"
+    script:
+        "../scripts/genera_check.py"
