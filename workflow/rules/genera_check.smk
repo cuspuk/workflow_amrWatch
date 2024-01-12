@@ -62,12 +62,13 @@ rule check_foreign_contamination:
         "results/kraken/{sample}.bracken",
     output:
         "results/checks/{sample}/foreign_contamination.txt",
+    params:
+        dir=lambda wildcards, output: os.path.dirname(output[0]),
     log:
         "logs/checks/foreign_contamination/{sample}.log",
     conda:
         "../envs/gawk_with_sed.yaml"
     shell:
         """
-        grep -P '\tG\t' {input} | awk ' $1 > 1 ' | awk 'BEGIN { FS = "\t" } ; { print $1 '\t' $6 }' \
-        | sed -re 's/^[[:blank:]]+|[[:blank:]]+$//g' -e 's/[[:blank:]]+/ /g' > {output} 2> {log}'
+        (mkdir -p {params.dir} && grep -P '\\tG\\t' {input} | awk ' $NF >= 0.1 ' | awk 'BEGIN {{ FS = "\\t" }} ; {{ print $1 "\\t" $NF }}' > {output}) 2> {log}
         """

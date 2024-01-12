@@ -41,29 +41,33 @@ rule unicycler__assemble_reads_into_contigs:
 
 rule bandage__visualise_contig_overlaps:
     input:
-        gfa="results/assembly/{sample}/assembly.gfa",
+        "results/assembly/{sample}/assembly.gfa",
     output:
-        svg=report(
+        report(
             "results/assembly/{sample}/bandage/bandage.svg",
             category="{sample}",
             labels={"Type": "Bandage"},
         ),
+    params:
+        dir=lambda wildcards, output: os.path.dirname(output[0]),
     log:
         "logs/bandage/{sample}.log",
     conda:
         "../envs/bandage.yaml"
     shell:
-        "Bandage image {input.gfa} {output.svg} > {log} 2>&1"
+        "mkdir -p {params.dir} && Bandage image {input} {output} > {log} 2>&1"
 
 
 rule bandage__info:
     input:
-        gfa="results/assembly/{sample}/assembly.gfa",
+        "results/assembly/{sample}/assembly.gfa",
     output:
-        info="results/assembly/{sample}/bandage/bandage.info",
+        "results/assembly/{sample}/bandage/bandage.info",
+    params:
+        dir=lambda wildcards, output: os.path.dirname(output[0]),
     log:
         "logs/bandage/{sample}.log",
     conda:
         "../envs/bandage.yaml"
     shell:
-        "Bandage info {input.gfa} > {output.info} 2> {log}"
+        "mkdir -p {params.dir} && Bandage info {input} > {output} 2> {log}"
