@@ -11,7 +11,8 @@ class GenusFraction(TypedDict):
 def get_abundant_genera_list(bracken_file: str, threshold_fraction: float) -> list[GenusFraction]:
     genera_list: list[GenusFraction] = []
     with open(bracken_file, "r") as f:
-        for line in f.readlines():
+        lines = f.readlines()
+        for line in lines[1:]:
             name, fraction = [line.strip().split("\t")[i] for i in (0, -1)]
             if float(fraction) > threshold_fraction:
                 genera_list.append(GenusFraction(genus=name, fraction=float(fraction)))
