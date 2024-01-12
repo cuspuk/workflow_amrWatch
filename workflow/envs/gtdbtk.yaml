@@ -3,5 +3,4 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - gawk=5.0.0
-  - sed=4.8
+  - gtdbtk=2.3.2

@@ -32,6 +32,8 @@ assembly__unicycler:
   bridging_mode: "normal" # Allowed: "conservative", "normal", "bold". Trade-off between contig length and misassembly rate (default: "normal").
   linear_seqs: 0 # The expected number of linear sequences (default: 0).
 
+gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
+
 ### RESOURCES #############################
 
 max_threads: 2
@@ -41,10 +43,12 @@ resources:
   reads__trimming_mem_mb: 4096
   fastqc_mem_mb: 2048
   assembly__unicycler_mem_mb: 4096
+  gtdb_classify__mem_mb: 4096
 
 threads:
-  reads__trimming: 4
+  reads__trimming: 2
   fastqc: 1
-  assembly__unicycler: 8
+  assembly__unicycler: 2
   kraken: 2
   bracken: 2
+  gtdb__classify: 2

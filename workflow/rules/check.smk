@@ -8,7 +8,7 @@ checkpoint assembly_constructed:
     log:
         "logs/checks/assembly_constructed/{sample}.log",
     shell:
-        "(([ -s {input} ] && echo 'PASS') || echo 'FAIL') > {output} 2> {log}"
+        "(([ -s {input} ] && echo 'PASS: Assembly is not empty') || echo 'FAIL: Assembly construction failed') > {output} 2> {log}"
 
 
 rule request_bandage_if_assembly_exists:

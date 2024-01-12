@@ -9,6 +9,9 @@ definitions:
         type: string
         description: "Path to the PEP file containing the info how to load the data."
         default: "config/pep/config.yaml"
+      gtdb_dirpath:
+        type: string
+        description: "Path to the PEP file containing the info how to load the data."
       max_threads:
         type: integer
         description: "Number of maximum threads to use in jobs."
@@ -36,6 +39,13 @@ definitions:
         type: object
         "$ref": "#/definitions/Threads"
         default: { "kraken": 1, "bracken": 1 }
+    required:
+      - gtdb_dirpath
+      - reads__trimming
+      - foreign_contamination
+      - assembly__unicycler
+      - resources
+      - threads
     title: AmrWatchWorkflow
   ReadsTrimming:
     type: object
@@ -216,11 +226,15 @@ definitions:
       default: 2048
     assembly__unicycler_mem_mb:
       type: integer
-      description: "Memory in MB to reserve for assembly"
+      description: "Memory in MB to reserve for assembly."
+    gtdb_classify__mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for GTDB-TK classification."
     required:
       - assembly__unicycler_mem_mb
       - reads__trimming_mem_mb
       - fastqc_mem_mb
+      - gtdb_classify__mem_mb
     title: Resources
   Threads:
     additionalProperties: true
@@ -244,6 +258,10 @@ definitions:
       type: integer
       default: 1
       description: "Number of threads to use for kraken."
+    gtdb__classify:
+      type: integer
+      default: 1
+      description: "Number of threads to use for GTDB-TK classification."
     title: Threads
     required:
       - reads__trimming
@@ -251,3 +269,4 @@ definitions:
       - assembly__unicycler
       - kraken
       - bracken
+      - gtdb__classify

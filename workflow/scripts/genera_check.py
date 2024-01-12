@@ -22,8 +22,8 @@ def get_abundant_genera_list(bracken_file: str, threshold_fraction: float) -> li
 
 def get_genera_check_decision(bracken_file: str, threshold_fraction: float) -> str:
     genera_list = get_abundant_genera_list(bracken_file, threshold_fraction)
-    genera_log = ",".join([f"{g['genus']}:{g['fraction']}" for g in genera_list])
-    if genera_count := len(genera_list) > 1:
+    genera_log = ", ".join([f"{g['genus']}:{g['fraction']}" for g in genera_list])
+    if (genera_count := len(genera_list)) > 1:
         return f"FAIL: There have been {genera_count} genera with fraction > {threshold_fraction}: {genera_log}"
     return f"PASS: Only one genus with fraction > {threshold_fraction}: {genera_log}"
 

@@ -133,7 +133,11 @@ def get_cutadapt_extra_pe() -> str:
 
 def optional_bandage_outputs(wildcards):
     if check_assembly_construction_success_for_sample(wildcards.sample):
-        return ["results/assembly/{sample}/bandage/bandage.svg", "results/assembly/{sample}/bandage/bandage.info"]
+        return [
+            "results/assembly/{sample}/bandage/bandage.svg",
+            "results/assembly/{sample}/bandage/bandage.info",
+            "results/taxonomy/{sample}",
+        ]
     else:
         return ""
 
@@ -172,3 +176,7 @@ def get_mem_mb_for_fastqc(wildcards, attempt):
 
 def get_mem_mb_for_unicycler(wildcards, attempt):
     return min(config["max_mem_mb"], config["resources"]["assembly__unicycler_mem_mb"] * attempt)
+
+
+def get_mem_mb_for_gtdb(wildcards, attempt):
+    return min(config["max_mem_mb"], config["resources"]["gtdb_classify__mem_mb"] * attempt)

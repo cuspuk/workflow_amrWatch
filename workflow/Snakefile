@@ -19,6 +19,7 @@ include: "rules/genera_check.smk"
 include: "rules/multiqc.smk"
 include: "rules/unicycler.smk"
 include: "rules/check.smk"
+include: "rules/gtdb.smk"
 
 
 rule all:
