@@ -14,5 +14,5 @@ rule gtdbtk__classify:
     log:
         "logs/taxonomy/gtdb_classify/{sample}.log",
     shell:
-        "gtdbtk classify_wf --genome_dir {params.assembly_dir} --cpus {threads}"
-        " --extension fasta --out_dir {output} --mash_db {input.gtdb}"
+        "(export GTDBTK_DATA_PATH={input.gtdb:q} && gtdbtk classify_wf --genome_dir {params.assembly_dir} --cpus {threads}"
+        " --extension fasta --out_dir {output} --mash_db {input.gtdb}) > {log} 2>&1"
