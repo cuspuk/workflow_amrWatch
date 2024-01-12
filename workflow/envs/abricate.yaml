@@ -3,4 +3,4 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - abritamr=1.0.14
+  - abricate=0.8.13
