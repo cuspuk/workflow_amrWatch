@@ -1,7 +1,33 @@
-# The highest level logic of the workflow is defined here
-# Here **and only here** should be defined which other .smk files are included
-# Here define the rule `all` gathering all the outputs of the workflow
-# Here can be defined also other highlevel snakemake stuff like `localrules`, `min_version` or `report`
-#
-# Please follow the best practices:
-# https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
+from snakemake.utils import min_version
+
+min_version("7.25.0")
+
+
+localrules:
+    all,
+    bandage__info,
+    bandage__visualise_contig_overlaps,
+    request_bandage_if_assembly_exists,
+    assembly_constructed,
+    summary_all_checks,
+    check_foreign_contamination,
+    get_final_results,
+
+
+include: "rules/common.smk"
+include: "rules/reads.smk"
+include: "rules/genera_check.smk"
+include: "rules/multiqc.smk"
+include: "rules/unicycler.smk"
+include: "rules/check.smk"
+
+
+if not config["gtdb_hack"]:
+
+    include: "rules/gtdb.smk"
+    include: "rules/amrdetect.smk"
+
+
+rule all:
+    input:
+        **get_outputs(),

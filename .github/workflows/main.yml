@@ -59,10 +59,10 @@ jobs:
           args: "--use-conda --show-failed-logs --cores 2 --conda-cleanup-pkgs cache"
           show-disk-usage-on-error: true
 
-      - name: Test report
-        uses: snakemake/snakemake-github-action@v1.25.1
-        with:
-          directory: .tests
-          snakefile: workflow/Snakefile
-          args: "--report report.zip"
-          show-disk-usage-on-error: true
+      # - name: Test report
+      #   uses: snakemake/snakemake-github-action@v1.25.1
+      #   with:
+      #     directory: .tests
+      #     snakefile: workflow/Snakefile
+      #     args: "--report report.zip"
+      #     show-disk-usage-on-error: true

@@ -1,1 +1,279 @@
-# schema for the config
+"$schema": http://json-schema.org/draft-06/schema#
+"$ref": "#/definitions/AmrWatchWorkflow"
+definitions:
+  AmrWatchWorkflow:
+    type: object
+    additionalProperties: false
+    properties:
+      pepfile:
+        type: string
+        description: "Path to the PEP file containing the info how to load the data."
+        default: "config/pep/config.yaml"
+      gtdb_dirpath:
+        type: string
+        description: "Path to the PEP file containing the info how to load the data."
+      max_threads:
+        type: integer
+        description: "Number of maximum threads to use in jobs."
+        default: 1
+        Minimum: 1
+      gtdb_hack:
+        type: boolean
+        default: false
+      max_mem_mb:
+        type: integer
+        description: "Maximum memory in megabytes to allocate for any job."
+        Minimum: 2048
+        default: 2048
+      reads__trimming:
+        type: object
+        "$ref": "#/definitions/ReadsTrimming"
+      foreign_contamination:
+        type: object
+        "$ref": "#/definitions/ForeignContamination"
+      assembly__unicycler:
+        type: object
+        "$ref": "#/definitions/AssemblyUnicycler"
+      resources:
+        type: object
+        "$ref": "#/definitions/Resources"
+        default: {}
+      threads:
+        type: object
+        "$ref": "#/definitions/Threads"
+        default: { "kraken": 1, "bracken": 1 }
+    required:
+      - gtdb_dirpath
+      - reads__trimming
+      - foreign_contamination
+      - assembly__unicycler
+      - resources
+      - threads
+    title: AmrWatchWorkflow
+  ReadsTrimming:
+    type: object
+    additionalProperties: false
+    properties:
+      adapter_removal:
+        type: object
+        "$ref": "#/definitions/AdapterRemoval"
+        default: {}
+      shorten_to_length:
+        type: integer
+        description: "Optional. Shorten each read to the specified length. Corresponds to the cutadapt length parameter."
+      cut_from_start:
+        type: integer
+        description: "Optional. Removes a specified number of bases from the beginning of the read."
+      cut_from_end:
+        type: integer
+        description: "Optional. Removes a specified number of bases from the end of the read."
+      max_n_bases:
+        type: integer
+        description: "Optional. Removes reads with more N bases than the specified number."
+      max_expected_errors:
+        type: integer
+        description: "Optional. Discard reads whose expected number of errors exceeds this value."
+      max_length_r1:
+        type: integer
+        description: "Optional. Discards R1 reads longer than this."
+      max_length_r2:
+        type: integer
+        description: "Optional. Discards R2 reads longer than this."
+      min_length_r1:
+        type: integer
+        description: "Optional. Discards R1 reads shorter than this. Recommended to set at least to 1, to discard empty reads."
+      min_length_r2:
+        type: integer
+        description: "Optional. Discards R2 reads shorter than this. Recommended to set at least to 1, to discard empty reads."
+      quality_cutoff_from_3_end_r1:
+        type: integer
+        description: "Optional. Removes lower quality bases from the 3' end of the R1 read."
+      quality_cutoff_from_5_end_r1:
+        type: integer
+        description: "Optional. Removes lower quality bases from the 5' end of the R1 read."
+      quality_cutoff_from_3_end_r2:
+        type: integer
+        description: "Optional. Removes lower quality bases from the 3' end of the R2 read."
+      quality_cutoff_from_5_end_r2:
+        type: integer
+        description: "Optional. Removes lower quality bases from the 5' end of the R2 read."
+    required:
+      - adapter_removal
+    title: ReadsTrimming
+  AdapterRemoval:
+    type: object
+    additionalProperties: false
+    properties:
+      do:
+        type: boolean
+        default: false
+        description: "Whether to do adapter removal or not."
+      adapters_fasta:
+        type: string
+        description: "Adapters fasta used for adapter trimming."
+      overlap:
+        type: integer
+        default: 3
+        description: "Minimum number of bases required to overlap with the adapter."
+      error_rate:
+        type: number
+        default: 0.1
+        exclusiveMinimum: 0
+        description: "Error tolerance used when searching for adapter."
+      times:
+        type: integer
+        default: 1
+        description: "How many times to repeat adapter removal."
+      action:
+        type: string
+        enum:
+          - "retain"
+          - "trim"
+          - "mask"
+          - "none"
+          - "lowercase"
+        default: "trim"
+        description: "Defines an action to perform with the found adapter."
+      keep_trimmed_only:
+        type: boolean
+        default: false
+        description: "Discard reads with no adapters found."
+      read_location:
+        type: string
+        enum:
+          - "anywhere"
+          - "regular"
+          - "front"
+        default: "anywhere"
+        description: "Path to the adapter file. Search for adapters anywhere in the read."
+    required:
+      - do
+    if:
+      properties:
+        do:
+          const: true
+    then:
+      required:
+        - adapters_fasta
+        - overlap
+        - error_rate
+        - times
+        - action
+        - keep_trimmed_only
+        - read_location
+    title: AdapterRemoval
+  ForeignContamination:
+    additionalProperties: false
+    title: ForeignContamination
+    properties:
+      kraken_dir:
+        type: string
+        description: "Directory with the kraken DB files. If does not exist, the workflow tries to download DB by using the basename."
+        pattern: '.*k2_.*_\d{8}$'
+      save_memory:
+        type: boolean
+        description: "if true, kraken limits RAM memory usage but sacrifices speed"
+        default: true
+      read_length:
+        type: integer
+        description: "Distribution will be used from this read length."
+        default: 50
+      classification_level:
+        type: string
+        enum:
+          - "K"
+          - "P"
+          - "C"
+          - "O"
+          - "F"
+          - "G"
+        default: "G"
+        description: "The taxa level at which bracken reestimation happens."
+      threshold:
+        description: "Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation."
+        type: integer
+        default: 10
+    required:
+      - kraken_dir
+  AssemblyUnicycler:
+    additionalProperties: false
+    title: AssemblyUnicycler
+    properties:
+      min_fasta_length:
+        type: integer
+        description: "Shorter contigs than this are removed."
+        default: 100
+        minimum: 1
+      bridging_mode:
+        type: string
+        enum:
+          - "normal"
+          - "bold"
+          - "conservative"
+        description: "Trade-off between contig length and misassembly rate."
+        default: "normal"
+      linear_seqs:
+        type: integer
+        minimum: 0
+        default: 0
+        description: "The expected number of linear sequences."
+  Resources:
+    additionalProperties: true
+    reads__trimming_mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for trimming."
+      default: 2048
+    fastqc_mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for fastqc."
+      default: 2048
+    assembly__unicycler_mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for assembly."
+    gtdb_classify__mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for GTDB-TK classification."
+    required:
+      - assembly__unicycler_mem_mb
+      - reads__trimming_mem_mb
+      - fastqc_mem_mb
+      - gtdb_classify__mem_mb
+    title: Resources
+  Threads:
+    additionalProperties: true
+    reads__trimming:
+      type: integer
+      default: 1
+      description: "Number of threads to use for trimming."
+    assembly__unicycler:
+      type: integer
+      default: 1
+      description: "Number of threads to use for assembly"
+    fastqc:
+      type: integer
+      default: 1
+      description: "Number of threads to use for fastqc."
+    bracken:
+      type: integer
+      default: 1
+      description: "Number of threads to use for bracken."
+    kraken:
+      type: integer
+      default: 1
+      description: "Number of threads to use for kraken."
+    gtdb__classify:
+      type: integer
+      default: 1
+      description: "Number of threads to use for GTDB-TK classification."
+    abritamr:
+      type: integer
+      default: 1
+      description: "Number of threads to use for AMR detection using abritamr."
+    title: Threads
+    required:
+      - reads__trimming
+      - fastqc
+      - assembly__unicycler
+      - kraken
+      - bracken
+      - gtdb__classify
