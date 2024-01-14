@@ -132,14 +132,12 @@ def get_cutadapt_extra_pe() -> str:
 
 
 def optional_bandage_outputs(wildcards):
-    if check_assembly_construction_success_for_sample(wildcards.sample):
-        outs = [
+    if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
+        return [
             "results/assembly/{sample}/bandage/bandage.svg",
             "results/assembly/{sample}/bandage/bandage.info",
+            "results/taxonomy/{sample}",
         ]
-        if not config["gtdb_hack"]:
-            outs.append("results/taxonomy/{sample}")
-        return outs
     else:
         return "results/checks/{sample}/assembly_constructed.txt"
 
