@@ -175,7 +175,7 @@ def get_all_checks(wildcards):
         "results/checks/{sample}/assembly_constructed.txt",
     ]
 
-    if check_assembly_construction_success_for_sample(wildcards.sample):
+    if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         basic_checks.append("results/checks/{sample}/assembly_quality.txt")
 
     return basic_checks
