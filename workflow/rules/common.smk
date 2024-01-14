@@ -162,7 +162,7 @@ def check_all_checks_success_for_sample(sample: str):
 def get_second_phase_results(wildcards):
     base_result = ["results/checks/{sample}/summary.txt"]
 
-    if check_all_checks_success_for_sample(wildcards.sample):
+    if not config["gtdb_hack"] and check_all_checks_success_for_sample(wildcards.sample):
         base_result.append("results/amr_detect/{sample}/amrfinder.tsv")
         base_result.append("results/amr_detect/{sample}/mlst.tsv")
         base_result.append("results/amr_detect/{sample}/abricate.tsv")

@@ -20,8 +20,12 @@ include: "rules/genera_check.smk"
 include: "rules/multiqc.smk"
 include: "rules/unicycler.smk"
 include: "rules/check.smk"
-include: "rules/gtdb.smk"
-include: "rules/amrdetect.smk"
+
+
+if not config["gtdb_hack"]:
+
+    include: "rules/gtdb.smk"
+    include: "rules/amrdetect.smk"
 
 
 rule all:

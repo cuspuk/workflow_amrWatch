@@ -17,6 +17,9 @@ definitions:
         description: "Number of maximum threads to use in jobs."
         default: 1
         Minimum: 1
+      gtdb_hack:
+        type: boolean
+        default: false
       max_mem_mb:
         type: integer
         description: "Maximum memory in megabytes to allocate for any job."
