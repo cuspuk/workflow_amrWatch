@@ -20,6 +20,7 @@ include: "rules/genera_check.smk"
 include: "rules/multiqc.smk"
 include: "rules/unicycler.smk"
 include: "rules/check.smk"
+include: "rules/selfcontamination_check.smk"
 
 
 if not config["gtdb_hack"]:

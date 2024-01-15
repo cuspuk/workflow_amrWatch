@@ -35,6 +35,9 @@ assembly__unicycler:
 
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
 
+self_contamination:
+  polymorph_rate: 0.2
+
 ### RESOURCES #############################
 
 max_threads: 16

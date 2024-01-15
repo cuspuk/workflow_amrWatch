@@ -31,6 +31,9 @@ definitions:
       foreign_contamination:
         type: object
         "$ref": "#/definitions/ForeignContamination"
+      self_contamination:
+        type: object
+        "$ref": "#/definitions/SelfContamination"
       assembly__unicycler:
         type: object
         "$ref": "#/definitions/AssemblyUnicycler"
@@ -162,6 +165,18 @@ definitions:
         - keep_trimmed_only
         - read_location
     title: AdapterRemoval
+  SelfContamination:
+    additionalProperties: false
+    title: SelfContamination
+    properties:
+      polymorph_rate:
+        type: number
+        description: "count variants with MAF larger than this threshold."
+        default: 0.2
+        minimum: 0
+        maximum: 1
+    required:
+      - polymorph_rate
   ForeignContamination:
     additionalProperties: false
     title: ForeignContamination
@@ -197,6 +212,8 @@ definitions:
         description: "Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1."
         type: number
         default: 0.01
+        minimum: 0
+        maximum: 1
     required:
       - kraken_dir
   AssemblyUnicycler:
