@@ -39,4 +39,4 @@ rule check_coverage_from_qualimap:
     conda:
         "../envs/python.yaml"
     script:
-        "../scripts/covergae_check.py"
+        "../scripts/coverage_check.py"
