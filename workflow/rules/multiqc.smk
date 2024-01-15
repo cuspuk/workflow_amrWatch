@@ -1,7 +1,7 @@
 
 rule multiqc__report:
     input:
-        cutadapt="results/reads/trimmed/{sample}_cutadapt.json",
+        cutadapt="results/reads/trimmed/{sample}.qc.txt",
         fastqc=expand("results/reads/trimmed/fastqc/{{sample}}_{pair}/fastqc_data.txt", pair=["R1", "R2"]),
         kraken="results/kraken/{sample}.kreport2",
     output:

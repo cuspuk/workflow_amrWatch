@@ -2,9 +2,9 @@ rule cutadapt__trim_reads_pe:
     input:
         get_reads_for_trimming,
     output:
-        r1=temp("results/reads/trimmed/{sample}_R1.fastq.gz"),
-        r2=temp("results/reads/trimmed/{sample}_R2.fastq.gz"),
-        report=temp("results/reads/trimmed/{sample}_cutadapt.json"),
+        fastq1=temp("results/reads/trimmed/{sample}_R1.fastq.gz"),
+        fastq2=temp("results/reads/trimmed/{sample}_R2.fastq.gz"),
+        qc=temp("results/reads/trimmed/{sample}.qc.txt"),
     params:
         extra=get_cutadapt_extra_pe(),
     resources:
@@ -13,7 +13,7 @@ rule cutadapt__trim_reads_pe:
     log:
         "logs/cutadapt/trim_reads_pe/{sample}.log",
     wrapper:
-        "https://github.com/xsitarcik/wrappers/raw/v1.12.6/wrappers/cutadapt/paired"
+        "v3.3.3/bio/cutadapt/pe"
 
 
 rule fastqc__quality_report:
