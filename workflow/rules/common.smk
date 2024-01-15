@@ -185,7 +185,7 @@ def get_outputs():
     sample_names = get_sample_names()
     return {
         "bandage_reports_optional": expand("results/checks/{sample}/.bandage_requested.txt", sample=sample_names),
-        "multiqc": expand("results/multiqc/{sample}.html", sample=sample_names),
+        "multiqc": "results/summary/multiqc.html",
         "checks": expand("results/checks/{sample}/.final_results_requested.txt", sample=sample_names),
     }
 

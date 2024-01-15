@@ -53,6 +53,8 @@ rule samtools__fixmate:
         "results/self_contamination/{sample}/mapped.bam",
     output:
         temp("results/self_contamination/{sample}/fixmate.bam"),
+    params:
+        extra="-m",
     log:
         "logs/self_contamination/samtools_fixmate/{sample}.log",
     threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
@@ -122,7 +124,7 @@ rule samtools__faidx:
 
 rule bcftools_mpileup:
     input:
-        alignments=["mapped/{sample}.bam", "mapped/{sample}.bam"],
+        alignments="results/self_contamination/{sample}/markdup.bam",
         ref="results/assembly/{sample}/assembly.fasta",
         index="results/assembly/{sample}/assembly.fasta.fai",
     output:
