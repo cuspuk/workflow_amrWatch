@@ -35,11 +35,11 @@ def parse_qualimap_for_coverage(filename: str) -> float:
 
 def get_decision_for_coverage(coverage: float, warn_threshold: float, fail_threshold: float) -> str:
     if coverage < fail_threshold:
-        return f"FAIL: Mean {coverage=} is lower than minimum threshold={fail_threshold}"
+        return f"FAIL: Mean coverage is lower than hard minimum threshold ({coverage}<{fail_threshold})"
     if coverage < warn_threshold:
-        return f"WARN: Mean {coverage=} is higher than minimum threshold={fail_threshold} but lower than good threshold={warn_threshold}"
+        return f"WARN: Mean coverage is higher than hard threshold but lower than soft threshold ({fail_threshold}<={coverage}<{warn_threshold})"
 
-    return f"PASS: Mean {coverage=} is higher than good threshold={warn_threshold}"
+    return f"PASS: Mean coverage is higher than soft threshold ({coverage}>={warn_threshold})"
 
 
 def evaluate_coverage_check(filename: str, output_path: str, warn_threshold: float, fail_threshold: float):
