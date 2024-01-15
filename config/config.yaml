@@ -36,7 +36,12 @@ assembly__unicycler:
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
 
 self_contamination:
-  polymorph_rate: 0.2
+  polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.
+  max_ambiguous_rows: 200 # Threshold for polymorph rows. Check fails if this threshold is exceeded.
+
+coverage_check:
+  warn_threshold: 50 # Soft threshold for mean coverage. Lower coverage than this results in WARN row.
+  fail_threshold: 20 # Hard threshold for mean coverage. Lower coverage than this results in FAIL row.
 
 ### RESOURCES #############################
 

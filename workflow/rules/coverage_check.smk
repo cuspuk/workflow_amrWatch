@@ -32,8 +32,8 @@ rule check_coverage_from_qualimap:
         "results/checks/{sample}/coverage_check.txt",
     params:
         genome_results_file=lambda wildcards, input: os.path.join(input[0], "genome_results.txt"),
-        warn_threshold=50,
-        fail_threshold=20,
+        warn_threshold=config["coverage_check"]["warn_threshold"],
+        fail_threshold=config["coverage_check"]["fail_threshold"],
     log:
         "logs/checks/coverage_check/{sample}.log",
     conda:

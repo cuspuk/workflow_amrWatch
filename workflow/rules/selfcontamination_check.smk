@@ -191,3 +191,18 @@ rule bcftools__filter_vcf:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
         "v3.3.3/bio/bcftools/filter"
+
+
+rule check_self_contamination:
+    input:
+        "results/self_contamination/{sample}/filtered.vcf",
+    output:
+        "results/checks/{sample}/self_contamination_check.txt",
+    params:
+        max_ambiguous_rows=config["self_contamination"]["max_ambiguous_rows"],
+    log:
+        "logs/checks/self_contamination/{sample}.log",
+    conda:
+        "../envs/grep.yaml"
+    script:
+        "../scripts/self_contamination.sh"

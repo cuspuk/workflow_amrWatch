@@ -1,4 +1,2 @@
 fn_clean_exts:
-  - "_R1"
-  - "_R2"
   - ".kreport2"

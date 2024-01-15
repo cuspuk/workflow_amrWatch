@@ -31,6 +31,9 @@ definitions:
       foreign_contamination:
         type: object
         "$ref": "#/definitions/ForeignContamination"
+      coverage_check:
+        type: object
+        "$ref": "#/definitions/CoverageCheck"
       self_contamination:
         type: object
         "$ref": "#/definitions/SelfContamination"
@@ -175,8 +178,30 @@ definitions:
         default: 0.2
         minimum: 0
         maximum: 1
+      max_ambiguous_rows:
+        type: integer
+        description: "Threshold for polymorph rows. Check fails if this threshold is exceeded."
+        minimum: 0
     required:
       - polymorph_rate
+      - max_ambiguous_rows
+  CoverageCheck:
+    additionalProperties: false
+    title: CoverageCheck
+    properties:
+      warn_threshold:
+        type: integer
+        description: "Soft threshold for mean coverage. Lower coverage than this results in WARN row."
+        minimum: 0
+        default: 50
+      fail_threshold:
+        type: integer
+        description: "Hard threshold for mean coverage. Lower coverage than this results in FAIL row."
+        minimum: 0
+        default: 20
+    required:
+      - fail_threshold
+      - warn_threshold
   ForeignContamination:
     additionalProperties: false
     title: ForeignContamination

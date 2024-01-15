@@ -182,6 +182,7 @@ def get_all_checks(wildcards):
     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         basic_checks.append("results/checks/{sample}/assembly_quality.txt")
         basic_checks.append("results/checks/{sample}/coverage_check.txt")
+        basic_checks.append("results/checks/{sample}/self_contamination_check.txt")
 
     return basic_checks
 
