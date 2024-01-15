@@ -234,14 +234,26 @@ definitions:
     assembly__unicycler_mem_mb:
       type: integer
       description: "Memory in MB to reserve for assembly."
+      default: 2048
     gtdb_classify__mem_mb:
       type: integer
       description: "Memory in MB to reserve for GTDB-TK classification."
+      default: 2048
+    mapping__mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for mapping."
+      default: 2048
+    mapping_postprocess__mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for mapping postprocess."
+      default: 2048
     required:
       - assembly__unicycler_mem_mb
       - reads__trimming_mem_mb
       - fastqc_mem_mb
       - gtdb_classify__mem_mb
+      - mapping__mem_mb
+      - mapping_postprocess__mem_mb
     title: Resources
   Threads:
     additionalProperties: true
@@ -273,6 +285,14 @@ definitions:
       type: integer
       default: 1
       description: "Number of threads to use for AMR detection using abritamr."
+    mapping:
+      type: integer
+      default: 1
+      description: "Number of threads to use for mapping reads back to assembly."
+    mapping_postprocess:
+      type: integer
+      default: 1
+      description: "Number of threads to use for selfcontamination check after mapping."
     title: Threads
     required:
       - reads__trimming
@@ -281,3 +301,5 @@ definitions:
       - kraken
       - bracken
       - gtdb__classify
+      - mapping_postprocess
+      - mapping

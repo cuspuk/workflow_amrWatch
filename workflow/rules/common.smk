@@ -131,7 +131,7 @@ def get_cutadapt_extra_pe() -> str:
 ### Global rule-set stuff #############################################################################################
 
 
-def optional_bandage_outputs(wildcards):
+def post_assembly_outputs(wildcards):
     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         return [
             "results/assembly/{sample}/bandage/bandage.svg",
@@ -142,11 +142,11 @@ def optional_bandage_outputs(wildcards):
         return "results/checks/{sample}/assembly_constructed.txt"
 
 
-def bandage_check_if_relevant(wildcards):
-    if check_assembly_construction_success_for_sample(wildcards.sample):
-        return "results/checks/{sample}/assembly_quality.txt"
-    else:
-        return ""
+# def bandage_check_if_relevant(wildcards):
+#     if check_assembly_construction_success_for_sample(wildcards.sample):
+#         return "results/checks/{sample}/assembly_quality.txt"
+#     else:
+#         return ""
 
 
 def check_assembly_construction_success_for_sample(sample: str):
@@ -207,3 +207,11 @@ def get_mem_mb_for_unicycler(wildcards, attempt):
 
 def get_mem_mb_for_gtdb(wildcards, attempt):
     return min(config["max_mem_mb"], config["resources"]["gtdb_classify__mem_mb"] * attempt)
+
+
+def get_mem_mb_for_mapping_postprocess(wildcards, attempt):
+    return min(config["max_mem_mb"], config["resources"]["mapping__mem_mb"] * attempt)
+
+
+def get_mem_mb_for_mapping(wildcards, attempt):
+    return min(config["max_mem_mb"], config["resources"]["mapping_postprocess__mem_mb"] * attempt)

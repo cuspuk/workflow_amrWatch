@@ -46,6 +46,8 @@ resources:
   fastqc_mem_mb: 2048
   assembly__unicycler_mem_mb: 4096
   gtdb_classify__mem_mb: 4096
+  mapping__mem_mb: 4096
+  mapping_postprocess__mem_mb: 4096
 
 threads:
   reads__trimming: 2
@@ -55,3 +57,5 @@ threads:
   bracken: 2
   gtdb__classify: 2
   abritamr: 2
+  mapping: 2
+  mapping_postprocess: 2

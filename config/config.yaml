@@ -16,12 +16,12 @@ reads__trimming: # Required only if "trimming" in main "flow" element. See https
     overlap: 3 # Minimum number of bases required to overlap with the adapter (default: 3).
     read_location: "anywhere" # Uses adapters defined in adapters_fasta. Searches for adapters anywhere. Possible values: 'regular', 'front' and "anywhere" (default: "anywhere").
     error_rate: 0.1 # Error tolerance used when searching for adapter (default: 0.1).
-    adapters_fasta: "{path_to_fasta_with_adapters}" # Adapters fasta used for adapter trimming (no default - must be set if used).
+    adapters_fasta: "/data/genome/others/adapters/nextera.fa" # Adapters fasta used for adapter trimming (no default - must be set if used).
     times: 1 # How many times to do adapter removal (default: 1).
     keep_trimmed_only: false # Discard reads with no adapters found (default: false).
 
 foreign_contamination:
-  kraken_dir: "path_to_kraken/{KRAKEN_TAG}" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
+  kraken_dir: "/data/genome/metagenome/kraken/k2_pluspf_20230314" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
   save_memory: true # If true, kraken limits RAM memory usage but sacrifices speed.
   read_length: 50 # Distribution will be used from this read length (default: 50).
   classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
@@ -45,6 +45,8 @@ resources:
   fastqc_mem_mb: 2048
   assembly__unicycler_mem_mb: 16384
   gtdb_classify__mem_mb: 16384
+  mapping__mem_mb: 8192 # mapping trimmed reads to assembly
+  mapping_postprocess__mem_mb: 4096 # postprocess mapping results and bcftools calling
 
 threads:
   reads__trimming: 4
@@ -54,3 +56,5 @@ threads:
   bracken: 8
   gtdb__classify: 8
   abritamr: 4
+  mapping: 8 # mapping trimmed reads to assembly
+  mapping_postprocess: 4 # postprocess mapping results and bcftools calling
