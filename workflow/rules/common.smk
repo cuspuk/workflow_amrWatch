@@ -73,9 +73,13 @@ def get_cutadapt_extra() -> list[str]:
     if "shorten_to_length" in config["reads__trimming"]:
         args_lst.append(f"--length {config['reads__trimming']['shorten_to_length']}")
     if "cut_from_start" in config["reads__trimming"]:
-        args_lst.append(f"--cut {config['reads__trimming']['cut_from_start']}")
+        args_lst.append(
+            f"--cut {config['reads__trimming']['cut_from_start']} -U {config['reads__trimming']['cut_from_start']}"
+        )
     if "cut_from_end" in config["reads__trimming"]:
-        args_lst.append(f"--cut -{config['reads__trimming']['cut_from_end']}")
+        args_lst.append(
+            f"--cut -{config['reads__trimming']['cut_from_end']} -U -{config['reads__trimming']['cut_from_end']}"
+        )
     if "max_n_bases" in config["reads__trimming"]:
         args_lst.append(f"--max-n {config['reads__trimming']['max_n_bases']}")
     if "max_expected_errors" in config["reads__trimming"]:
