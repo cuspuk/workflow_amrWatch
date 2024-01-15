@@ -196,6 +196,7 @@ definitions:
       abundance_check_fraction:
         description: "Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1."
         type: number
+        default: 0.01
     required:
       - kraken_dir
   AssemblyUnicycler:

@@ -26,7 +26,7 @@ foreign_contamination:
   read_length: 50 # Distribution will be used from this read length (default: 50).
   classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
   bracken_threshold: 10 # Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation (default: 10).
-  abundance_check_fraction: 0.01 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1.
+  abundance_check_fraction: 0.01 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1 (default: 0.01).
 
 assembly__unicycler:
   min_fasta_length: 200 # Shorter contigs than this are removed (default: 100).
