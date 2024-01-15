@@ -189,10 +189,13 @@ definitions:
           - "G"
         default: "G"
         description: "The taxa level at which bracken reestimation happens."
-      threshold:
+      bracken_threshold:
         description: "Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation."
         type: integer
         default: 10
+      abundance_check_fraction:
+        description: "Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1."
+        type: number
     required:
       - kraken_dir
   AssemblyUnicycler:
