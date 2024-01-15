@@ -11,9 +11,9 @@ checkpoint assembly_constructed:
         "(([ -s {input} ] && echo 'PASS: Assembly is not empty') || echo 'FAIL: Assembly construction failed') > {output} 2> {log}"
 
 
-rule request_bandage_if_assembly_exists:
+rule request_post_assembly_outputs:
     input:
-        optional_bandage_outputs,
+        post_assembly_outputs,
     output:
         temp("results/checks/{sample}/.bandage_requested.txt"),
     conda:

@@ -45,7 +45,7 @@ rule bracken__correction:
     params:
         db_dir=lambda wildcards, input: os.path.dirname(input.kraken_tax),
         read_length=config["foreign_contamination"]["read_length"],
-        threshold=config["foreign_contamination"]["threshold"],
+        threshold=config["foreign_contamination"]["bracken_threshold"],
         classification_level=config["foreign_contamination"]["classification_level"],
     threads: min(config["threads"]["bracken"], config["max_threads"])
     log:
@@ -63,7 +63,7 @@ rule check_foreign_contamination:
     output:
         "results/checks/{sample}/foreign_contamination.txt",
     params:
-        fraction_threshold=0.01,
+        fraction_threshold=config["foreign_contamination"]["abundance_check_fraction"],
     log:
         "logs/checks/foreign_contamination/{sample}.log",
     conda:

@@ -73,9 +73,13 @@ def get_cutadapt_extra() -> list[str]:
     if "shorten_to_length" in config["reads__trimming"]:
         args_lst.append(f"--length {config['reads__trimming']['shorten_to_length']}")
     if "cut_from_start" in config["reads__trimming"]:
-        args_lst.append(f"--cut {config['reads__trimming']['cut_from_start']}")
+        args_lst.append(
+            f"--cut {config['reads__trimming']['cut_from_start']} -U {config['reads__trimming']['cut_from_start']}"
+        )
     if "cut_from_end" in config["reads__trimming"]:
-        args_lst.append(f"--cut -{config['reads__trimming']['cut_from_end']}")
+        args_lst.append(
+            f"--cut -{config['reads__trimming']['cut_from_end']} -U -{config['reads__trimming']['cut_from_end']}"
+        )
     if "max_n_bases" in config["reads__trimming"]:
         args_lst.append(f"--max-n {config['reads__trimming']['max_n_bases']}")
     if "max_expected_errors" in config["reads__trimming"]:
@@ -131,7 +135,7 @@ def get_cutadapt_extra_pe() -> str:
 ### Global rule-set stuff #############################################################################################
 
 
-def optional_bandage_outputs(wildcards):
+def post_assembly_outputs(wildcards):
     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         return [
             "results/assembly/{sample}/bandage/bandage.svg",
@@ -142,11 +146,11 @@ def optional_bandage_outputs(wildcards):
         return "results/checks/{sample}/assembly_constructed.txt"
 
 
-def bandage_check_if_relevant(wildcards):
-    if check_assembly_construction_success_for_sample(wildcards.sample):
-        return "results/checks/{sample}/assembly_quality.txt"
-    else:
-        return ""
+# def bandage_check_if_relevant(wildcards):
+#     if check_assembly_construction_success_for_sample(wildcards.sample):
+#         return "results/checks/{sample}/assembly_quality.txt"
+#     else:
+#         return ""
 
 
 def check_assembly_construction_success_for_sample(sample: str):
@@ -177,6 +181,8 @@ def get_all_checks(wildcards):
 
     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         basic_checks.append("results/checks/{sample}/assembly_quality.txt")
+        basic_checks.append("results/checks/{sample}/coverage_check.txt")
+        basic_checks.append("results/checks/{sample}/self_contamination_check.txt")
 
     return basic_checks
 
@@ -185,7 +191,7 @@ def get_outputs():
     sample_names = get_sample_names()
     return {
         "bandage_reports_optional": expand("results/checks/{sample}/.bandage_requested.txt", sample=sample_names),
-        "multiqc": expand("results/multiqc/{sample}.html", sample=sample_names),
+        "multiqc": "results/summary/multiqc.html",
         "checks": expand("results/checks/{sample}/.final_results_requested.txt", sample=sample_names),
     }
 
@@ -207,3 +213,11 @@ def get_mem_mb_for_unicycler(wildcards, attempt):
 
 def get_mem_mb_for_gtdb(wildcards, attempt):
     return min(config["max_mem_mb"], config["resources"]["gtdb_classify__mem_mb"] * attempt)
+
+
+def get_mem_mb_for_mapping_postprocess(wildcards, attempt):
+    return min(config["max_mem_mb"], config["resources"]["mapping__mem_mb"] * attempt)
+
+
+def get_mem_mb_for_mapping(wildcards, attempt):
+    return min(config["max_mem_mb"], config["resources"]["mapping_postprocess__mem_mb"] * attempt)

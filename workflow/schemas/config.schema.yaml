@@ -31,6 +31,12 @@ definitions:
       foreign_contamination:
         type: object
         "$ref": "#/definitions/ForeignContamination"
+      coverage_check:
+        type: object
+        "$ref": "#/definitions/CoverageCheck"
+      self_contamination:
+        type: object
+        "$ref": "#/definitions/SelfContamination"
       assembly__unicycler:
         type: object
         "$ref": "#/definitions/AssemblyUnicycler"
@@ -162,6 +168,40 @@ definitions:
         - keep_trimmed_only
         - read_location
     title: AdapterRemoval
+  SelfContamination:
+    additionalProperties: false
+    title: SelfContamination
+    properties:
+      polymorph_rate:
+        type: number
+        description: "count variants with MAF larger than this threshold."
+        default: 0.2
+        minimum: 0
+        maximum: 1
+      max_ambiguous_rows:
+        type: integer
+        description: "Threshold for polymorph rows. Check fails if this threshold is exceeded."
+        minimum: 0
+    required:
+      - polymorph_rate
+      - max_ambiguous_rows
+  CoverageCheck:
+    additionalProperties: false
+    title: CoverageCheck
+    properties:
+      warn_threshold:
+        type: integer
+        description: "Soft threshold for mean coverage. Lower coverage than this results in WARN row."
+        minimum: 0
+        default: 50
+      fail_threshold:
+        type: integer
+        description: "Hard threshold for mean coverage. Lower coverage than this results in FAIL row."
+        minimum: 0
+        default: 20
+    required:
+      - fail_threshold
+      - warn_threshold
   ForeignContamination:
     additionalProperties: false
     title: ForeignContamination
@@ -189,10 +229,16 @@ definitions:
           - "G"
         default: "G"
         description: "The taxa level at which bracken reestimation happens."
-      threshold:
+      bracken_threshold:
         description: "Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation."
         type: integer
         default: 10
+      abundance_check_fraction:
+        description: "Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1."
+        type: number
+        default: 0.01
+        minimum: 0
+        maximum: 1
     required:
       - kraken_dir
   AssemblyUnicycler:
@@ -230,14 +276,26 @@ definitions:
     assembly__unicycler_mem_mb:
       type: integer
       description: "Memory in MB to reserve for assembly."
+      default: 2048
     gtdb_classify__mem_mb:
       type: integer
       description: "Memory in MB to reserve for GTDB-TK classification."
+      default: 2048
+    mapping__mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for mapping."
+      default: 2048
+    mapping_postprocess__mem_mb:
+      type: integer
+      description: "Memory in MB to reserve for mapping postprocess."
+      default: 2048
     required:
       - assembly__unicycler_mem_mb
       - reads__trimming_mem_mb
       - fastqc_mem_mb
       - gtdb_classify__mem_mb
+      - mapping__mem_mb
+      - mapping_postprocess__mem_mb
     title: Resources
   Threads:
     additionalProperties: true
@@ -269,6 +327,14 @@ definitions:
       type: integer
       default: 1
       description: "Number of threads to use for AMR detection using abritamr."
+    mapping:
+      type: integer
+      default: 1
+      description: "Number of threads to use for mapping reads back to assembly."
+    mapping_postprocess:
+      type: integer
+      default: 1
+      description: "Number of threads to use for selfcontamination check after mapping."
     title: Threads
     required:
       - reads__trimming
@@ -277,3 +343,5 @@ definitions:
       - kraken
       - bracken
       - gtdb__classify
+      - mapping_postprocess
+      - mapping

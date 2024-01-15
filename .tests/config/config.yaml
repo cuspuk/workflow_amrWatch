@@ -25,7 +25,8 @@ foreign_contamination:
   save_memory: true # If true, kraken limits RAM memory usage but sacrifices speed.
   read_length: 50 # Distribution will be used from this read length (default: 50).
   classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
-  threshold: 10 # Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation (default: 10).
+  bracken_threshold: 10 # Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation (default: 10).
+  abundance_check_fraction: 0.01 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1 (default: 0.01).
 
 assembly__unicycler:
   min_fasta_length: 200 # Shorter contigs than this are removed (default: 100).
@@ -34,6 +35,14 @@ assembly__unicycler:
 
 gtdb_hack: True
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
+
+self_contamination:
+  polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.
+  max_ambiguous_rows: 200 # Threshold for polymorph rows. Check fails if this threshold is exceeded.
+
+coverage_check:
+  warn_threshold: 50 # Soft threshold for mean coverage. Lower coverage than this results in WARN row.
+  fail_threshold: 20 # Hard threshold for mean coverage. Lower coverage than this results in FAIL row.
 
 ### RESOURCES #############################
 
@@ -45,6 +54,8 @@ resources:
   fastqc_mem_mb: 2048
   assembly__unicycler_mem_mb: 4096
   gtdb_classify__mem_mb: 4096
+  mapping__mem_mb: 4096
+  mapping_postprocess__mem_mb: 4096
 
 threads:
   reads__trimming: 2
@@ -54,3 +65,5 @@ threads:
   bracken: 2
   gtdb__classify: 2
   abritamr: 2
+  mapping: 2
+  mapping_postprocess: 2

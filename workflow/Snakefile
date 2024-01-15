@@ -7,7 +7,7 @@ localrules:
     all,
     bandage__info,
     bandage__visualise_contig_overlaps,
-    request_bandage_if_assembly_exists,
+    request_post_assembly_outputs,
     assembly_constructed,
     summary_all_checks,
     check_foreign_contamination,
@@ -20,6 +20,8 @@ include: "rules/genera_check.smk"
 include: "rules/multiqc.smk"
 include: "rules/unicycler.smk"
 include: "rules/check.smk"
+include: "rules/selfcontamination_check.smk"
+include: "rules/coverage_check.smk"
 
 
 if not config["gtdb_hack"]:
