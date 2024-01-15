@@ -199,7 +199,7 @@ rule check_self_contamination:
     output:
         "results/checks/{sample}/self_contamination_check.txt",
     params:
-        max_ambiguous_rows=config["self_contamination"]["max_ambiguous_rows"],
+        max_rows=config["self_contamination"]["max_ambiguous_rows"],
     log:
         "logs/checks/self_contamination/{sample}.log",
     conda:
