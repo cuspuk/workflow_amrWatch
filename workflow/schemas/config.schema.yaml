@@ -20,6 +20,21 @@ definitions:
       gtdb_hack:
         type: boolean
         default: false
+      abricate_db:
+        type: string
+        enum:
+          [
+            "argannot",
+            "ecoh",
+            "ecoli_vf",
+            "megares",
+            "card",
+            "ncbi",
+            "plasmidfinder",
+            "resfinder",
+            "vfdb",
+          ]
+        default: "vfdb"
       max_mem_mb:
         type: integer
         description: "Maximum memory in megabytes to allocate for any job."
@@ -323,10 +338,10 @@ definitions:
       type: integer
       default: 1
       description: "Number of threads to use for GTDB-TK classification."
-    abritamr:
+    amrfinder:
       type: integer
       default: 1
-      description: "Number of threads to use for AMR detection using abritamr."
+      description: "Number of threads to use for AMR detection using amrfinder."
     mapping:
       type: integer
       default: 1

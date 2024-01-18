@@ -35,6 +35,7 @@ assembly__unicycler:
 
 gtdb_hack: True
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
+abricate_db: "vfdb"
 
 self_contamination:
   polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.
@@ -64,6 +65,6 @@ threads:
   kraken: 2
   bracken: 2
   gtdb__classify: 2
-  abritamr: 2
+  amrfinder: 2
   mapping: 2
   mapping_postprocess: 2

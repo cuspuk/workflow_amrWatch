@@ -34,6 +34,7 @@ assembly__unicycler:
   linear_seqs: 0 # The expected number of linear sequences (default: 0).
 
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
+abricate_db: "vfdb" # Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"] (default: "vfdb").
 
 self_contamination:
   polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.
@@ -63,6 +64,6 @@ threads:
   kraken: 8
   bracken: 8
   gtdb__classify: 8
-  abritamr: 4
+  amrfinder: 4
   mapping: 8 # mapping trimmed reads to assembly
   mapping_postprocess: 4 # postprocess mapping results and bcftools calling
