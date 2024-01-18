@@ -1,42 +1,77 @@
-# Snakemake workflow: `<name>`
+# Snakemake workflow: `amrWatch``
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥7.25.0-brightgreen.svg)](https://snakemake.github.io)
-[![GitHub actions status](https://github.com/<owner>/<repo>/workflows/Tests/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions?query=branch%3Amain+workflow%3ATests)
+[![GitHub actions status](https://github.com/xsitarcik/amrWatch/workflows/Tests/badge.svg?branch=main)](https://github.com/xsitarcik/amrWatch/actions?query=branch%3Amain+workflow%3ATests)
 
-A Snakemake workflow for `<description>`
+A Snakemake workflow for antimicrobial resistance samples.
 
-After pressing `Use this template`, the following steps are to be performed to finish the configuration of the new repository:
+## Installing and running
 
-In github:
+To install the workflow, simply git clone the repository into the path you want:
 
-- Allow Github Actions to create pull requests (in Settings->Actions/general there is a checkbox `Allow GitHub Actions to create and approve pull requests`, check it.)
-- Block main branch (in Settings->Branches press `Add branch protection rule`, set `Branch name pattern` to `main` and check the `Require a pull request before merging` checkbox)
+```bash
+git clone git@github.com:xsitarcik/reads.git
+```
 
-In README.md:
+Install the following conda environment:
 
-- replace `<XY>` values with the correct ones (in badges as well)
+```bash
+mamba create -c conda-forge -c bioconda --name snakemake_reads python=3.11 snakemake=7.25 peppy snakemake-wrapper-utils
+```
+
+**IMPORTANT**: change the directory to the cloned repository - workflow directory. Every relative path mentioned is relative to this directory.
+
+### Preparing data and configuration
+
+First, prepare your data configuration using PEP file, see [samples.csv](config/pep/samples.csv) as an example. Create new file or update the existing one.
+
+Second, you must configure the `config/config.yaml` file:
+
+- Do not forget to update the `pepfile` path, if you created your own PEP file.
+- Provide the path to reference input data (at the config header).
+- Update other values as desired.
+
+### Running the workflow
+
+There are many arguments to use when running a snakemake workflow, see [the documentation](https://snakemake.readthedocs.io/en/stable/executing/cli.html). Recommended arguments to use, is `--use-conda` to use conda, and the `--conda-prefix` which is the directory where snakemake will install workflow conda environments. Then for example, the command is:
+
+First, it is advised to dry-run the snakemake workflow using `--dry-run`, i.e.:
+
+```shell
+snakemake --cores {THREADS} --use-conda --rerun-incomplete --printshellcmds --dry-run
+```
+
+A basic summary of outputs and rules is outputted for you to verify. Then, run snakemake without `--dry-run`
+
+```shell
+snakemake --cores {THREADS} --use-conda --rerun-incomplete --printshellcmds
+```
+
+### Debugging
+
+- run with `--notemp` to ignore `temp()` in snakemake rules.
+- run with `--show-failed-logs` to automatically show failed log messages.
+
+### Issues
+
+- use issues in github to report any problems. This way solving any issue will be stored here for other users or future ourselves.
+- Watch the repo to subscribe to pull requests, issues and other repo-related stuff. This way you will be notified of any changes.
 
 ## Development
 
-Repository is now created from the template. You can git clone the repository and start the development.
-
-Install snakemake, for example in the environment `snakemake_dev`:
+Install `snakemake` with `pre_commit`, for example in the environment `snakemake_dev`:
 
 ```shell
-mamba create -c conda-forge -c bioconda --name snakemake_dev snakemake pre_commit
+mamba create -c conda-forge -c bioconda --name snakemake_dev snakemake=7.25 snakemake-wrapper-utils pre_commit peppy
 ```
 
-Then set up `pre-commit` in the repository:
+Then set up `pre-commit` in the cloned repository:
 
 ```bash
 pre-commit install
 ```
 
 Now before any commit, a defined set of actions will be performed, such as linting, formatting, etc.
-
-### Best practices
-
-Follow the [best practices set by Snakemake authors](https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html) ...
 
 ### Testing and linting
 
@@ -51,53 +86,3 @@ Further, any push (i.e. after merged PR) to the `main` branch creates in a new P
 
 - a new release following the [Semantic Versioning](https://semver.org/)
 - an automatic changelog as parsed from the commit history
-
-## Running
-
-Snakemake oworkflows are advised to be run from the workflow directory. Recommended arguments to use, is `--use-conda` to use conda, and the `--conda-prefix` which is the directory where snakemake will install workflow conda environments. Then for example, the command is:
-
-```shell
-snakemake --cores {THREADS} --use-conda --conda-prefix {CONDA_DIR}
-```
-
-After running, create a [report](https://snakemake.readthedocs.io/en/stable/snakefiles/reporting.html), either `.zip` or `.html`:
-
-```shell
-snakemake --report my_first_report.zip
-```
-
-It is also advised to [archive](https://snakemake.readthedocs.io/en/stable/snakefiles/deployment.html#sustainable-and-reproducible-archiving) the workflow if successful:
-
-```shell
-snakemake --archive my_first_workflow.tar.gz
-```
-
-### Recommendations
-
-Use dry-run: `-n` first to confirm that it works as intended:
-
-```shell
-snakemake -n
-```
-
-To re-run after parameter changes:
-
-```shell
-snakemake -n -R `snakemake --list-params-changes`
-```
-
-Or after code changes:
-
-```shell
-snakemake -n -R `snakemake --list-code-changes`
-```
-
-### Debugging
-
-- run with `--notemp` to ignore `temp()` in snakemake rules.
-- run with `--show-failed-logs` to automatically show failed log messages
-
-### Issues
-
-- use issues in github to report any problems. This way solving any issue will be stored here for other users or future ourselves.
-- Watch the repo to subscribe to pull requests, issues and other repo-related stuff. This way you will be notified of any changes.
