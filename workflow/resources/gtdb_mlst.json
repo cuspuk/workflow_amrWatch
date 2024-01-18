@@ -72,7 +72,7 @@
     "species": "pseudomallei.*"
   },
   "brachyspira": {
-    "genus": "Brachyspira"
+    "genus": "Brachyspira.*"
   },
   "bsubtilis": {
     "genus": "Bacillus.*",
@@ -119,7 +119,7 @@
     "species": "helveticus.*"
   },
   "chlamydiales": {
-    "genus": "Chlamydia"
+    "genus": "Chlamydia.*"
   },
   "chyointestinalis": {
     "genus": "Campylobacter.*",
@@ -150,7 +150,7 @@
     "species": "neoformans.*"
   },
   "cronobacter": {
-    "genus": "Cronobacter"
+    "genus": "Cronobacter.*"
   },
   "csepticum": {
     "genus": "Clostridium.*",
@@ -174,10 +174,10 @@
   },
   "ecloacae": {
     "genus": "Enterobacter.*",
-    "species": "cloacae.*"
+    "species": "(cloacae|hormaechei).*"
   },
   "ecoli": {
-    "genus": "Escherichia|Shigella"
+    "genus": "(Escherichia|Shigella).*"
   },
   "edwardsiella": {
     "genus": "Edwardsiella.*",
@@ -196,7 +196,7 @@
     "species": "psychrophilum.*"
   },
   "haemophilus": {
-    "genus": "Haemophilus"
+    "genus": "Haemophilus.*"
   },
   "hcinaedi": {
     "genus": "Helicobacter.*",
@@ -239,10 +239,10 @@
     "species": "casei.*"
   },
   "legionella": {
-    "genus": "Legionella"
+    "genus": "Legionella.*"
   },
   "leptospira": {
-    "genus": "Leptospira"
+    "genus": "Leptospira.*"
   },
   "lmonocytogenes": {
     "genus": "Listeria.*",
@@ -285,7 +285,7 @@
     "species": "plutonius.*"
   },
   "neisseria": {
-    "genus": "Neisseria"
+    "genus": "Neisseria.*"
   },
   "orhinotracheale": {
     "genus": "Ornithobacterium.*",
@@ -380,7 +380,7 @@
     "species": "hominis.*"
   },
   "sinorhizobium": {
-    "genus": "Sinorhizobium"
+    "genus": "Sinorhizobium.*"
   },
   "slugdunensis": {
     "genus": "Staphylococcus.*",
@@ -415,7 +415,7 @@
     "species": "thermophilus.*"
   },
   "streptomyces": {
-    "genus": "Streptomyces"
+    "genus": "Streptomyces.*"
   },
   "suberis": {
     "genus": "Streptococcus.*",
@@ -426,7 +426,7 @@
     "species": "equi.*"
   },
   "taylorella": {
-    "genus": "Taylorella"
+    "genus": "Taylorella.*"
   },
   "tenacibaculum": {
     "genus": "Tenacibaculum.*"
@@ -440,7 +440,7 @@
     "species": "cholerae.*"
   },
   "vibrio": {
-    "genus": "Vibrio"
+    "genus": "Vibrio.*"
   },
   "vparahaemolyticus": {
     "genus": "Vibrio.*",
@@ -455,14 +455,14 @@
     "species": "vulnificus.*"
   },
   "wolbachia": {
-    "genus": "Wolbachia"
+    "genus": "Wolbachia.*"
   },
   "xfastidiosa": {
     "genus": "Xylella.*",
     "species": "fastidiosa.*"
   },
   "yersinia": {
-    "genus": "Yersinia"
+    "genus": "Yersinia.*"
   },
   "ypseudotuberculosis": {
     "genus": "Yersinia.*",

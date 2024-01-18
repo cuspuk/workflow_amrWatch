@@ -12,8 +12,7 @@
     "species": "(humptydooensis|mallei|mayonis|oklahomensis|pseudomallei|savannae|singularis|thailandensis).*"
   },
   "Campylobacter": {
-    "genus": "Campylobacter.*",
-    "species": ".*"
+    "genus": "Campylobacter.*"
   },
   "Citrobacter_freundii": {
     "genus": "Citrobacter.*",
@@ -40,8 +39,7 @@
     "species": "(faecium|hirae).*"
   },
   "Escherichia": {
-    "genus": "(Escherichia|Shigella).*",
-    "species": ".*"
+    "genus": "(Escherichia|Shigella).*"
   },
   "Klebsiella_oxytoca": {
     "genus": "Klebsiella.*",
@@ -64,8 +62,7 @@
     "species": "aeruginosa.*"
   },
   "Salmonella": {
-    "genus": "Salmonella.*",
-    "species": ".*"
+    "genus": "Salmonella.*"
   },
   "Serratia_marcescens": {
     "genus": "Serratia.*",

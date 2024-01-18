@@ -20,7 +20,7 @@ rule gtdbtk__classify:
 
 checkpoint gtdbtk__parse_taxa:
     input:
-        gtdb_outdir=directory("results/taxonomy/{sample}"),
+        gtdb_outdir="results/taxonomy/{sample}",
     output:
         "results/taxonomy/{sample}/parsed_taxa.txt",
     params:
