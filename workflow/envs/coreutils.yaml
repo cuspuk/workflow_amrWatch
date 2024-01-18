@@ -4,3 +4,4 @@ channels:
   - nodefaults
 dependencies:
   - coreutils
+  - sed=4.8

@@ -1,4 +1,6 @@
 from snakemake.utils import validate
+import json
+import re
 
 
 configfile: "config/config.yaml"
@@ -40,6 +42,11 @@ def infer_fastq_path(wildcards):
     elif wildcards.pair == "R2":
         return get_one_fastq_file(wildcards.sample, read_pair="fq2")[0]
 
+
+with open(f"{workflow.basedir}/resources/gtdb_amrfinder.json", "r") as f:
+    AMRFINDER_MAP = json.load(f)
+with open(f"{workflow.basedir}/resources/gtdb_mlst.json", "r") as f:
+    MLST_MAP = json.load(f)
 
 ### Data input handling independent of wildcards ######################################################################
 
@@ -146,13 +153,6 @@ def post_assembly_outputs(wildcards):
         return "results/checks/{sample}/assembly_constructed.txt"
 
 
-# def bandage_check_if_relevant(wildcards):
-#     if check_assembly_construction_success_for_sample(wildcards.sample):
-#         return "results/checks/{sample}/assembly_quality.txt"
-#     else:
-#         return ""
-
-
 def check_assembly_construction_success_for_sample(sample: str):
     with checkpoints.assembly_constructed.get(sample=sample).output[0].open() as f:
         return f.read().startswith("PASS:")
@@ -161,16 +161,6 @@ def check_assembly_construction_success_for_sample(sample: str):
 def check_all_checks_success_for_sample(sample: str):
     with checkpoints.summary_all_checks.get(sample=sample).output[0].open() as f:
         return all([line.startswith("PASS:") for line in f.readlines()])
-
-
-def get_second_phase_results(wildcards):
-    base_result = ["results/checks/{sample}/summary.txt"]
-
-    if not config["gtdb_hack"] and check_all_checks_success_for_sample(wildcards.sample):
-        base_result.append("results/amr_detect/{sample}/amrfinder.tsv")
-        base_result.append("results/amr_detect/{sample}/mlst.tsv")
-        base_result.append("results/amr_detect/{sample}/abricate.tsv")
-    return base_result
 
 
 def get_all_checks(wildcards):
@@ -194,6 +184,54 @@ def get_outputs():
         "multiqc": "results/summary/multiqc.html",
         "checks": expand("results/checks/{sample}/.final_results_requested.txt", sample=sample_names),
     }
+
+
+def get_parsed_taxa_from_gtdbtk_for_sample(sample: str):
+    with checkpoints.gtdbtk__parse_taxa.get(sample=sample).output[0].open() as f:
+        taxa = f.read().strip()
+    return taxa
+
+
+def get_key_for_value_from_db(value: str, db: dict):
+    for key in db:
+        pattern = "bob"
+        if re.match(pattern, taxa):
+            return key
+    raise KeyError
+
+
+def get_organism_for_amrfinder(wildcards):
+    taxa = get_parsed_taxa_from_gtdbtk(wildcards.sample)
+    try:
+        return get_key_for_value_from_db(taxa, AMRFINDER_MAP)
+    except KeyError:
+        raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map")
+
+
+def get_taxonomy_for_mlst(wildcards):
+    taxa = get_parsed_taxa_from_gtdbtk(wildcards.sample)
+    try:
+        return get_key_for_value_from_db(taxa, MLST_MAP)
+    except KeyError:
+        raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
+
+
+def get_second_phase_results(wildcards):
+    base_result = ["results/checks/{sample}/summary.txt"]
+
+    if not config["gtdb_hack"] and check_all_checks_success_for_sample(wildcards.sample):
+        base_result.append("results/amr_detect/{sample}/amrfinder.tsv")
+        base_result.append("results/amr_detect/{sample}/mlst.tsv")
+        base_result.append("results/amr_detect/{sample}/abricate.tsv")
+
+        taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
+        if taxa.startswith("Klebsiella"):
+            base_result.append("results/amr_detect/{sample}/kleborate.tsv")
+        elif "Staphylococcus" in taxa and "aureus" in taxa:
+            base_result.append("results/amr_detect/{sample}/spa_typer.tsv")
+        elif taxa.startswith("Escherichia") or taxa.startswith("Shigella"):
+            base_result.append("results/amr_detect/{sample}/etoki_ebeis.tsv")
+    return base_result
 
 
 ### Resource handling #################################################################################################

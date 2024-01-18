@@ -1,0 +1,6 @@
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - kleborate=2.3.2

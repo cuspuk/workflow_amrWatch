@@ -1,0 +1,6 @@
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - etoki=1.2.3

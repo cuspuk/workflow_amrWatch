@@ -12,6 +12,7 @@ localrules:
     summary_all_checks,
     check_foreign_contamination,
     get_final_results,
+    gtdbtk__parse_taxa,
 
 
 include: "rules/common.smk"
