@@ -194,7 +194,7 @@ def get_parsed_taxa_from_gtdbtk_for_sample(sample: str):
 
 def get_key_for_value_from_db(value: str, db: dict):
     for key in db:
-        pattern = "bob"
+        pattern = f'{db[key]["genus"]} {db[key].get("species", "")}'
         if re.match(pattern, taxa):
             return key
     raise KeyError
