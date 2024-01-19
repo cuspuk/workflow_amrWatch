@@ -12,18 +12,16 @@ checkpoint assembly_constructed:
         "(([ -s {input} ] && echo 'PASS: Assembly is not empty') || echo 'FAIL: Assembly construction failed') > {output} 2> {log}"
 
 
-# rule request_post_assembly_outputs:
-#     input:
-#         post_assembly_outputs,
-#     output:
-#         temp("results/checks/{sample}/.post_assembly_requested.txt"),
-#     conda:
-#         "../envs/coreutils.yaml"
-#     log:
-#         "logs/checks/assembly/{sample}.log",
-#     localrule: True
-#     shell:
-#         "touch {output} 2> {log}"
+rule assembly_not_requested:
+    output:
+        "results/checks/{sample}/check_skipping.txt",
+    conda:
+        "../envs/coreutils.yaml"
+    log:
+        "logs/checks/assembly/{sample}.log",
+    localrule: True
+    shell:
+        "echo 'PASS:' > {output} 2> {log}"
 
 
 rule check_assembly_quality:

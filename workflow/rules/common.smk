@@ -107,6 +107,9 @@ def infer_outputs_for_sample(wildcards):
             "results/amr_detect/{sample}/abricate.tsv",
         ] + get_taxonomy_dependant_outputs(wildcards.sample, taxa)
 
+    else:
+        return "results/checks/{sample}/summary.txt"
+
 
 ### Wildcard handling #################################################################################################
 
@@ -115,7 +118,7 @@ def infer_assembly_fasta(wildcards) -> str:
     if sample_has_asssembly_as_input(wildcards.sample):
         return get_fasta_for_sample_from_pep(wildcards.sample)
     else:
-        "results/assembly/{sample}/assembly.fasta"
+        return "results/assembly/{sample}/assembly.fasta"
 
 
 def infer_fastqs_for_trimming(wildcards) -> list[str]:
@@ -129,17 +132,6 @@ def infer_fastq_path_for_fastqc(wildcards):
         return get_first_fastq_for_sample_from_pep(wildcards.sample, read_pair="fq1")
     elif wildcards.pair == "R2":
         return get_first_fastq_for_sample_from_pep(wildcards.sample, read_pair="fq2")
-
-
-# def post_assembly_outputs(wildcards):
-#     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
-#         return [
-#             "results/assembly/{sample}/bandage/bandage.svg",
-#             "results/assembly/{sample}/bandage/bandage.info",
-#             "results/taxonomy/{sample}",
-#         ]
-#     else:
-#         return "results/checks/{sample}/assembly_constructed.txt"
 
 
 def get_organism_for_amrfinder(wildcards):
@@ -161,7 +153,7 @@ def get_taxonomy_for_mlst(wildcards):
 
 def infer_relevant_checks(wildcards):
     if sample_has_asssembly_as_input(wildcards.sample):
-        return ["results/checks/{sample}/assembly_quality.txt"]
+        return ["results/checks/{sample}/check_skipping.txt"]
 
     checks = [
         "results/checks/{sample}/foreign_contamination.txt",
