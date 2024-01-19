@@ -1,23 +1,24 @@
 rule amrfinder__call:
     input:
-        infer_assembly_fasta,
+        contigs=infer_assembly_fasta,
+        taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
         tsv="results/amr_detect/{sample}/amrfinder.tsv",
     params:
         organism=get_organism_for_amrfinder,
-        tmp_output=lambda wildcards, output: os.path.join(output.dir, "amrfinder.out"),
     threads: min(config["threads"]["amrfinder"], config["max_threads"])
     conda:
         "../envs/amrfinder.yaml"
     log:
         "logs/amr_detect/amrfinder/{sample}.log",
     shell:
-        "amrfinder --nucleotide {input} --prefix {output.dir} --threads {threads} --organism {params.organism} -o {output.tsv} > {log} 2>&1"
+        "amrfinder --nucleotide {input} --threads {threads} --organism {params.organism} -o {output.tsv} > {log} 2>&1"
 
 
 rule mlst__call:
     input:
-        infer_assembly_fasta,
+        contigs=infer_assembly_fasta,
+        taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
         "results/amr_detect/{sample}/mlst.tsv",
     params:
@@ -36,7 +37,7 @@ rule abricate__call:
     output:
         "results/amr_detect/{sample}/abricate.tsv",
     params:
-        scheme=config["abricate_db"],
+        abricate_db=config["abricate_db"],
     conda:
         "../envs/abricate.yaml"
     log:

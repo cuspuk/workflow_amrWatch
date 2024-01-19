@@ -3,7 +3,7 @@ rule gtdbtk__classify:
         assembly=infer_assembly_fasta,
         gtdb=os.path.join(config["gtdb_dirpath"], "db"),
     output:
-        directory("results/taxonomy/{sample}"),
+        directory("results/taxonomy/{sample}/classify"),
     params:
         assembly_dir=lambda wildcards, input: os.path.dirname(input.assembly),
     threads: min(config["threads"]["gtdb__classify"], config["max_threads"])
