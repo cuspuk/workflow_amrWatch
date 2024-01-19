@@ -15,40 +15,170 @@ pepfile: config["pepfile"]
 validate(pep.sample_table, "../schemas/samples.schema.yaml")
 
 
-def get_sample_names():
+def get_sample_names() -> list[str]:
     return list(pep.sample_table["sample_name"].values)
 
 
-def get_constraints():
-    constraints = {
-        "sample": "|".join(get_sample_names()),
-    }
-    return constraints
+def sample_has_asssembly_as_input(sample: str) -> bool:
+    try:
+        assembly = pep.sample_table.loc[sample][["fasta"]]
+        return True
+    except KeyError:
+        return False
 
 
-def get_reads_for_trimming(wildcards):
-    return pep.sample_table.loc[wildcards.sample][["fq1", "fq2"]]
+def get_sample_names_with_reads_as_input() -> list[str]:
+    return [sample for sample in get_sample_names() if not sample_has_asssembly_as_input(sample)]
 
 
-def get_one_fastq_file(sample: str, read_pair="fq1"):
-    return pep.sample_table.loc[sample][[read_pair]]
+def get_constraints() -> dict[str, list[str]]:
+    return {"sample": "|".join(get_sample_names()), "pair": ["R1", "R2"]}
 
 
-def infer_fastq_path(wildcards):
-    if wildcards.step != "original":
-        return "results/reads/{step}/{sample}_{pair}.fastq.gz"
-    if "pair" not in wildcards or wildcards.pair == "R1":
-        return get_one_fastq_file(wildcards.sample, read_pair="fq1")[0]
-    elif wildcards.pair == "R2":
-        return get_one_fastq_file(wildcards.sample, read_pair="fq2")[0]
+def get_first_fastq_for_sample_from_pep(sample: str, read_pair="fq1") -> str:
+    return pep.sample_table.loc[sample][[read_pair]][0]
+
+
+def get_fasta_for_sample_from_pep(sample: str) -> str:
+    return pep.sample_table.loc[sample][["fasta"]][0]
 
 
 with open(f"{workflow.basedir}/resources/gtdb_amrfinder.json", "r") as f:
     AMRFINDER_MAP = json.load(f)
+
 with open(f"{workflow.basedir}/resources/gtdb_mlst.json", "r") as f:
     MLST_MAP = json.load(f)
 
-### Data input handling independent of wildcards ######################################################################
+
+def get_key_for_value_from_db(value: str, db: dict) -> str:
+    for key in db:
+        pattern = f'{db[key]["genus"]} {db[key].get("species", "")}'
+        if re.match(pattern, value):
+            return key
+    raise KeyError
+
+
+def get_parsed_taxa_from_gtdbtk_for_sample(sample: str):
+    with checkpoints.gtdbtk__parse_taxa.get(sample=sample).output[0].open() as f:
+        return f.read().strip()
+
+
+def check_assembly_construction_success_for_sample(sample: str):
+    with checkpoints.assembly_constructed.get(sample=sample).output[0].open() as f:
+        return f.read().startswith("PASS:")
+
+
+def check_all_checks_success_for_sample(sample: str):
+    with checkpoints.summary_all_checks.get(sample=sample).output[0].open() as f:
+        return all([line.startswith("PASS:") for line in f.readlines()])
+
+
+def get_outputs():
+    sample_names = get_sample_names()
+    outputs = {
+        "final_results": expand("results/checks/{sample}/.final_results_requested.txt", sample=sample_names),
+    }
+
+    if len(get_sample_names_with_reads_as_input()) > 1:
+        outputs["multiqc"] = "results/summary/multiqc.html"
+
+    return outputs
+
+
+def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> list[str]:
+    outputs = []
+    if taxa.startswith("Klebsiella"):
+        outputs.append("results/amr_detect/{sample}/kleborate.tsv")
+    elif "Staphylococcus" in taxa and "aureus" in taxa:
+        outputs.append("results/amr_detect/{sample}/spa_typer.tsv")
+    elif taxa.startswith("Escherichia") or taxa.startswith("Shigella"):
+        outputs.append("results/amr_detect/{sample}/etoki_ebeis.tsv")
+    return outputs
+
+
+def infer_outputs_for_sample(wildcards):
+    if check_all_checks_success_for_sample(wildcards.sample):
+        taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
+
+        return [
+            "results/assembly/{sample}/bandage/bandage.svg",
+            "results/amr_detect/{sample}/amrfinder.tsv",
+            "results/amr_detect/{sample}/mlst.tsv",
+            "results/amr_detect/{sample}/abricate.tsv",
+        ] + get_taxonomy_dependant_outputs(wildcards.sample, taxa)
+
+
+### Wildcard handling #################################################################################################
+
+
+def infer_assembly_fasta(wildcards) -> str:
+    if sample_has_asssembly_as_input(wildcards.sample):
+        return get_fasta_for_sample_from_pep(wildcards.sample)
+    else:
+        "results/assembly/{sample}/assembly.fasta"
+
+
+def infer_fastqs_for_trimming(wildcards) -> list[str]:
+    return pep.sample_table.loc[wildcards.sample][["fq1", "fq2"]]
+
+
+def infer_fastq_path_for_fastqc(wildcards):
+    if wildcards.step != "original":
+        return "results/reads/{step}/{sample}_{pair}.fastq.gz"
+    if "pair" not in wildcards or wildcards.pair == "R1":
+        return get_first_fastq_for_sample_from_pep(wildcards.sample, read_pair="fq1")
+    elif wildcards.pair == "R2":
+        return get_first_fastq_for_sample_from_pep(wildcards.sample, read_pair="fq2")
+
+
+# def post_assembly_outputs(wildcards):
+#     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
+#         return [
+#             "results/assembly/{sample}/bandage/bandage.svg",
+#             "results/assembly/{sample}/bandage/bandage.info",
+#             "results/taxonomy/{sample}",
+#         ]
+#     else:
+#         return "results/checks/{sample}/assembly_constructed.txt"
+
+
+def get_organism_for_amrfinder(wildcards):
+    taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
+    try:
+        return get_key_for_value_from_db(taxa, AMRFINDER_MAP)
+    except KeyError:
+        raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map")
+
+
+def get_taxonomy_for_mlst(wildcards):
+    taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
+    try:
+        return get_key_for_value_from_db(taxa, MLST_MAP)
+        # TODO: OSETRIT ak chyba species
+    except KeyError:
+        raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
+
+
+def infer_relevant_checks(wildcards):
+    if sample_has_asssembly_as_input(wildcards.sample):
+        return ["results/checks/{sample}/assembly_quality.txt"]
+
+    checks = [
+        "results/checks/{sample}/foreign_contamination.txt",
+        "results/checks/{sample}/assembly_constructed.txt",
+    ]
+
+    if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
+        checks += [
+            "results/checks/{sample}/assembly_quality.txt",
+            "results/checks/{sample}/coverage_check.txt",
+            "results/checks/{sample}/self_contamination_check.txt",
+        ]
+
+    return checks
+
+
+### Parameter parsing #################################################################################################
 
 
 def get_unicycler_params():
@@ -62,7 +192,15 @@ def parse_adapter_removal_params():
     args_lst = []
     adapters_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
     read_location = config["reads__trimming"]["adapter_removal"]["read_location"]
-    args_lst.append(f"--{read_location} file:{adapters_file}")
+
+    if read_location == "front":
+        paired_arg = "-G"
+    elif read_location == "anywhere":
+        paired_arg = "-B"
+    elif read_location == "adapter":
+        paired_arg = "-A"
+
+    args_lst.append(f"--{read_location} file:{adapters_file} {paired_arg} file:{adapters_file}")
 
     if config["reads__trimming"]["adapter_removal"]["keep_trimmed_only"]:
         args_lst.append("--discard-untrimmed")
@@ -79,18 +217,21 @@ def get_cutadapt_extra() -> list[str]:
 
     if "shorten_to_length" in config["reads__trimming"]:
         args_lst.append(f"--length {config['reads__trimming']['shorten_to_length']}")
-    if "cut_from_start" in config["reads__trimming"]:
-        args_lst.append(
-            f"--cut {config['reads__trimming']['cut_from_start']} -U {config['reads__trimming']['cut_from_start']}"
-        )
-    if "cut_from_end" in config["reads__trimming"]:
-        args_lst.append(
-            f"--cut -{config['reads__trimming']['cut_from_end']} -U -{config['reads__trimming']['cut_from_end']}"
-        )
+    if value := config["reads__trimming"].get("cut_from_start_r1", None):
+        args_lst.append(f"--cut {value}")
+    if value := config["reads__trimming"].get("cut_from_start_r2", None):
+        args_lst.append(f"-U {value}")
+    if value := config["reads__trimming"].get("cut_from_end_r1", None):
+        args_lst.append(f"--cut -{value}")
+    if value := config["reads__trimming"].get("cut_from_end_r2", None):
+        args_lst.append(f"-U -{value}")
+
     if "max_n_bases" in config["reads__trimming"]:
         args_lst.append(f"--max-n {config['reads__trimming']['max_n_bases']}")
     if "max_expected_errors" in config["reads__trimming"]:
         args_lst.append(f"--max-expected-errors {config['reads__trimming']['max_expected_errors']}")
+    if "trim_N_bases_on_ends" in config["reads__trimming"]:
+        args_lst.append(f"--trim-n")
 
     if config["reads__trimming"]["adapter_removal"]["do"]:
         args_lst += parse_adapter_removal_params()
@@ -137,101 +278,6 @@ def get_cutadapt_extra_pe() -> str:
     ):
         args_lst.append(qual_cut_arg_r2)
     return " ".join(args_lst)
-
-
-### Global rule-set stuff #############################################################################################
-
-
-def post_assembly_outputs(wildcards):
-    if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
-        return [
-            "results/assembly/{sample}/bandage/bandage.svg",
-            "results/assembly/{sample}/bandage/bandage.info",
-            "results/taxonomy/{sample}",
-        ]
-    else:
-        return "results/checks/{sample}/assembly_constructed.txt"
-
-
-def check_assembly_construction_success_for_sample(sample: str):
-    with checkpoints.assembly_constructed.get(sample=sample).output[0].open() as f:
-        return f.read().startswith("PASS:")
-
-
-def check_all_checks_success_for_sample(sample: str):
-    with checkpoints.summary_all_checks.get(sample=sample).output[0].open() as f:
-        return all([line.startswith("PASS:") for line in f.readlines()])
-
-
-def get_all_checks(wildcards):
-    basic_checks = [
-        "results/checks/{sample}/foreign_contamination.txt",
-        "results/checks/{sample}/assembly_constructed.txt",
-    ]
-
-    if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
-        basic_checks.append("results/checks/{sample}/assembly_quality.txt")
-        basic_checks.append("results/checks/{sample}/coverage_check.txt")
-        basic_checks.append("results/checks/{sample}/self_contamination_check.txt")
-
-    return basic_checks
-
-
-def get_outputs():
-    sample_names = get_sample_names()
-    return {
-        "bandage_reports_optional": expand("results/checks/{sample}/.bandage_requested.txt", sample=sample_names),
-        "multiqc": "results/summary/multiqc.html",
-        "checks": expand("results/checks/{sample}/.final_results_requested.txt", sample=sample_names),
-    }
-
-
-def get_parsed_taxa_from_gtdbtk_for_sample(sample: str):
-    with checkpoints.gtdbtk__parse_taxa.get(sample=sample).output[0].open() as f:
-        taxa = f.read().strip()
-    return taxa
-
-
-def get_key_for_value_from_db(value: str, db: dict):
-    for key in db:
-        pattern = f'{db[key]["genus"]} {db[key].get("species", "")}'
-        if re.match(pattern, taxa):
-            return key
-    raise KeyError
-
-
-def get_organism_for_amrfinder(wildcards):
-    taxa = get_parsed_taxa_from_gtdbtk(wildcards.sample)
-    try:
-        return get_key_for_value_from_db(taxa, AMRFINDER_MAP)
-    except KeyError:
-        raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map")
-
-
-def get_taxonomy_for_mlst(wildcards):
-    taxa = get_parsed_taxa_from_gtdbtk(wildcards.sample)
-    try:
-        return get_key_for_value_from_db(taxa, MLST_MAP)
-    except KeyError:
-        raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
-
-
-def get_second_phase_results(wildcards):
-    base_result = ["results/checks/{sample}/summary.txt"]
-
-    if not config["gtdb_hack"] and check_all_checks_success_for_sample(wildcards.sample):
-        base_result.append("results/amr_detect/{sample}/amrfinder.tsv")
-        base_result.append("results/amr_detect/{sample}/mlst.tsv")
-        base_result.append("results/amr_detect/{sample}/abricate.tsv")
-
-        taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
-        if taxa.startswith("Klebsiella"):
-            base_result.append("results/amr_detect/{sample}/kleborate.tsv")
-        elif "Staphylococcus" in taxa and "aureus" in taxa:
-            base_result.append("results/amr_detect/{sample}/spa_typer.tsv")
-        elif taxa.startswith("Escherichia") or taxa.startswith("Shigella"):
-            base_result.append("results/amr_detect/{sample}/etoki_ebeis.tsv")
-    return base_result
 
 
 ### Resource handling #################################################################################################

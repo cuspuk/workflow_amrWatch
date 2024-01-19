@@ -3,26 +3,11 @@ from snakemake.utils import min_version
 min_version("7.25.0")
 
 
-localrules:
-    all,
-    bandage__info,
-    bandage__visualise_contig_overlaps,
-    request_post_assembly_outputs,
-    assembly_constructed,
-    summary_all_checks,
-    check_foreign_contamination,
-    get_final_results,
-    gtdbtk__parse_taxa,
-
-
 include: "rules/common.smk"
 include: "rules/reads.smk"
-include: "rules/genera_check.smk"
-include: "rules/multiqc.smk"
 include: "rules/unicycler.smk"
 include: "rules/check.smk"
 include: "rules/selfcontamination_check.smk"
-include: "rules/coverage_check.smk"
 
 
 if not config["gtdb_hack"]:
@@ -34,3 +19,4 @@ if not config["gtdb_hack"]:
 rule all:
     input:
         **get_outputs(),
+    localrule: True

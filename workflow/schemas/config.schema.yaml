@@ -82,10 +82,16 @@ definitions:
       shorten_to_length:
         type: integer
         description: "Optional. Shorten each read to the specified length. Corresponds to the cutadapt length parameter."
-      cut_from_start:
+      cut_from_start_r2:
         type: integer
         description: "Optional. Removes a specified number of bases from the beginning of the read."
-      cut_from_end:
+      cut_from_end_r1:
+        type: integer
+        description: "Optional. Removes a specified number of bases from the end of the read."
+      cut_from_start_r1:
+        type: integer
+        description: "Optional. Removes a specified number of bases from the beginning of the read."
+      cut_from_end_r2:
         type: integer
         description: "Optional. Removes a specified number of bases from the end of the read."
       max_n_bases:
@@ -97,6 +103,9 @@ definitions:
       max_length_r1:
         type: integer
         description: "Optional. Discards R1 reads longer than this."
+      trim_N_bases_on_ends:
+        type: boolean
+        description: "Optional. Set to true to trim N bases on ends."
       max_length_r2:
         type: integer
         description: "Optional. Discards R2 reads longer than this."
@@ -278,6 +287,15 @@ definitions:
         minimum: 0
         default: 0
         description: "The expected number of linear sequences."
+      max_dead_ends:
+        type: integer
+        default: 200
+        description: "Threshold for dead ends. This is only a WARNING check."
+      max_contigs:
+        type: integer
+        default: 2000
+        description: "Threshold for contigs. This is a FAIL check - workflow does not proceed to the next stage."
+
   Resources:
     additionalProperties: true
     reads__trimming_mem_mb:

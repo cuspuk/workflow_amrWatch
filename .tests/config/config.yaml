@@ -4,8 +4,10 @@ reads__trimming: # Required only if "trimming" in main "flow" element. See https
   max_expected_errors: 3 # OPT - discard reads with more expected errors than this.
   min_length_r1: 35 # OPT, minimum R1 read length. The fourth step.
   min_length_r2: 35 # OPT, minimum R2 read length. The fourth step.
-  # cut_from_start: 0 # OPT, removes a specified number of bases from the beginning of the read.
-  # cut_from_end: 0 # OPT, removes a specified number of bases from the end of the read.
+  # cut_from_start_r1: 0 # OPT, removes a specified number of bases from the beginning of the read.
+  # cut_from_start_r2: 0 # OPT, removes a specified number of bases from the beginning of the read.
+  # cut_from_end_r1: 0 # OPT, removes a specified number of bases from the end of the read.
+  # cut_from_end_r2: 0 # OPT, removes a specified number of bases from the end of the read.
   quality_cutoff_from_5_end_r1: 20 # OPT cutoff on 5' end of R1 read. The second step.
   quality_cutoff_from_3_end_r1: 20 # OPT cutoff on 3' end of R1 read. The second step.
   quality_cutoff_from_5_end_r2: 20 # OPT cutoff on 5' end of R2 read. The second step.

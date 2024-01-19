@@ -1,6 +1,6 @@
 rule gtdbtk__classify:
     input:
-        assembly="results/assembly/{sample}/assembly.fasta",
+        assembly=infer_assembly_fasta,
         gtdb=os.path.join(config["gtdb_dirpath"], "db"),
     output:
         directory("results/taxonomy/{sample}"),
@@ -27,6 +27,7 @@ checkpoint gtdbtk__parse_taxa:
         gtdb_tsv=lambda wildcards, input: os.path.join(input.gtdb_outdir, "classify", "gtdbtk.bac120.summary.tsv"),
     conda:
         "../envs/coreutils.yaml"
+    localrule: True
     log:
         "logs/taxonomy/parse_taxa/{sample}.log",
     shell:

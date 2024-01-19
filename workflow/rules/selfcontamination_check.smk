@@ -108,6 +108,32 @@ rule samtools__index:
         "v3.3.3/bio/samtools/index"
 
 
+rule qualimap__mapping_quality_report:
+    input:
+        bam="results/self_contamination/{sample}/markdup.bam",
+        bai="results/self_contamination/{sample}/markdup.bam.bai",
+    output:
+        report_dir=report(
+            directory("results/self_contamination/{sample}/markdup/bamqc"),
+            category="{sample}",
+            labels={
+                "Type": "Qualimap for markdup",
+            },
+            htmlindex="qualimapReport.html",
+        ),
+    params:
+        extra=[
+            "--paint-chromosome-limits",
+            "-outformat PDF:HTML",
+        ],
+    resources:
+        mem_mb=get_mem_mb_for_mapping_postprocess,
+    log:
+        "logs/qualimap/mapping_quality_report/{sample}.log",
+    wrapper:
+        "https://github.com/xsitarcik/wrappers/raw/v1.12.7/wrappers/qualimap/bamqc"
+
+
 rule samtools__faidx:
     input:
         "results/assembly/{sample}/assembly.fasta",
@@ -191,18 +217,3 @@ rule bcftools__filter_vcf:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
         "v3.3.3/bio/bcftools/filter"
-
-
-rule check_self_contamination:
-    input:
-        "results/self_contamination/{sample}/filtered.vcf",
-    output:
-        "results/checks/{sample}/self_contamination_check.txt",
-    params:
-        max_rows=config["self_contamination"]["max_ambiguous_rows"],
-    log:
-        "logs/checks/self_contamination/{sample}.log",
-    conda:
-        "../envs/grep.yaml"
-    script:
-        "../scripts/self_contamination.sh"

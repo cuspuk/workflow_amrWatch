@@ -1,6 +1,6 @@
 rule amrfinder__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        infer_assembly_fasta,
     output:
         tsv="results/amr_detect/{sample}/amrfinder.tsv",
     params:
@@ -17,7 +17,7 @@ rule amrfinder__call:
 
 rule mlst__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        infer_assembly_fasta,
     output:
         "results/amr_detect/{sample}/mlst.tsv",
     params:
@@ -32,7 +32,7 @@ rule mlst__call:
 
 rule abricate__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        infer_assembly_fasta,
     output:
         "results/amr_detect/{sample}/abricate.tsv",
     params:
@@ -47,7 +47,7 @@ rule abricate__call:
 
 rule kleborate__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        infer_assembly_fasta,
     output:
         "results/amr_detect/{sample}/kleborate.tsv",
     conda:
@@ -60,7 +60,7 @@ rule kleborate__call:
 
 rule spatyper__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        infer_assembly_fasta,
     output:
         "results/amr_detect/{sample}/spa_typer.tsv",
     conda:
@@ -73,7 +73,7 @@ rule spatyper__call:
 
 rule etoki__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        infer_assembly_fasta,
     output:
         "results/amr_detect/{sample}/etoki_ebeis.tsv",
     conda:
