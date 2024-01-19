@@ -101,7 +101,6 @@ def infer_outputs_for_sample(wildcards):
         taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
 
         return [
-            "results/assembly/{sample}/bandage/bandage.svg",
             "results/amr_detect/{sample}/amrfinder.tsv",
             "results/amr_detect/{sample}/mlst.tsv",
             "results/amr_detect/{sample}/abricate.tsv",

@@ -26,7 +26,8 @@ rule assembly_not_requested:
 
 rule check_assembly_quality:
     input:
-        "results/assembly/{sample}/bandage/bandage.info",
+        tsv="results/assembly/{sample}/bandage/bandage.info",
+        svg="results/assembly/{sample}/bandage/bandage.svg",
     output:
         "results/checks/{sample}/assembly_quality.txt",
     params:
