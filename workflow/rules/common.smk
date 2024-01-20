@@ -51,9 +51,17 @@ with open(f"{workflow.basedir}/resources/gtdb_mlst.json", "r") as f:
 
 
 def get_key_for_value_from_db(value: str, db: dict) -> str:
+    # search species first
     for key in db:
-        pattern = f'{db[key]["genus"]} {db[key].get("species", "")}'
+        if "species" not in db[key]:
+            continue
+        pattern = f'{db[key]["genus"]} {db[key]["species"]}'
         if re.match(pattern, value):
+            return key
+
+    # search genus
+    for key in db:
+        if re.match(db[key]["genus"], value):
             return key
     raise KeyError
 
@@ -145,7 +153,6 @@ def get_taxonomy_for_mlst(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
     try:
         return get_key_for_value_from_db(taxa, MLST_MAP)
-        # TODO: OSETRIT ak chyba species
     except KeyError:
         raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
 

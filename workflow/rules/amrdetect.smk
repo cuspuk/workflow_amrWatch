@@ -1,7 +1,19 @@
 rule amrfinder__call:
+    output:
+        db=directory(config["amrfinder_db_dir"]),
+    conda:
+        "../envs/amrfinder.yaml"
+    log:
+        os.path.join(config["amrfinder_db_dir"], "logs", "download"),
+    shell:
+        "amrfinder_update -d {output.db} > {log} 2>&1"
+
+
+rule amrfinder__call:
     input:
         contigs=infer_assembly_fasta,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
+        db=config["amrfinder_db_dir"],
     output:
         tsv="results/amr_detect/{sample}/amrfinder.tsv",
     params:
@@ -12,7 +24,7 @@ rule amrfinder__call:
     log:
         "logs/amr_detect/amrfinder/{sample}.log",
     shell:
-        "amrfinder --nucleotide {input} --threads {threads} --organism {params.organism} -o {output.tsv} > {log} 2>&1"
+        "amrfinder -d {input.db} --nucleotide {input.contigs} --threads {threads} --organism {params.organism} -o {output.tsv} > {log} 2>&1"
 
 
 rule mlst__call:
@@ -28,7 +40,7 @@ rule mlst__call:
     log:
         "logs/amr_detect/mlst/{sample}.log",
     shell:
-        "mlst {input} --scheme {params.scheme} > {output} 2> {log}"
+        "mlst {input.contigs} --scheme {params.scheme} > {output} 2> {log}"
 
 
 rule abricate__call:
