@@ -15,30 +15,6 @@ rule unicycler__assemble_reads_into_contigs:
         "v3.3.0/bio/unicycler"
 
 
-# rule quast__evaluate_assembly:
-#     input:
-#         fasta="results/assembly/{sample}/assembly.fasta",
-#     output:
-#         pdf=report(
-#             "results/assembly/{sample}/quast/report.pdf",
-#             category="{sample}",
-#             labels={"Type": "QUAST"},
-#         ),
-#         basic_reports=multiext("results/assembly/{sample}/quast/report.", "html", "tex", "txt", "tsv"),
-#         transposed=multiext("results/assembly/{sample}/quast/transposed_report.", "tex", "txt", "tsv"),
-#         basic_stats=directory("results/assembly/{sample}/quast/basic_stats/"),
-#         icarus="results/assembly/{sample}/quast/icarus.html",
-#         viewer="results/assembly/{sample}/quast/icarus_viewers/contig_size_viewer.html",
-#         log="results/assembly/{sample}/quast/quast.log",
-#     log:
-#         "logs/quast/{sample}.log",
-#     threads: min(config["threads"]["quast"], config["max_threads"])
-#     params:
-#         extra=get_quast_params(),
-#     wrapper:
-#         "v3.3.0/bio/quast"
-
-
 rule bandage__visualise_contig_overlaps:
     input:
         "results/assembly/{sample}/assembly.gfa",
@@ -54,6 +30,7 @@ rule bandage__visualise_contig_overlaps:
         "logs/assembly/bandage_svg/{sample}.log",
     conda:
         "../envs/bandage.yaml"
+    localrule: True
     shell:
         "(mkdir -p {params.dir} && Bandage image {input} {output}) > {log} 2>&1"
 
@@ -69,5 +46,6 @@ rule bandage__info:
         "logs/assembly/bandage_info/{sample}.log",
     conda:
         "../envs/bandage.yaml"
+    localrule: True
     shell:
         "(mkdir -p {params.dir} && Bandage info {input} > {output}) 2> {log}"

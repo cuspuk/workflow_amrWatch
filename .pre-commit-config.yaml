@@ -50,3 +50,4 @@ repos:
         name: snakemake_linter
         entry: snakemake -c1 --lint --directory .tests/ --snakefile workflow/Snakefile
         language: python
+        language_version: python3.11.7

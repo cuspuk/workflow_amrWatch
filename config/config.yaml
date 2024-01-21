@@ -1,16 +1,16 @@
-reads__trimming: # Required only if "trimming" in main "flow" element. See https://cutadapt.readthedocs.io/en/stable/guide.html#read-processing-stages
-  shorten_to_length: 500 # OPT shorten to this length.
-  max_n_bases: 3 # OPT Discard reads with more than the specified number of bases. The fifth step.
-  max_expected_errors: 3 # OPT - discard reads with more expected errors than this.
-  min_length_r1: 35 # OPT, minimum R1 read length. The fourth step.
-  min_length_r2: 35 # OPT, minimum R2 read length. The fourth step.
-  # cut_from_start: 0 # OPT, removes a specified number of bases from the beginning of the read.
-  # cut_from_end: 0 # OPT, removes a specified number of bases from the end of the read.
-  quality_cutoff_from_5_end_r1: 20 # OPT cutoff on 5' end of R1 read. The second step.
-  quality_cutoff_from_3_end_r1: 20 # OPT cutoff on 3' end of R1 read. The second step.
-  quality_cutoff_from_5_end_r2: 20 # OPT cutoff on 5' end of R2 read. The second step.
-  quality_cutoff_from_3_end_r2: 20 # OPT cutoff on 3' end of R2 read. The second step.
-  adapter_removal:
+reads__trimming:
+  # 1st stage - trimming
+  # cut_from_start_r1: 0 # OPT, removes a specified number of bases from the beginning of the R1 read.
+  # cut_from_start_r2: 0 # OPT, removes a specified number of bases from the beginning of the R2 read.
+  # cut_from_end_r1: 0 # OPT, removes a specified number of bases from the end of the R1 read.
+  # cut_from_end_r2: 0 # OPT, removes a specified number of bases from the end of the R2 read.
+  quality_cutoff_from_5_end_r1: 20 # cutoff on 5' end of R1 read. The second step.
+  quality_cutoff_from_3_end_r1: 20 # cutoff on 3' end of R1 read. The second step.
+  quality_cutoff_from_5_end_r2: 20 # cutoff on 5' end of R2 read. The second step.
+  quality_cutoff_from_3_end_r2: 20 # cutoff on 3' end of R2 read. The second step.
+
+  # 2nd stage - Adapter removal
+  adapter_removal: # OPT - set "do" to false to skip this step.
     do: true # If true, all below options are required. Else, they are ignored/can be deleted.
     action: "trim" # Defines an action to perform with the found adapter.
     overlap: 3 # Minimum number of bases required to overlap with the adapter (default: 3).
@@ -20,28 +20,45 @@ reads__trimming: # Required only if "trimming" in main "flow" element. See https
     times: 1 # How many times to do adapter removal (default: 1).
     keep_trimmed_only: false # Discard reads with no adapters found (default: false).
 
+  # 3rd stage - post adapter trimming
+  shorten_to_length: 500 # OPT - both R1 and R2 are shortened to this length.
+  trim_N_bases_on_ends: true # OPT - trim flanking N's on both read ends.
+
+  # 4th stage - Filtering
+  min_length_r1: 35 # OPT - minimum R1 read length. If R1 read is shorter, both R1 and R2 reads are discarded. The fourth step.
+  min_length_r2: 35 # OPT - minimum R2 read length. If R2 read is shorter, both R1 and R2 reads are discarded. The fourth step.
+  # max_length_r1: # OPT - maximum R1 read length. If R1 read is longer, both R1 and R2 reads are discarded. The fourth step.
+  # max_length_r2: # OPT - maximum R2 read length. If R2 read is longer, both R1 and R2 reads are discarded. The fourth step.
+  # max_n_bases: 3 # OPT - Discard read if R1 or R2 has more than the specified number of N bases. The fifth step.
+  # max_expected_errors: 3 # OPT - Discard read if R1 or R2 has more expected errors than this.
+
 foreign_contamination:
   kraken_dir: "/data/genome/metagenome/kraken/k2_pluspf_20230314" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
   save_memory: true # If true, kraken limits RAM memory usage but sacrifices speed.
   read_length: 50 # Distribution will be used from this read length (default: 50).
   classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
   bracken_threshold: 10 # Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation (default: 10).
-  abundance_check_fraction: 0.01 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1 (default: 0.01).
+  abundance_check_fraction: 0.01 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1 (default: 0.01). This is a FAIL check - workflow does not proceed to the next stage.
 
 assembly__unicycler:
   min_fasta_length: 200 # Shorter contigs than this are removed (default: 100).
   bridging_mode: "normal" # Allowed: "conservative", "normal", "bold". Trade-off between contig length and misassembly rate (default: "normal").
   linear_seqs: 0 # The expected number of linear sequences (default: 0).
-
-gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
+  max_dead_ends: 200 # Threshold for dead ends. This is only a WARNING check.
+  max_contigs: 2000 # Threshold for contigs. This is a FAIL check - workflow does not proceed to the next stage.
 
 self_contamination:
   polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.
-  max_ambiguous_rows: 200 # Threshold for polymorph rows. Check fails if this threshold is exceeded.
+  max_ambiguous_rows: 200 # Threshold for polymorph rows. This is a FAIL check - workflow does not proceed to the next stage.
 
 coverage_check:
-  warn_threshold: 50 # Soft threshold for mean coverage. Lower coverage than this results in WARN row.
-  fail_threshold: 20 # Hard threshold for mean coverage. Lower coverage than this results in FAIL row.
+  warn_threshold: 50 # Soft threshold for mean coverage. This is only a WARNING check.
+  fail_threshold: 20 # Hard threshold for mean coverage. This is a FAIL check - workflow does not proceed to the next stage.
+
+gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
+abricate_db: "vfdb" # Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"] (default: "vfdb").
+amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1" # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
+# Valid DB version must be provided. See https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus/database/latest/
 
 ### RESOURCES #############################
 
@@ -63,6 +80,6 @@ threads:
   kraken: 8
   bracken: 8
   gtdb__classify: 8
-  abritamr: 4
+  amrfinder: 4
   mapping: 8 # mapping trimmed reads to assembly
   mapping_postprocess: 4 # postprocess mapping results and bcftools calling

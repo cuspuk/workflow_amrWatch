@@ -1,9 +1,9 @@
 rule gtdbtk__classify:
     input:
-        assembly="results/assembly/{sample}/assembly.fasta",
+        assembly=infer_assembly_fasta,
         gtdb=os.path.join(config["gtdb_dirpath"], "db"),
     output:
-        directory("results/taxonomy/{sample}"),
+        directory("results/taxonomy/{sample}/classify"),
     params:
         assembly_dir=lambda wildcards, input: os.path.dirname(input.assembly),
     threads: min(config["threads"]["gtdb__classify"], config["max_threads"])
@@ -16,3 +16,19 @@ rule gtdbtk__classify:
     shell:
         "(export GTDBTK_DATA_PATH={input.gtdb:q} && gtdbtk classify_wf --genome_dir {params.assembly_dir} --cpus {threads}"
         " --extension fasta --out_dir {output} --mash_db {input.gtdb}) > {log} 2>&1"
+
+
+checkpoint gtdbtk__parse_taxa:
+    input:
+        gtdb_outdir="results/taxonomy/{sample}/classify",
+    output:
+        "results/taxonomy/{sample}/parsed_taxa.txt",
+    params:
+        gtdb_tsv=lambda wildcards, input: os.path.join(input.gtdb_outdir, "classify", "gtdbtk.bac120.summary.tsv"),
+    conda:
+        "../envs/coreutils.yaml"
+    localrule: True
+    log:
+        "logs/taxonomy/parse_taxa/{sample}.log",
+    shell:
+        '(cut -f2 {params.gtdb_tsv} | tail -n 1 | sed -e "s/.*;s__//") > {output} 2> {log}'

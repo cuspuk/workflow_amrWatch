@@ -1,0 +1,475 @@
+{
+  "abaumannii": {
+    "genus": "Acinetobacter.*",
+    "species": "baumannii.*"
+  },
+  "achromobacter": {
+    "genus": "Achromobacter.*"
+  },
+  "aeromonas": {
+    "genus": "Aeromonas.*"
+  },
+  "afumigatus": {
+    "genus": "Aspergillus.*",
+    "species": "afumigatus.*"
+  },
+  "aphagocytophilum": {
+    "genus": "Anaplasma.*",
+    "species": "phagocytophilum.*"
+  },
+  "arcobacter": {
+    "genus": "Arcobacter.*"
+  },
+  "bburgdorferi": {
+    "genus": "Borreliella.*",
+    "species": "burgdorferi.*"
+  },
+  "bcc": {
+    "genus": "Burkholderia.*",
+    "species": "cepacia.*"
+  },
+  "bcereus": {
+    "genus": "Bacillus.*",
+    "species": "cereus.*"
+  },
+  "bhampsonii": {
+    "genus": "Brachyspira.*",
+    "species": "hampsonii.*"
+  },
+  "bhenselae": {
+    "genus": "Bartonella.*",
+    "species": "henselae.*"
+  },
+  "bhyodysenteriae": {
+    "genus": "Brachyspira.*",
+    "species": "hyodysenteriae.*"
+  },
+  "bifidobacterium": {
+    "genus": "Bifidobacterium.*",
+    "species": "bifidum.*"
+  },
+  "bintermedia": {
+    "genus": "Brachyspira.*",
+    "species": "intermedia.*"
+  },
+  "blicheniformis": {
+    "genus": "Bacillus.*",
+    "species": "licheniformis.*"
+  },
+  "bordetella": {
+    "genus": "Bordetella.*",
+    "species": "pertussis.*"
+  },
+  "borrelia": {
+    "genus": "Borrelia.*"
+  },
+  "bpilosicoli": {
+    "genus": "Brachyspira.*",
+    "species": "pilosicoli.*"
+  },
+  "bpseudomallei": {
+    "genus": "Burkholderia.*",
+    "species": "pseudomallei.*"
+  },
+  "brachyspira": {
+    "genus": "Brachyspira.*"
+  },
+  "bsubtilis": {
+    "genus": "Bacillus.*",
+    "species": "subtilis.*"
+  },
+  "calbicans": {
+    "genus": "Candida.*",
+    "species": "albicans.*"
+  },
+  "campylobacter": {
+    "genus": "Campylobacter.*",
+    "species": "(coli|jejuni).*"
+  },
+  "cbotulinum": {
+    "genus": "Clostridium.*",
+    "species": "botulinum.*"
+  },
+  "cconcisus": {
+    "genus": "Campylobacter.*",
+    "species": "concisus.*"
+  },
+  "cdifficile": {
+    "genus": "(Clostridium|Peptoclostridium).*",
+    "species": "difficile.*"
+  },
+  "cdiphtheriae": {
+    "genus": "Corynebacterium.*",
+    "species": "diphtheriae.*"
+  },
+  "cfetus": {
+    "genus": "Campylobacter.*",
+    "species": "fetus.*"
+  },
+  "cfreundii": {
+    "genus": "Citrobacter.*",
+    "species": "freundii.*"
+  },
+  "cglabrata": {
+    "genus": "Candida.*",
+    "species": "glabrata.*"
+  },
+  "chelveticus": {
+    "genus": "Campylobacter.*",
+    "species": "helveticus.*"
+  },
+  "chlamydiales": {
+    "genus": "Chlamydia.*"
+  },
+  "chyointestinalis": {
+    "genus": "Campylobacter.*",
+    "species": "hyointestinalis.*"
+  },
+  "cinsulaenigrae": {
+    "genus": "Campylobacter.*",
+    "species": "insulaenigrae.*"
+  },
+  "ckrusei": {
+    "genus": "Candida.*",
+    "species": "krusei.*"
+  },
+  "clanienae": {
+    "genus": "Campylobacter.*",
+    "species": "lanienae.*"
+  },
+  "clari": {
+    "genus": "Campylobacter.*",
+    "species": "lari.*"
+  },
+  "cmaltaromaticum": {
+    "genus": "Carnobacterium.*",
+    "species": "maltaromaticum.*"
+  },
+  "cneoformans": {
+    "genus": "Cryptococcus.*",
+    "species": "neoformans.*"
+  },
+  "cronobacter": {
+    "genus": "Cronobacter.*"
+  },
+  "csepticum": {
+    "genus": "Clostridium.*",
+    "species": "septicum.*"
+  },
+  "csinensis": {
+    "genus": "Clonorchis.*",
+    "species": "sinensis.*"
+  },
+  "csputorum": {
+    "genus": "Campylobacter.*",
+    "species": "sputorum.*"
+  },
+  "ctropicalis": {
+    "genus": "Candida.*",
+    "species": "tropicalis.*"
+  },
+  "cupsaliensis": {
+    "genus": "Campylobacter.*",
+    "species": "upsaliensis.*"
+  },
+  "ecloacae": {
+    "genus": "Enterobacter.*",
+    "species": "(cloacae|hormaechei).*"
+  },
+  "ecoli": {
+    "genus": "(Escherichia|Shigella).*"
+  },
+  "edwardsiella": {
+    "genus": "Edwardsiella.*",
+    "species": "tarda.*"
+  },
+  "efaecalis": {
+    "genus": "Enterococcus.*",
+    "species": "faecalis.*"
+  },
+  "efaecium": {
+    "genus": "Enterococcus.*",
+    "species": "faecium.*"
+  },
+  "fpsychrophilum": {
+    "genus": "Flavobacterium.*",
+    "species": "psychrophilum.*"
+  },
+  "haemophilus": {
+    "genus": "Haemophilus.*"
+  },
+  "hcinaedi": {
+    "genus": "Helicobacter.*",
+    "species": "cinaedi.*"
+  },
+  "hinfluenzae": {
+    "genus": "Haemophilus.*",
+    "species": "influenzae.*"
+  },
+  "hparasuis": {
+    "genus": "Haemophilus.*",
+    "species": "parasuis.*"
+  },
+  "hpylori": {
+    "genus": "Helicobacter.*",
+    "species": "pylori.*"
+  },
+  "hsuis": {
+    "genus": "Haematopinus.*",
+    "species": "suis.*"
+  },
+  "kkingae": {
+    "genus": "Kingella.*",
+    "species": "kingae.*"
+  },
+  "koxytoca": {
+    "genus": "Klebsiella.*",
+    "species": "oxytoca.*"
+  },
+  "kpneumoniae": {
+    "genus": "Klebsiella.*",
+    "species": "pneumoniae.*"
+  },
+  "kseptempunctata": {
+    "genus": "Kudoa.*",
+    "species": "septempunctata.*"
+  },
+  "lcasei": {
+    "genus": "Lactobacillus.*",
+    "species": "casei.*"
+  },
+  "legionella": {
+    "genus": "Legionella.*"
+  },
+  "leptospira": {
+    "genus": "Leptospira.*"
+  },
+  "lmonocytogenes": {
+    "genus": "Listeria.*",
+    "species": "monocytogenes.*"
+  },
+  "lsalivarius": {
+    "genus": "Lactobacillus.*",
+    "species": "salivarius.*"
+  },
+  "mabscessus": {
+    "genus": "Mycobacterium.*",
+    "species": "abscessus.*"
+  },
+  "magalactiae": {
+    "genus": "Mycoplasma.*",
+    "species": "agalactiae.*"
+  },
+  "mbovis": {
+    "genus": "Mycoplasma.*",
+    "species": "bovis.*"
+  },
+  "mcatarrhalis": {
+    "genus": "Moraxella.*",
+    "species": "catarrhalis.*"
+  },
+  "mhaemolytica": {
+    "genus": "Mannheimia.*",
+    "species": "haemolytica.*"
+  },
+  "mhyorhinis": {
+    "genus": "Mycoplasma.*",
+    "species": "hyorhinis.*"
+  },
+  "mmassiliense": {
+    "genus": "Mycobacterium.*",
+    "species": "massiliense.*"
+  },
+  "mplutonius": {
+    "genus": "Melissococcus.*",
+    "species": "plutonius.*"
+  },
+  "neisseria": {
+    "genus": "Neisseria.*"
+  },
+  "orhinotracheale": {
+    "genus": "Ornithobacterium.*",
+    "species": "rhinotracheale.*"
+  },
+  "otsutsugamushi": {
+    "genus": "Orientia.*",
+    "species": "tsutsugamushi.*"
+  },
+  "pacnes": {
+    "genus": "Propionibacterium.*",
+    "species": "acnes.*"
+  },
+  "paeruginosa": {
+    "genus": "Pseudomonas.*",
+    "species": "aeruginosa.*"
+  },
+  "pagglomerans": {
+    "genus": "Pantoea.*",
+    "species": "agglomerans.*"
+  },
+  "pfluorescens": {
+    "genus": "Pseudomonas.*",
+    "species": "fluorescens.*"
+  },
+  "pfreudenreichii": {
+    "genus": "Propionibacterium.*",
+    "species": "freudenreichii.*"
+  },
+  "pgingivalis": {
+    "genus": "Porphyromonas.*",
+    "species": "gingivalis.*"
+  },
+  "plarvae": {
+    "genus": "Paenibacillus.*",
+    "species": "larvae.*"
+  },
+  "pmultocida_multihost": {
+    "genus": "Pasteurella.*",
+    "species": "multocida.*"
+  },
+  "pmultocida_rirdc": {
+    "genus": "Pasteurella.*",
+    "species": "multocida.*"
+  },
+  "ppentosaceus": {
+    "genus": "Pediococcus.*",
+    "species": "pentosaceus.*"
+  },
+  "pshigelloides": {
+    "genus": "Plesiomonas.*",
+    "species": "shigelloides.*"
+  },
+  "ranatipestifer": {
+    "genus": "Riemerella.*",
+    "species": "anatipestifer.*"
+  },
+  "sagalactiae": {
+    "genus": "Streptococcus.*",
+    "species": "agalactiae.*"
+  },
+  "saureus": {
+    "genus": "Staphylococcus.*",
+    "species": "aureus.*"
+  },
+  "scanis": {
+    "genus": "Streptococcus.*",
+    "species": "canis.*"
+  },
+  "sdysgalactiae": {
+    "genus": "Streptococcus.*",
+    "species": "dysgalactiae.*"
+  },
+  "senterica": {
+    "genus": "Salmonella.*",
+    "species": "enterica.*"
+  },
+  "sepidermidis": {
+    "genus": "Staphylococcus.*",
+    "species": "epidermidis.*"
+  },
+  "sgallolyticus": {
+    "genus": "Streptococcus.*",
+    "species": "gallolyticus.*"
+  },
+  "shaemolyticus": {
+    "genus": "Staphylococcus.*",
+    "species": "haemolyticus.*"
+  },
+  "shominis": {
+    "genus": "Stapylococcus.*",
+    "species": "hominis.*"
+  },
+  "sinorhizobium": {
+    "genus": "Sinorhizobium.*"
+  },
+  "slugdunensis": {
+    "genus": "Staphylococcus.*",
+    "species": "lugdunensis.*"
+  },
+  "smaltophilia": {
+    "genus": "Stenotrophomonas.*",
+    "species": "maltophilia.*"
+  },
+  "soralis": {
+    "genus": "Streptococcus.*",
+    "species": "oralis.*"
+  },
+  "spneumoniae": {
+    "genus": "Streptococcus.*",
+    "species": "pneumoniae.*"
+  },
+  "spseudintermedius": {
+    "genus": "Staphylococcus.*",
+    "species": "pseudintermedius.*"
+  },
+  "spyogenes": {
+    "genus": "Streptococcus.*",
+    "species": "pyogenes.*"
+  },
+  "ssuis": {
+    "genus": "Streptococcus.*",
+    "species": "suis.*"
+  },
+  "sthermophilus": {
+    "genus": "Streptococcus.*",
+    "species": "thermophilus.*"
+  },
+  "streptomyces": {
+    "genus": "Streptomyces.*"
+  },
+  "suberis": {
+    "genus": "Streptococcus.*",
+    "species": "uberis.*"
+  },
+  "szooepidemicus": {
+    "genus": "Streptococcus.*",
+    "species": "equi.*"
+  },
+  "taylorella": {
+    "genus": "Taylorella.*"
+  },
+  "tenacibaculum": {
+    "genus": "Tenacibaculum.*"
+  },
+  "tvaginalis": {
+    "genus": "Trichomonas.*",
+    "species": "vaginalis.*"
+  },
+  "vcholerae": {
+    "genus": "Vibrio.*",
+    "species": "cholerae.*"
+  },
+  "vibrio": {
+    "genus": "Vibrio.*"
+  },
+  "vparahaemolyticus": {
+    "genus": "Vibrio.*",
+    "species": "parahaemolyticus.*"
+  },
+  "vtapetis": {
+    "genus": "Vibrio.*",
+    "species": "tapetis.*"
+  },
+  "vvulnificus": {
+    "genus": "Vibrio.*",
+    "species": "vulnificus.*"
+  },
+  "wolbachia": {
+    "genus": "Wolbachia.*"
+  },
+  "xfastidiosa": {
+    "genus": "Xylella.*",
+    "species": "fastidiosa.*"
+  },
+  "yersinia": {
+    "genus": "Yersinia.*"
+  },
+  "ypseudotuberculosis": {
+    "genus": "Yersinia.*",
+    "species": "pseudotuberculosis.*"
+  },
+  "yruckeri": {
+    "genus": "Yersinia.*",
+    "species": "ruckeri.*"
+  }
+}

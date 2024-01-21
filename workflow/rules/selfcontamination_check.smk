@@ -35,7 +35,7 @@ rule samtools__filter_unmapped:
     input:
         "results/self_contamination/{sample}/mapped.bam",
     output:
-        bam="results/self_contamination/{sample}/filtered.bam",
+        bam=temp("results/self_contamination/{sample}/filtered.bam"),
     log:
         "logs/self_contamination/samtools_filter/{sample}.log",
     params:
@@ -98,7 +98,7 @@ rule samtools__index:
     input:
         "results/self_contamination/{sample}/markdup.bam",
     output:
-        "results/self_contamination/{sample}/markdup.bam.bai",
+        temp("results/self_contamination/{sample}/markdup.bam.bai"),
     log:
         "logs/self_contamination/samtools_index/{sample}.log",
     threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
@@ -106,6 +106,22 @@ rule samtools__index:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
         "v3.3.3/bio/samtools/index"
+
+
+rule qualimap__mapping_quality_report:
+    input:
+        bam="results/self_contamination/{sample}/markdup.bam",
+        bai="results/self_contamination/{sample}/markdup.bam.bai",
+    output:
+        report_dir=directory("results/self_contamination/{sample}/markdup/bamqc"),
+        report_pdf=temp("results/self_contamination/{sample}/markdup/bamqc/report.pdf"),
+    resources:
+        mem_mb=get_mem_mb_for_mapping_postprocess,
+    threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
+    log:
+        "logs/qualimap/mapping_quality_report/{sample}.log",
+    wrapper:
+        "https://github.com/xsitarcik/wrappers/raw/v1.12.7/wrappers/qualimap/bamqc"
 
 
 rule samtools__faidx:
@@ -191,18 +207,3 @@ rule bcftools__filter_vcf:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
         "v3.3.3/bio/bcftools/filter"
-
-
-rule check_self_contamination:
-    input:
-        "results/self_contamination/{sample}/filtered.vcf",
-    output:
-        "results/checks/{sample}/self_contamination_check.txt",
-    params:
-        max_rows=config["self_contamination"]["max_ambiguous_rows"],
-    log:
-        "logs/checks/self_contamination/{sample}.log",
-    conda:
-        "../envs/grep.yaml"
-    script:
-        "../scripts/self_contamination.sh"

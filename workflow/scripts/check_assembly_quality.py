@@ -42,7 +42,7 @@ def evaluate_assembly_quality(bandage_output_file: str, output_path: str, max_de
 if __name__ == "__main__":
     sys.stderr = open(snakemake.log[0], "w")
     evaluate_assembly_quality(
-        snakemake.input[0],
+        snakemake.input.tsv,
         snakemake.output[0],
         snakemake.params.max_dead_ends,
         snakemake.params.max_contigs,

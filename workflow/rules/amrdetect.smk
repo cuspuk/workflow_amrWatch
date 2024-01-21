@@ -1,43 +1,99 @@
-rule abritamr__call:
+rule amrfinder__download_db:
+    output:
+        db=directory(config["amrfinder_db_dir"]),
+    params:
+        db_parent=lambda wildcards, output: os.path.dirname(output.db),
+    conda:
+        "../envs/amrfinder.yaml"
+    log:
+        os.path.join(os.path.dirname(config["amrfinder_db_dir"]), "logs", "download"),
+    shell:
+        "(mkdir -p {params.db_parent} && amrfinder_update -d {params.db_parent}) > {log} 2>&1"
+
+
+rule amrfinder__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        contigs=infer_assembly_fasta,
+        taxa="results/taxonomy/{sample}/parsed_taxa.txt",
+        db=config["amrfinder_db_dir"],
     output:
         tsv="results/amr_detect/{sample}/amrfinder.tsv",
-        dir=directory("results/amr_detect/{sample}/amrfinder"),
     params:
-        identity=0.9,  # TODO
-        tmp_output=lambda wildcards, output: os.path.join(output.dir, "amrfinder.out"),
-    threads: min(config["threads"]["abritamr"], config["max_threads"])
+        organism=get_organism_for_amrfinder,
+    threads: min(config["threads"]["amrfinder"], config["max_threads"])
     conda:
-        "../envs/abritamr.yaml"
+        "../envs/amrfinder.yaml"
     log:
-        "logs/amr_detect/abritamr/{sample}.log",
+        "logs/amr_detect/amrfinder/{sample}.log",
     shell:
-        "(abritamr run --contigs {input} --prefix {output.dir} --jobs {threads} --identity {params.identity}"
-        " && mv {params.tmp_output} {output.tsv} ) > {log} 2>&1"
+        "amrfinder -d {input.db} --nucleotide {input.contigs} --threads {threads} --organism {params.organism} -o {output.tsv} > {log} 2>&1"
 
 
 rule mlst__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        contigs=infer_assembly_fasta,
+        taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
         "results/amr_detect/{sample}/mlst.tsv",
+    params:
+        scheme=get_taxonomy_for_mlst,
     conda:
         "../envs/mlst.yaml"
     log:
         "logs/amr_detect/mlst/{sample}.log",
     shell:
-        "mlst {input} > {output} 2> {log}"
+        "mlst {input.contigs} --scheme {params.scheme} > {output} 2> {log}"
 
 
 rule abricate__call:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        infer_assembly_fasta,
     output:
         "results/amr_detect/{sample}/abricate.tsv",
+    params:
+        abricate_db=config["abricate_db"],
     conda:
         "../envs/abricate.yaml"
     log:
-        "logs/amr_detect/mlst/{sample}.log",
+        "logs/amr_detect/abricate/{sample}.log",
     shell:
-        "abricate {input} > {output} 2> {log}"
+        "abricate --db {params.abricate_db} {input} > {output} 2> {log}"
+
+
+rule kleborate__call:
+    input:
+        infer_assembly_fasta,
+    output:
+        "results/amr_detect/{sample}/kleborate.tsv",
+    conda:
+        "../envs/kleborate.yaml"
+    log:
+        "logs/amr_detect/kleborate/{sample}.log",
+    shell:
+        "kleborate --all -o {output} -a {input} > {log} 2>&1"
+
+
+rule spatyper__call:
+    input:
+        infer_assembly_fasta,
+    output:
+        "results/amr_detect/{sample}/spa_typer.tsv",
+    conda:
+        "../envs/spatyper.yaml"
+    log:
+        "logs/amr_detect/spa_typer/{sample}.log",
+    shell:
+        "spaTyper -f {input} --output {output} > {log} 2>&1"
+
+
+rule etoki__call:
+    input:
+        infer_assembly_fasta,
+    output:
+        "results/amr_detect/{sample}/etoki_ebeis.tsv",
+    conda:
+        "../envs/etoki.yaml"
+    log:
+        "logs/amr_detect/etoki/{sample}.log",
+    shell:
+        "EToKi.py EBEis -q {input} > {output} 2>{log}"
