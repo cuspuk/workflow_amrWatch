@@ -30,6 +30,7 @@ rule bandage__visualise_contig_overlaps:
         "logs/assembly/bandage_svg/{sample}.log",
     conda:
         "../envs/bandage.yaml"
+    localrule: True
     shell:
         "(mkdir -p {params.dir} && Bandage image {input} {output}) > {log} 2>&1"
 
@@ -45,5 +46,6 @@ rule bandage__info:
         "logs/assembly/bandage_info/{sample}.log",
     conda:
         "../envs/bandage.yaml"
+    localrule: True
     shell:
         "(mkdir -p {params.dir} && Bandage info {input} > {output}) 2> {log}"

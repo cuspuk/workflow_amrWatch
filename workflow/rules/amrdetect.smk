@@ -6,9 +6,9 @@ rule amrfinder__download_db:
     conda:
         "../envs/amrfinder.yaml"
     log:
-        os.path.join(config["amrfinder_db_dir"], "logs", "download"),
+        os.path.join(os.path.dirname(config["amrfinder_db_dir"]), "logs", "download"),
     shell:
-        "amrfinder_update -d {output.db} > {log} 2>&1"
+        "(mkdir -p {params.db_parent} && amrfinder_update -d {params.db_parent}) > {log} 2>&1"
 
 
 rule amrfinder__call:
