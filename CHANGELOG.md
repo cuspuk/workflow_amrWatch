@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.0.0](https://github.com/xsitarcik/amrWatch/compare/v1.1.0...v2.0.0) (2024-01-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* reworked amrfinder with input user db
+
+### Features
+
+* added gtdb mapping for amrfinder and mlst ([a5ff773](https://github.com/xsitarcik/amrWatch/commit/a5ff773820b1047ceb0ccbaafad05e1a145c851a))
+* added running from assembly ([23d0a34](https://github.com/xsitarcik/amrWatch/commit/23d0a343f40bd77e73a594a56418aba92c3b5a19))
+* added taxa dependent outputs, etoki, kleborate and spatyper ([86c59be](https://github.com/xsitarcik/amrWatch/commit/86c59bef973f14ff63c900d5bb8dea97f8267084))
+* amrfinder update db automatically ([0108ba1](https://github.com/xsitarcik/amrWatch/commit/0108ba107bf701229a1efed4c1ed61353abcda3c))
+* DB for abricate is selectable from config ([14a1c26](https://github.com/xsitarcik/amrWatch/commit/14a1c264c6eba6e2a77b2c156f819823103a1966))
+* expanded cutadapt params in config, added mode for assembly input ([2dad26c](https://github.com/xsitarcik/amrWatch/commit/2dad26c2c6456be8101e8c7aae5005f51e8457ca))
+* replaced abritamr by amrfinderplus ([1b7d9e8](https://github.com/xsitarcik/amrWatch/commit/1b7d9e847eb95af2dbff954ae2051e1f9dab1110))
+* reworked amrfinder with input user db ([d069444](https://github.com/xsitarcik/amrWatch/commit/d0694447fd0ee490fcefdb1dcb119a07d8f50d00))
+
 ## [1.1.0](https://github.com/xsitarcik/amrWatch/compare/v1.0.0...v1.1.0) (2024-01-15)
 
 
