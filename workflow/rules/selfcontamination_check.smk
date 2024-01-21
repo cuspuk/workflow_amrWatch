@@ -35,7 +35,7 @@ rule samtools__filter_unmapped:
     input:
         "results/self_contamination/{sample}/mapped.bam",
     output:
-        bam="results/self_contamination/{sample}/filtered.bam",
+        bam=temp("results/self_contamination/{sample}/filtered.bam"),
     log:
         "logs/self_contamination/samtools_filter/{sample}.log",
     params:
@@ -98,7 +98,7 @@ rule samtools__index:
     input:
         "results/self_contamination/{sample}/markdup.bam",
     output:
-        "results/self_contamination/{sample}/markdup.bam.bai",
+        temp("results/self_contamination/{sample}/markdup.bam.bai"),
     log:
         "logs/self_contamination/samtools_index/{sample}.log",
     threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
@@ -113,21 +113,11 @@ rule qualimap__mapping_quality_report:
         bam="results/self_contamination/{sample}/markdup.bam",
         bai="results/self_contamination/{sample}/markdup.bam.bai",
     output:
-        report_dir=report(
-            directory("results/self_contamination/{sample}/markdup/bamqc"),
-            category="{sample}",
-            labels={
-                "Type": "Qualimap for markdup",
-            },
-            htmlindex="qualimapReport.html",
-        ),
-    params:
-        extra=[
-            "--paint-chromosome-limits",
-            "-outformat PDF:HTML",
-        ],
+        report_dir=directory("results/self_contamination/{sample}/markdup/bamqc"),
+        report_pdf=temp("results/self_contamination/{sample}/markdup/bamqc/report.pdf"),
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
+    threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
     log:
         "logs/qualimap/mapping_quality_report/{sample}.log",
     wrapper:

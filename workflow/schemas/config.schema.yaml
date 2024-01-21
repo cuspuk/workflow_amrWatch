@@ -35,6 +35,10 @@ definitions:
             "vfdb",
           ]
         default: "vfdb"
+      amrfinder_db_dir:
+        type: string
+        description: "Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version."
+        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
       max_mem_mb:
         type: integer
         description: "Maximum memory in megabytes to allocate for any job."

@@ -1,6 +1,8 @@
 rule amrfinder__call:
     output:
         db=directory(config["amrfinder_db_dir"]),
+    params:
+        db_parent=lambda wildcards, output: os.path.dirname(output.db),
     conda:
         "../envs/amrfinder.yaml"
     log:

@@ -21,7 +21,7 @@ rule assembly_not_requested:
         "logs/checks/assembly/{sample}.log",
     localrule: True
     shell:
-        "echo 'PASS:' > {output} 2> {log}"
+        "echo 'PASS: Assembly provided as input' > {output} 2> {log}"
 
 
 rule check_assembly_quality:

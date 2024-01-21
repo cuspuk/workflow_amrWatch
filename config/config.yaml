@@ -47,9 +47,6 @@ assembly__unicycler:
   max_dead_ends: 200 # Threshold for dead ends. This is only a WARNING check.
   max_contigs: 2000 # Threshold for contigs. This is a FAIL check - workflow does not proceed to the next stage.
 
-gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
-abricate_db: "vfdb" # Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"] (default: "vfdb").
-
 self_contamination:
   polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.
   max_ambiguous_rows: 200 # Threshold for polymorph rows. This is a FAIL check - workflow does not proceed to the next stage.
@@ -57,6 +54,11 @@ self_contamination:
 coverage_check:
   warn_threshold: 50 # Soft threshold for mean coverage. This is only a WARNING check.
   fail_threshold: 20 # Hard threshold for mean coverage. This is a FAIL check - workflow does not proceed to the next stage.
+
+gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
+abricate_db: "vfdb" # Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"] (default: "vfdb").
+amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1" # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
+# Valid DB version must be provided. See https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus/database/latest/
 
 ### RESOURCES #############################
 
