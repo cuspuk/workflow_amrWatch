@@ -1,4 +1,4 @@
-rule amrfinder__call:
+rule amrfinder__download_db:
     output:
         db=directory(config["amrfinder_db_dir"]),
     params:
