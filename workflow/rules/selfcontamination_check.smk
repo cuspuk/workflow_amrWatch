@@ -114,7 +114,6 @@ rule qualimap__mapping_quality_report:
         bai="results/self_contamination/{sample}/markdup.bam.bai",
     output:
         report_dir=directory("results/self_contamination/{sample}/markdup/bamqc"),
-        report_pdf=temp("results/self_contamination/{sample}/markdup/bamqc/report.pdf"),
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
