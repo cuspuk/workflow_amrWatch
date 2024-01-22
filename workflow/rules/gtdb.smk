@@ -16,8 +16,8 @@ rule gtdbtk__classify:
         "logs/taxonomy/gtdb_classify/{sample}.log",
     shell:
         "(export GTDBTK_DATA_PATH={input.gtdb:q} "
-        " && echo '{wildcards.sample}\t{input.assembly}' > $TMPDIR/batchfile_{wildcards.sample}.txt"
-        " && gtdbtk classify_wf --batchfile $TMPDIR/batchfile_{wildcards.sample}.txt --genome_dir {params.assembly_dir}"
+        " && echo '{input.assembly}\t{wildcards.sample}' > $TMPDIR/batchfile_{wildcards.sample}.txt"
+        " && gtdbtk classify_wf --batchfile $TMPDIR/batchfile_{wildcards.sample}.txt"
         " --cpus {threads} --tmpdir $TMPDIR --extension fasta --out_dir {params.out_dir} --mash_db {input.gtdb}) > {log} 2>&1"
 
 
@@ -27,7 +27,7 @@ checkpoint gtdbtk__parse_taxa:
     output:
         "results/taxonomy/{sample}/parsed_taxa.txt",
     params:
-        gtdb_tsv=lambda wildcards, input: os.path.join(input.gtdb_outdir, "classify", "gtdbtk.bac120.summary.tsv"),
+        gtdb_tsv=lambda wildcards, input: os.path.join(input.gtdb_outdir, "gtdbtk.bac120.summary.tsv"),
     conda:
         "../envs/coreutils.yaml"
     localrule: True
