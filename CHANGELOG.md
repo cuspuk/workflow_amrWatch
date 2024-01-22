@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/xsitarcik/amrWatch/compare/v2.0.0...v2.0.1) (2024-01-22)
+
+
+### Bug Fixes
+
+* allow to pass also WARN samples ([c7697d6](https://github.com/xsitarcik/amrWatch/commit/c7697d68aa24d6abf322f8bb23618e7792a8b948))
+* assembly running mode works correctly per sample ([59a7d23](https://github.com/xsitarcik/amrWatch/commit/59a7d231ce80597287667fae45c4a2ab96cae6a6))
+
 ## [2.0.0](https://github.com/xsitarcik/amrWatch/compare/v1.1.0...v2.0.0) (2024-01-21)
 
 
