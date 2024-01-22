@@ -78,7 +78,7 @@ def check_assembly_construction_success_for_sample(sample: str):
 
 def check_all_checks_success_for_sample(sample: str):
     with checkpoints.summary_all_checks.get(sample=sample).output[0].open() as f:
-        return all([line.startswith("PASS:") for line in f.readlines()])
+        return all([line.startswith(("PASS:", "WARN:")) for line in f.readlines()])
 
 
 def get_outputs():
