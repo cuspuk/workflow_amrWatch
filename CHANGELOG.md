@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.0.2](https://github.com/xsitarcik/amrWatch/compare/v2.0.1...v2.0.2) (2024-01-23)
+
+
+### Bug Fixes
+
+* fixed parsing bandage report in case of zero ([2509d07](https://github.com/xsitarcik/amrWatch/commit/2509d07c1a934eeb156b83441e7342e0b121e9e8))
+* matching for amrfinder and mlst happens first for genus and species, and then just for genus ignoring entries if they have species ([f837e91](https://github.com/xsitarcik/amrWatch/commit/f837e91f57f8637c9a2d1c44203208ca246801ed))
+* mlst and amrfinder receives no organism if not found in map, instead of error ([5b2740e](https://github.com/xsitarcik/amrWatch/commit/5b2740e415a071fd480be4a59ea566924f900a07))
+
 ## [2.0.1](https://github.com/xsitarcik/amrWatch/compare/v2.0.0...v2.0.1) (2024-01-22)
 
 
