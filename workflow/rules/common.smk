@@ -61,6 +61,8 @@ def get_key_for_value_from_db(value: str, db: dict) -> str:
 
     # search genus
     for key in db:
+        if "species" in db[key]:
+            continue
         if re.match(db[key]["genus"], value):
             return key
     raise KeyError
@@ -144,17 +146,21 @@ def infer_fastq_path_for_fastqc(wildcards):
 def get_organism_for_amrfinder(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
     try:
-        return get_key_for_value_from_db(taxa, AMRFINDER_MAP)
+        matched_organism = get_key_for_value_from_db(taxa, AMRFINDER_MAP)
+        return f"--organism {matched_organism}"
     except KeyError:
-        raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map")
+        print(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map")
+        return ""
 
 
 def get_taxonomy_for_mlst(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
     try:
-        return get_key_for_value_from_db(taxa, MLST_MAP)
+        matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
+        return f"--scheme {matched_organism}"
     except KeyError:
-        raise KeyError(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
+        print(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
+        return ""
 
 
 def infer_relevant_checks(wildcards):
