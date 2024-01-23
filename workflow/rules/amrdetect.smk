@@ -19,14 +19,14 @@ rule amrfinder__call:
     output:
         tsv="results/amr_detect/{sample}/amrfinder.tsv",
     params:
-        organism=get_organism_for_amrfinder,
+        organism_arg=get_organism_for_amrfinder,
     threads: min(config["threads"]["amrfinder"], config["max_threads"])
     conda:
         "../envs/amrfinder.yaml"
     log:
         "logs/amr_detect/amrfinder/{sample}.log",
     shell:
-        "amrfinder -d {input.db} --nucleotide {input.contigs} --threads {threads} --organism {params.organism} -o {output.tsv} > {log} 2>&1"
+        "amrfinder -d {input.db} --nucleotide {input.contigs} --threads {threads} {params.organism_arg} -o {output.tsv} > {log} 2>&1"
 
 
 rule mlst__call:
@@ -36,13 +36,13 @@ rule mlst__call:
     output:
         "results/amr_detect/{sample}/mlst.tsv",
     params:
-        scheme=get_taxonomy_for_mlst,
+        scheme_arg=get_taxonomy_for_mlst,
     conda:
         "../envs/mlst.yaml"
     log:
         "logs/amr_detect/mlst/{sample}.log",
     shell:
-        "mlst {input.contigs} --scheme {params.scheme} > {output} 2> {log}"
+        "mlst {input.contigs} {params.scheme_arg} > {output} 2> {log}"
 
 
 rule abricate__call:

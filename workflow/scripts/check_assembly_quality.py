@@ -12,7 +12,7 @@ def parse_assembly_metrics(bandage_output_file: str):
                 dead_ends = int(line.strip().split()[-1])
             elif line.startswith("Node count:"):
                 contigs = int(line.strip().split()[-1])
-    if not dead_ends or not contigs:
+    if dead_ends is None or contigs is None:
         raise ValueError(f"Could not parse assembly quality from {bandage_output_file=}")
     return dead_ends, contigs
 
