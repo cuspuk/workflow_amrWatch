@@ -33,6 +33,7 @@ rule check_assembly_quality:
     params:
         max_dead_ends=config["assembly__unicycler"]["max_dead_ends"],
         max_contigs=config["assembly__unicycler"]["max_contigs"],
+        min_length_in_bp=config["assembly__unicycler"]["min_length_in_bp"],
     conda:
         "../envs/python.yaml"
     localrule: True

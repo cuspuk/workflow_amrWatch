@@ -34,10 +34,15 @@ assembly__unicycler:
   min_fasta_length: 200 # Shorter contigs than this are removed (default: 100).
   bridging_mode: "normal" # Allowed: "conservative", "normal", "bold". Trade-off between contig length and misassembly rate (default: "normal").
   linear_seqs: 0 # The expected number of linear sequences (default: 0).
+  min_length_in_bp: 500000 # Threshold for assembly length. This is a FAIL check - workflow does not proceed to the next stage.
 
 gtdb_hack: True
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
-abricate_db: "vfdb"
+abricate:
+  db: "vfdb" # Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"] (default: "vfdb").
+  min_identity: 75 # Minimum identity of the query sequence to the database sequence (default: 75).
+  min_coverage: 75 # Minimum coverage of the query sequence by the database sequence (default: 0).
+
 amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1"
 
 self_contamination:

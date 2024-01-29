@@ -51,13 +51,16 @@ rule abricate__call:
     output:
         "results/amr_detect/{sample}/abricate.tsv",
     params:
-        abricate_db=config["abricate_db"],
+        abricate_db=config["abricate"]["db"],
+        min_identity=config["abricate"]["min_identity"],
+        min_coverage=config["abricate"]["min_coverage"],
     conda:
         "../envs/abricate.yaml"
     log:
         "logs/amr_detect/abricate/{sample}.log",
     shell:
-        "abricate --db {params.abricate_db} {input} > {output} 2> {log}"
+        "abricate --db {params.abricate_db} --minid {params.min_identity} --mincov {params.min_coverage}"
+        " {input} > {output} 2> {log}"
 
 
 rule kleborate__call:
