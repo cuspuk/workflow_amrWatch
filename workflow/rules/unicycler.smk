@@ -5,7 +5,7 @@ rule unicycler__assemble_reads_into_contigs:
         contigs="results/assembly/{sample}/assembly.fasta",
         gfa="results/assembly/{sample}/assembly.gfa",
     params:
-        extra=get_unicycler_params(),
+        extra="--keep 0 {others}".format(others=get_unicycler_params()),
     threads: min(config["threads"]["assembly__unicycler"], config["max_threads"])
     resources:
         mem_mb=get_mem_mb_for_unicycler,
