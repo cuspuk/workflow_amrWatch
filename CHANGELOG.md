@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0](https://github.com/xsitarcik/amrWatch/compare/v2.0.2...v2.1.0) (2024-01-29)
+
+
+### Features
+
+* added abricate parameters for coverage and identity ([114680b](https://github.com/xsitarcik/amrWatch/commit/114680b7c4828725004353d184270547351e3327))
+* added check for assembly minimum length ([f9239ad](https://github.com/xsitarcik/amrWatch/commit/f9239ad05ed7aae9bf41994cf8feb738740a24a1))
+
+
+### Bug Fixes
+
+* forced unicycler to keep only final results ([0a9a135](https://github.com/xsitarcik/amrWatch/commit/0a9a13540538421a2267b326aeac41403b5a068b))
+* when restarting gtdbtk classify force remove previous results ([583586d](https://github.com/xsitarcik/amrWatch/commit/583586dfa15fd3bce63890a67b006100f255f06f))
+
 ## [2.0.2](https://github.com/xsitarcik/amrWatch/compare/v2.0.1...v2.0.2) (2024-01-23)
 
 
