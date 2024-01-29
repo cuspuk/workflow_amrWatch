@@ -31,7 +31,7 @@ def get_assembly_quality_decision(
         return f"FAIL: Number of contigs is {contigs} which is greater than threshold {max_contigs}"
     if dead_ends > max_dead_ends:
         return f"WARN: Number of dead ends is {dead_ends} which is greater than threshold {max_dead_ends}"
-    return f"PASS: Assembly quality fulfills criteria, number of contigs ({contigs}<={max_contigs}) and dead ends ({dead_ends}<={max_dead_ends})"
+    return f"PASS: Assembly quality fulfills criteria, assembly length ({basepairs}>={min_length_in_bp}), number of contigs ({contigs}<={max_contigs}) and dead ends ({dead_ends}<={max_dead_ends})"
 
 
 def evaluate_assembly_quality(
