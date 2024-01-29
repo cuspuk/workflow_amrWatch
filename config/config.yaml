@@ -46,6 +46,7 @@ assembly__unicycler:
   linear_seqs: 0 # The expected number of linear sequences (default: 0).
   max_dead_ends: 200 # Threshold for dead ends. This is only a WARNING check.
   max_contigs: 2000 # Threshold for contigs. This is a FAIL check - workflow does not proceed to the next stage.
+  min_length_in_bp: 500000 # Threshold for assembly length. This is a FAIL check - workflow does not proceed to the next stage.
 
 self_contamination:
   polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.

@@ -299,6 +299,10 @@ definitions:
         type: integer
         default: 2000
         description: "Threshold for contigs. This is a FAIL check - workflow does not proceed to the next stage."
+      min_length_in_bp:
+        type: integer
+        default: 500000
+        description: "Threshold for assembly length. This is a FAIL check - workflow does not proceed to the next stage."
 
   Resources:
     additionalProperties: true
