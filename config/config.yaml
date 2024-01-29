@@ -57,7 +57,12 @@ coverage_check:
   fail_threshold: 20 # Hard threshold for mean coverage. This is a FAIL check - workflow does not proceed to the next stage.
 
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
-abricate_db: "vfdb" # Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"] (default: "vfdb").
+
+abricate:
+  db: "vfdb" # Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"] (default: "vfdb").
+  min_identity: 75 # Minimum identity of the query sequence to the database sequence (default: 75).
+  min_coverage: 75 # Minimum coverage of the query sequence by the database sequence (default: 0).
+
 amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1" # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
 # Valid DB version must be provided. See https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus/database/latest/
 

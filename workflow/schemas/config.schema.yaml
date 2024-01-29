@@ -20,21 +20,6 @@ definitions:
       gtdb_hack:
         type: boolean
         default: false
-      abricate_db:
-        type: string
-        enum:
-          [
-            "argannot",
-            "ecoh",
-            "ecoli_vf",
-            "megares",
-            "card",
-            "ncbi",
-            "plasmidfinder",
-            "resfinder",
-            "vfdb",
-          ]
-        default: "vfdb"
       amrfinder_db_dir:
         type: string
         description: "Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version."
@@ -47,6 +32,9 @@ definitions:
       reads__trimming:
         type: object
         "$ref": "#/definitions/ReadsTrimming"
+      abricate:
+        type: object
+        "$ref": "#/definitions/Abricate"
       foreign_contamination:
         type: object
         "$ref": "#/definitions/ForeignContamination"
@@ -230,6 +218,39 @@ definitions:
     required:
       - fail_threshold
       - warn_threshold
+  Abricate:
+    additionalProperties: false
+    title: Abricate
+    properties:
+      db:
+        type: string
+        enum:
+          [
+            "argannot",
+            "ecoh",
+            "ecoli_vf",
+            "megares",
+            "card",
+            "ncbi",
+            "plasmidfinder",
+            "resfinder",
+            "vfdb",
+          ]
+        default: "vfdb"
+      min_coverage:
+        type: integer
+        description: "Minimum coverage of the hit to be reported."
+        minimum: 0
+        default: 0
+      min_identity:
+        type: integer
+        description: "Minimum identity of the hit to be reported."
+        minimum: 0
+        default: 75
+    required:
+      - db
+      - min_coverage
+      - min_identity
   ForeignContamination:
     additionalProperties: false
     title: ForeignContamination
