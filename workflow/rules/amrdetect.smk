@@ -90,7 +90,7 @@ rule spatyper__database_download:
 
 rule spatyper__call:
     input:
-        infer_assembly_fasta,
+        fasta=infer_assembly_fasta,
         repeats=os.path.join(config["spatyper_db_dir"], "sparepeats.fasta"),
         order=os.path.join(config["spatyper_db_dir"], "spatypes.txt"),
     output:
@@ -100,7 +100,7 @@ rule spatyper__call:
     log:
         "logs/amr_detect/spa_typer/{sample}.log",
     shell:
-        "spaTyper -f {input} -r {input.repeats} -o {input.order} --output {output} > {log} 2>&1"
+        "spaTyper -f {input.fasta} -r {input.repeats} -o {input.order} --output {output} > {log} 2>&1"
 
 
 rule etoki__call:
