@@ -79,12 +79,13 @@ rule spatyper__database_download:
         order=os.path.join(config["spatyper_db_dir"], "spatypes.txt"),
     params:
         db_dir=lambda wildcards, output: os.path.dirname(output.repeats),
+    localrule: True
     conda:
         "../envs/spatyper.yaml"
     log:
         os.path.join(os.path.join(config["spatyper_db_dir"], "logs", "download.log")),
     script:
-        "../spatyper_db_download.py"
+        "../scripts/spatyper_db_download.py"
 
 
 rule spatyper__call:
