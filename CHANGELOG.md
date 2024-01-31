@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/xsitarcik/amrWatch/compare/v2.1.0...v2.2.0) (2024-01-31)
+
+
+### Features
+
+* added updateable database for spatyper ([c9af3b2](https://github.com/xsitarcik/amrWatch/commit/c9af3b2d9f32315080e79de53fb66b82e6624e69))
+
 ## [2.1.0](https://github.com/xsitarcik/amrWatch/compare/v2.0.2...v2.1.0) (2024-01-29)
 
 
