@@ -1,0 +1,33 @@
+name: autobump
+
+on:
+  schedule:
+    - cron: "50 0 * * 5"
+
+jobs:
+  autobump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # needed personal access token such that checks are triggered on the created PR, see https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
+      - uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.CONDA_UPDATE_ENVS_APP_ID }}
+          private_key: ${{ secrets.CONDA_UPDATE_ENVS_PRIVATE_KEY }}
+
+      - name: Update conda envs and also create pinnings
+        uses: snakemake/snakedeploy-github-action@v1
+        with:
+          subcommand: update-conda-envs
+          args: workflow/envs/*.yaml
+
+      # Make changes to pull request here
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: autobump/conda-envs
+          title: "perf: autobump conda envs"
+          commit-message: "perf: autobump conda envs"
+          token: ${{ steps.generate-token.outputs.token }}
