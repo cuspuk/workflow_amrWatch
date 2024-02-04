@@ -327,7 +327,11 @@ definitions:
       min_length_in_bp:
         type: integer
         default: 500000
-        description: "Threshold for assembly length. This is a FAIL check - workflow does not proceed to the next stage."
+        description: "Threshold for minimum assembly length. This is a FAIL check - workflow does not proceed to the next stage."
+      max_length_in_bp:
+        type: integer
+        default: 10000000
+        description: "Threshold for maximum assembly length. This is a FAIL check - workflow does not proceed to the next stage."
 
   Resources:
     additionalProperties: true

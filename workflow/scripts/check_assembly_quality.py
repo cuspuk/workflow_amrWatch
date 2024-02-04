@@ -21,23 +21,32 @@ def parse_assembly_metrics(bandage_output_file: str):
 
 
 def get_assembly_quality_decision(
-    bandage_output_file: str, max_dead_ends: int, max_contigs: int, min_length_in_bp: int
+    bandage_output_file: str, max_dead_ends: int, max_contigs: int, min_length_in_bp: int, max_length_in_bp: int
 ):
     dead_ends, contigs, basepairs = parse_assembly_metrics(bandage_output_file)
 
     if basepairs < min_length_in_bp:
         return f"FAIL: Number of basepairs in assembly is lower than given threshold ({basepairs}<{min_length_in_bp})"
+    if basepairs > max_length_in_bp:
+        return f"FAIL: Number of basepairs in assembly is higher than given threshold ({basepairs}>{max_length_in_bp})"
     if contigs > max_contigs:
         return f"FAIL: Number of contigs is {contigs} which is greater than threshold {max_contigs}"
     if dead_ends > max_dead_ends:
         return f"WARN: Number of dead ends is {dead_ends} which is greater than threshold {max_dead_ends}"
-    return f"PASS: Assembly quality fulfills criteria, assembly length ({basepairs}>={min_length_in_bp}), number of contigs ({contigs}<={max_contigs}) and dead ends ({dead_ends}<={max_dead_ends})"
+    return f"PASS: Assembly quality fulfills criteria, assembly length ({max_length_in_bp}>={basepairs}>={min_length_in_bp}), number of contigs ({contigs}<={max_contigs}) and dead ends ({dead_ends}<={max_dead_ends})"
 
 
 def evaluate_assembly_quality(
-    bandage_output_file: str, output_path: str, max_dead_ends: int, max_contigs: int, min_length_in_bp: int
+    bandage_output_file: str,
+    output_path: str,
+    max_dead_ends: int,
+    max_contigs: int,
+    min_length_in_bp: int,
+    max_length_in_bp: int,
 ):
-    decision = get_assembly_quality_decision(bandage_output_file, max_dead_ends, max_contigs, min_length_in_bp)
+    decision = get_assembly_quality_decision(
+        bandage_output_file, max_dead_ends, max_contigs, min_length_in_bp, max_length_in_bp
+    )
 
     output_dir = os.path.dirname(output_path)
     if not os.path.exists(output_dir):
@@ -56,4 +65,5 @@ if __name__ == "__main__":
         snakemake.params.max_dead_ends,
         snakemake.params.max_contigs,
         snakemake.params.min_length_in_bp,
+        snakemake.params.max_length_in_bp,
     )
