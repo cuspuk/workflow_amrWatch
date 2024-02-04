@@ -34,7 +34,8 @@ assembly__unicycler:
   min_fasta_length: 200 # Shorter contigs than this are removed (default: 100).
   bridging_mode: "normal" # Allowed: "conservative", "normal", "bold". Trade-off between contig length and misassembly rate (default: "normal").
   linear_seqs: 0 # The expected number of linear sequences (default: 0).
-  min_length_in_bp: 500000 # Threshold for assembly length. This is a FAIL check - workflow does not proceed to the next stage.
+  min_length_in_bp: 500000 # Threshold for minimum assembly length. This is a FAIL check - workflow does not proceed to the next stage.
+  max_length_in_bp: 10000000 # Threshold for maximum assembly length. This is a FAIL check - workflow does not proceed to the next stage.
 
 gtdb_hack: True
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
