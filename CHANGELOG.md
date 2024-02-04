@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/xsitarcik/amrWatch/compare/v2.2.0...v2.2.1) (2024-02-04)
+
+
+### Bug Fixes
+
+* added threshold for max assembly length ([43468d8](https://github.com/xsitarcik/amrWatch/commit/43468d891afdb02f1cfafe918eae5a120eb291e8))
+
 ## [2.2.0](https://github.com/xsitarcik/amrWatch/compare/v2.1.0...v2.2.0) (2024-01-31)
 
 
