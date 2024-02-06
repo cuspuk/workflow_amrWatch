@@ -117,3 +117,16 @@ rule etoki__call:
         "logs/amr_detect/etoki/{sample}.log",
     shell:
         "EToKi.py EBEis -q {input} > {output} 2>{log}"
+
+
+rule mob_suite__typer:
+    input:
+        infer_assembly_fasta,
+    output:
+        "results/plasmids/{sample}/mob_typer.txt",
+    conda:
+        "../envs/mob_suite.yaml"
+    log:
+        "logs/plasmids/{sample}/mob_typer.log",
+    shell:
+        "mob_typer --infile {input} --out_file {output} > {log} 2>&1"
