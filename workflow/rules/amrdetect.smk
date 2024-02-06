@@ -130,20 +130,3 @@ rule mob_suite__typer:
         "logs/plasmids/{sample}/mob_typer.log",
     shell:
         "mob_typer --infile {input} --out_file {output} > {log} 2>&1"
-
-
-rule mob_suite__recon:
-    input:
-        infer_assembly_fasta,
-    output:
-        "results/plasmids/{sample}/contig_report.txt",
-        "results/plasmids/{sample}/mge.report.txt",
-        "results/plasmids/{sample}/chromosome.fasta",
-    params:
-        outdir=lambda wildcards, output: os.path.dirname(output[0]),
-    conda:
-        "../envs/mob_suite.yaml"
-    log:
-        "logs/plasmids/{sample}/mob_recon.log",
-    shell:
-        "mob_recon --infile {input} --outdir {params.outdir} > {log} 2>&1"
