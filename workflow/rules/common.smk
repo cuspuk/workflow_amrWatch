@@ -115,9 +115,6 @@ def infer_outputs_for_sample(wildcards):
             "results/amr_detect/{sample}/mlst.tsv",
             "results/amr_detect/{sample}/abricate.tsv",
             "results/plasmids/{sample}/mob_typer.txt",
-            "results/plasmids/{sample}/contig_report.txt",
-            "results/plasmids/{sample}/mge.report.txt",
-            "results/plasmids/{sample}/chromosome.fasta",
         ] + get_taxonomy_dependant_outputs(wildcards.sample, taxa)
 
     else:
