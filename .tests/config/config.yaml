@@ -12,7 +12,7 @@ reads__trimming: # Required only if "trimming" in main "flow" element. See https
   quality_cutoff_from_3_end_r1: 20 # OPT cutoff on 3' end of R1 read. The second step.
   quality_cutoff_from_5_end_r2: 20 # OPT cutoff on 5' end of R2 read. The second step.
   quality_cutoff_from_3_end_r2: 20 # OPT cutoff on 3' end of R2 read. The second step.
-  nextseq_trimming_mode: True # Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq).
+  nextseq_trimming_mode: False # Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq).
 
   adapter_removal:
     do: true # If true, all below options are required. Else, they are ignored/can be deleted.
