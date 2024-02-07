@@ -239,7 +239,10 @@ def get_cutadapt_extra() -> list[str]:
     if config["reads__trimming"].get("trim_N_bases_on_ends", None):
         args_lst.append(f"--trim-n")
     if config["reads__trimming"].get("nextseq_trimming_mode", None):
-        args_lst.append("--nextseq-trim")
+        value = config["reads__trimming"].get("quality_cutoff_from_3_end_r1", None)
+        if value is None:
+            raise ValueError("If nextseq_trimming_mode is set, quality_cutoff_from_3_end_r1 must be set as well")
+        args_lst.append(f"--nextseq-trim={value}")
 
     if config["reads__trimming"]["adapter_removal"]["do"]:
         args_lst += parse_adapter_removal_params()
