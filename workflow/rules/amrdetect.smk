@@ -163,7 +163,7 @@ rule mob_suite__download_db:
     conda:
         "../envs/mob_suite.yaml"
     log:
-        "logs/plasmids/{sample}/mob_typer.log",
+        "logs/plasmids/download_db.log",
     shell:
         "mob_init --database_directory {params.db_dir} > {log} 2>&1"
 
