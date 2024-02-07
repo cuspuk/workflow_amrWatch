@@ -129,7 +129,7 @@ rule sccmec__download_db:
         repo_db_name="staphopia-sccmec-master/share/staphopia-sccmec/data",
         db_dir=lambda wildcards, output: os.path.dirname(output.db_proteins),
     conda:
-        "../envs/curl.yaml"
+        "../envs/curl_with_unzip.yaml"
     log:
         os.path.join(config["SCCmec_db_dir"], "logs", "download.log"),
     script:
