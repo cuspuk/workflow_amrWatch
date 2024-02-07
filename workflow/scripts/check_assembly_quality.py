@@ -4,26 +4,41 @@ import sys
 
 def parse_assembly_metrics(bandage_output_file: str):
     dead_ends = None
-    contigs = None
     basepairs = None
     with open(bandage_output_file, "r") as f:
         lines = f.readlines()
         for line in lines:
             if line.startswith("Dead ends:"):
                 dead_ends = int(line.strip().split()[-1])
-            elif line.startswith("Node count:"):
-                contigs = int(line.strip().split()[-1])
             elif line.startswith("Total length (bp):"):
                 basepairs = int(line.strip().split()[-1])
-    if dead_ends is None or contigs is None or basepairs is None:
+    if dead_ends is None or basepairs is None:
         raise ValueError(f"Could not parse assembly quality from {bandage_output_file=}")
-    return dead_ends, contigs, basepairs
+    return dead_ends, basepairs
+
+
+def parse_seqkit_stats(seqkit_stats_file: str):
+    with open(seqkit_stats_file, "r") as f:
+        lines = f.readlines()
+        header = lines[0].strip().split("\t")
+        try:
+            num_seqs_index = header.index("num_seqs")
+        except ValueError:
+            raise ValueError(f"Could not find num_seqs in {seqkit_stats_file=}")
+        row = lines[1].strip().split("\t")
+        return int(row[num_seqs_index])
 
 
 def get_assembly_quality_decision(
-    bandage_output_file: str, max_dead_ends: int, max_contigs: int, min_length_in_bp: int, max_length_in_bp: int
+    bandage_output_file: str,
+    seqkit_stats_file: str,
+    max_dead_ends: int,
+    max_contigs: int,
+    min_length_in_bp: int,
+    max_length_in_bp: int,
 ):
-    dead_ends, contigs, basepairs = parse_assembly_metrics(bandage_output_file)
+    dead_ends, basepairs = parse_assembly_metrics(bandage_output_file)
+    contigs = parse_seqkit_stats(seqkit_stats_file)
 
     if basepairs < min_length_in_bp:
         return f"FAIL: Number of basepairs in assembly is lower than given threshold ({basepairs}<{min_length_in_bp})"
@@ -38,6 +53,7 @@ def get_assembly_quality_decision(
 
 def evaluate_assembly_quality(
     bandage_output_file: str,
+    seqkit_stats_file: str,
     output_path: str,
     max_dead_ends: int,
     max_contigs: int,
@@ -45,7 +61,7 @@ def evaluate_assembly_quality(
     max_length_in_bp: int,
 ):
     decision = get_assembly_quality_decision(
-        bandage_output_file, max_dead_ends, max_contigs, min_length_in_bp, max_length_in_bp
+        bandage_output_file, seqkit_stats_file, max_dead_ends, max_contigs, min_length_in_bp, max_length_in_bp
     )
 
     output_dir = os.path.dirname(output_path)
@@ -61,6 +77,7 @@ if __name__ == "__main__":
     sys.stderr = open(snakemake.log[0], "w")
     evaluate_assembly_quality(
         snakemake.input.tsv,
+        snakemake.input.stats,
         snakemake.output[0],
         snakemake.params.max_dead_ends,
         snakemake.params.max_contigs,

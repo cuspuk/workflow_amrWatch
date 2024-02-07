@@ -49,3 +49,17 @@ rule bandage__info:
     localrule: True
     shell:
         "(mkdir -p {params.dir} && Bandage info {input} > {output}) 2> {log}"
+
+
+rule seqkit__stats:
+    input:
+        fasta="results/assembly/{sample}/assembly.fasta",
+    output:
+        stats="results/assembly/{sample}/seqkit_stats.tsv",
+    params:
+        command="stats",
+        extra="--tabular --basename",
+    log:
+        "logs/assembly/seqkit/{sample}.log",
+    wrapper:
+        "v3.3.6/bio/seqkit"

@@ -28,6 +28,7 @@ rule check_assembly_quality:
     input:
         tsv="results/assembly/{sample}/bandage/bandage.info",
         svg="results/assembly/{sample}/bandage/bandage.svg",
+        stats="results/assembly/{sample}/seqkit_stats.tsv",
     output:
         "results/checks/{sample}/assembly_quality.txt",
     params:
