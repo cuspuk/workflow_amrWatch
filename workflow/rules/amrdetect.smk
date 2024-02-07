@@ -119,6 +119,42 @@ rule etoki__call:
         "EToKi.py EBEis -q {input} > {output} 2>{log}"
 
 
+rule sccmec__download_db:
+    output:
+        db_proteins=os.path.join(config["SCCmec_db_dir"], "proteins.fasta"),
+        db_subtypes=os.path.join(config["SCCmec_db_dir"], "subtypes.fasta"),
+        db_primers=os.path.join(config["SCCmec_db_dir"], "primers.fasta"),
+    params:
+        repo="https://github.com/staphopia/staphopia-sccmec/archive/refs/heads/master.zip",
+        repo_db_name="staphopia-sccmec-master/share/staphopia-sccmec/data",
+        db_dir=lambda wildcards, output: os.path.dirname(output.db_proteins),
+    conda:
+        "../envs/curl_with_unzip.yaml"
+    log:
+        os.path.join(config["SCCmec_db_dir"], "logs", "download.log"),
+    script:
+        "../scripts/sccmec_download_db.py"
+
+
+rule sccmec__call:
+    input:
+        assembly=infer_assembly_fasta,
+        db_proteins=os.path.join(config["SCCmec_db_dir"], "proteins.fasta"),
+        db_subtypes=os.path.join(config["SCCmec_db_dir"], "subtypes.fasta"),
+        db_primers=os.path.join(config["SCCmec_db_dir"], "primers.fasta"),
+    output:
+        "results/amr_detect/{sample}/SCCmec.tsv",
+    params:
+        ext=lambda wildcards, input: os.path.splitext(input[0])[1],
+        db_dir=lambda wildcards, input: os.path.dirname(input.db_proteins),
+    conda:
+        "../envs/sccmec.yaml"
+    log:
+        "logs/plasmids/{sample}/mob_typer.log",
+    shell:
+        "staphopia-sccmec --assembly {input.assembly} --sccmec {params.db_dir} --ext {params.ext} > {output} 2>{log}"
+
+
 rule mob_suite__typer:
     input:
         infer_assembly_fasta,
