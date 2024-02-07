@@ -4,3 +4,4 @@ channels:
   - nodefaults
 dependencies:
   - curl
+  - unzip=6.0
