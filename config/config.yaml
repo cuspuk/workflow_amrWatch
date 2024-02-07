@@ -69,6 +69,7 @@ amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1" # Path to amrf
 # Valid DB version must be provided. See https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus/database/latest/
 spatyper_db_dir: "/data/genome/others/spatyper_db/2024-01-31" # Path to spatyper database directory. If it does not exist, the latest version will be downloaded. The last path element must be timestamp.
 SCCmec_db_dir: "/data/genome/others/SCCmec_db/2024-02-07" # Path to SCCmec database directory. If it does not exist, the latest version will be downloaded from https://github.com/staphopia/staphopia-sccmec.
+ncbi_plasmid_db_dir: "data/genome/others/ncbi_plasmid_db/2024-02-07" # For Mob-suite. Path to NCBI plasmid database directory. If it does not exist, the latest version will be downloaded.
 
 ### RESOURCES #############################
 
