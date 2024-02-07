@@ -121,10 +121,11 @@ rule etoki__call:
 
 rule sccmec__download_db:
     output:
-        db_dir=directory(config["SCCmec_db_dir"]),
+        db=multiext(config["SCCmec_db_dir"], "proteins.fasta", "subtypes.fasta", "primers.fasta"),
     params:
         repo="https://github.com/staphopia/staphopia-sccmec/archive/refs/heads/master.zip",
-        repo_db_name="data",
+        repo_db_name="staphopia-sccmec-master/share/staphopia-sccmec/data",
+        db_dir=lambda wildcards, output: os.path.dirname(output.db),
     conda:
         "../envs/curl.yaml"
     log:
