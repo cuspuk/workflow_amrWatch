@@ -1,14 +1,14 @@
 reads__trimming:
   # 1st stage - trimming
-  # cut_from_start_r1: 0 # OPT, removes a specified number of bases from the beginning of the R1 read.
-  # cut_from_start_r2: 0 # OPT, removes a specified number of bases from the beginning of the R2 read.
-  # cut_from_end_r1: 0 # OPT, removes a specified number of bases from the end of the R1 read.
-  # cut_from_end_r2: 0 # OPT, removes a specified number of bases from the end of the R2 read.
+  cut_from_start_r1: 1 # OPT, removes a specified number of bases from the beginning of the R1 read.
+  cut_from_start_r2: 1 # OPT, removes a specified number of bases from the beginning of the R2 read.
+  cut_from_end_r1: 1 # OPT, removes a specified number of bases from the end of the R1 read.
+  cut_from_end_r2: 1 # OPT, removes a specified number of bases from the end of the R2 read.
   quality_cutoff_from_5_end_r1: 20 # cutoff on 5' end of R1 read. The second step.
   quality_cutoff_from_3_end_r1: 20 # cutoff on 3' end of R1 read. The second step.
   quality_cutoff_from_5_end_r2: 20 # cutoff on 5' end of R2 read. The second step.
   quality_cutoff_from_3_end_r2: 20 # cutoff on 3' end of R2 read. The second step.
-  nextseq_trimming_mode: True # Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq).
+  nextseq_trimming_mode: True # Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq). This masks G bases to zero quality for R1 3'. Thus, `quality_cutoff_from_3_end_r1` must be defined.
 
   # 2nd stage - Adapter removal
   adapter_removal: # OPT - set "do" to false to skip this step.
@@ -26,20 +26,20 @@ reads__trimming:
   trim_N_bases_on_ends: true # OPT - trim flanking N's on both read ends.
 
   # 4th stage - Filtering
-  min_length_r1: 35 # OPT - minimum R1 read length. If R1 read is shorter, both R1 and R2 reads are discarded. The fourth step.
-  min_length_r2: 35 # OPT - minimum R2 read length. If R2 read is shorter, both R1 and R2 reads are discarded. The fourth step.
+  min_length_r1: 50 # OPT - minimum R1 read length. If R1 read is shorter, both R1 and R2 reads are discarded. The fourth step.
+  min_length_r2: 50 # OPT - minimum R2 read length. If R2 read is shorter, both R1 and R2 reads are discarded. The fourth step.
   # max_length_r1: # OPT - maximum R1 read length. If R1 read is longer, both R1 and R2 reads are discarded. The fourth step.
   # max_length_r2: # OPT - maximum R2 read length. If R2 read is longer, both R1 and R2 reads are discarded. The fourth step.
-  # max_n_bases: 3 # OPT - Discard read if R1 or R2 has more than the specified number of N bases. The fifth step.
-  # max_expected_errors: 3 # OPT - Discard read if R1 or R2 has more expected errors than this.
+  max_n_bases: 3 # OPT - Discard read if R1 or R2 has more than the specified number of N bases. The fifth step.
+  max_expected_errors: 3 # OPT - Discard read if R1 or R2 has more expected errors than this.
 
 foreign_contamination:
   kraken_dir: "/data/genome/metagenome/kraken/k2_pluspf_20230314" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
   save_memory: true # If true, kraken limits RAM memory usage but sacrifices speed.
-  read_length: 50 # Distribution will be used from this read length (default: 50).
+  read_length: 100 # Distribution will be used from this read length (default: 50).
   classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
   bracken_threshold: 10 # Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation (default: 10).
-  abundance_check_fraction: 0.05 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1 (default: 0.01). This is a FAIL check - workflow does not proceed to the next stage.
+  abundance_check_fraction: 0.1 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1 (default: 0.01). This is a FAIL check - workflow does not proceed to the next stage.
 
 assembly__unicycler:
   min_fasta_length: 200 # Shorter contigs than this are removed (default: 100).
@@ -62,7 +62,7 @@ gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with
 
 abricate:
   db: "vfdb" # Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"] (default: "vfdb").
-  min_identity: 75 # Minimum identity of the query sequence to the database sequence (default: 75).
+  min_identity: 80 # Minimum identity of the query sequence to the database sequence (default: 75).
   min_coverage: 75 # Minimum coverage of the query sequence by the database sequence (default: 0).
 
 amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1" # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
@@ -86,7 +86,7 @@ resources:
 threads:
   reads__trimming: 4
   fastqc: 1
-  assembly__unicycler: 16
+  assembly__unicycler: 15
   kraken: 8
   bracken: 8
   gtdb__classify: 8
