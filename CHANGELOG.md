@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.4.0](https://github.com/xsitarcik/amrWatch/compare/v2.3.0...v2.4.0) (2024-02-07)
+
+
+### Features
+
+* added db download for SCCmec ([9dae50d](https://github.com/xsitarcik/amrWatch/commit/9dae50d2c7a495a1d13acdf5cca2db030322bf25))
+* added nextseq trimming mode to cutadapt ([56c7894](https://github.com/xsitarcik/amrWatch/commit/56c7894e6b205db6fdf0f69253fd94247410b221))
+* added sccmec ([fd08726](https://github.com/xsitarcik/amrWatch/commit/fd08726106b510e0b1f91f941861ac0d7f79d87c))
+
+
+### Bug Fixes
+
+* added sccmec for staphyloccocus aureus only ([50e0829](https://github.com/xsitarcik/amrWatch/commit/50e08296653bd914e8d5c39049c7ac3cd8b8bb7b))
+* added seqkit stats to count number of contigs ([a6fc872](https://github.com/xsitarcik/amrWatch/commit/a6fc8729879c2334208b356243211bd51e0f324f))
+* nextseq trimming is boolean in the config and the cutoff value is taken from r1 3 quality ([e13f2bc](https://github.com/xsitarcik/amrWatch/commit/e13f2bce2b0f6918ad614f39e01e2ce37570563f))
+
 ## [2.3.0](https://github.com/xsitarcik/amrWatch/compare/v2.2.1...v2.3.0) (2024-02-06)
 
 
