@@ -166,3 +166,21 @@ rule mob_suite__typer:
         "logs/plasmids/{sample}/mob_typer.log",
     shell:
         "mob_typer --infile {input} --out_file {output} > {log} 2>&1"
+
+
+rule sistr_cmd__call:
+    input:
+        infer_assembly_fasta,
+    output:
+        serovar="results/amr_detect/{sample}/sistr_serovar.csv",
+        alleles="results/amr_detect/{sample}/sistr/allele-results.json",
+        cgmlst="results/amr_detect/{sample}/sistr/cgmlst-profiles.csv",
+    params:
+        out_dir=lambda wildcards, output: os.path.dirname(output.alleles),
+    conda:
+        "../envs/sistr_cmd.yaml"
+    log:
+        "logs/amr_detect/sistr/{sample}.log",
+    shell:
+        "(mkdir -p {params.out_dir} && sistr --qc --output-format tab --output-prediction {output.serovar}"
+        " --alleles-output {output.alleles} --cgmlst-profiles {output.cgmlst}) > {log} 2>&1"
