@@ -46,6 +46,7 @@ abricate:
 
 amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1"
 spatyper_db_dir: "/data/genome/others/spatyper_db/2024-01-31"
+SCCmec_db_dir: "/data/genome/others/SCCmec_db/2024-01-31"
 
 self_contamination:
   polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.

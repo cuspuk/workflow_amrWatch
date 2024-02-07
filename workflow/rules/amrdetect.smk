@@ -119,6 +119,36 @@ rule etoki__call:
         "EToKi.py EBEis -q {input} > {output} 2>{log}"
 
 
+rule sccmec__download_db:
+    output:
+        db_dir=directory(config["SCCmec_db_dir"]),
+    params:
+        repo="https://github.com/staphopia/staphopia-sccmec/archive/refs/heads/master.zip",
+        repo_db_name="data",
+    conda:
+        "../envs/curl.yaml"
+    log:
+        os.path.join(config["SCCmec_db_dir"], "logs", "download.log"),
+    script:
+        "../scripts/sccmec_download_db.py"
+
+
+rule sccmec__call:
+    input:
+        assembly=infer_assembly_fasta,
+        db=config["SCCmec_db_dir"],
+    output:
+        "results/amr_detect/{sample}/SCCmec.tsv",
+    params:
+        ext=lambda wildcards, input: os.path.splitext(input[0])[1],
+    conda:
+        "../envs/sccmec.yaml"
+    log:
+        "logs/plasmids/{sample}/mob_typer.log",
+    shell:
+        "staphopia-sccmec --assembly {input.assembly} --sccmec {input.db} --ext {params.ext} > {output} 2>{log}"
+
+
 rule mob_suite__typer:
     input:
         infer_assembly_fasta,

@@ -28,6 +28,10 @@ definitions:
         type: string
         description: "Path to spatyper database directory. If it does not exist, the latest version from online repo will be downloaded."
         pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+      SCCmec_db_dir:
+        type: string
+        description: "Path to SCCmec database directory. If it does not exist, the latest version from online repo will be downloaded."
+        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
       max_mem_mb:
         type: integer
         description: "Maximum memory in megabytes to allocate for any job."
