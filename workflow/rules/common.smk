@@ -221,8 +221,8 @@ def parse_adapter_removal_params():
 def get_cutadapt_extra() -> list[str]:
     args_lst = []
 
-    if "shorten_to_length" in config["reads__trimming"]:
-        args_lst.append(f"--length {config['reads__trimming']['shorten_to_length']}")
+    if value := config["reads__trimming"].get("shorten_to_length", None):
+        args_lst.append(f"--length {value}")
     if value := config["reads__trimming"].get("cut_from_start_r1", None):
         args_lst.append(f"--cut {value}")
     if value := config["reads__trimming"].get("cut_from_start_r2", None):
@@ -232,12 +232,14 @@ def get_cutadapt_extra() -> list[str]:
     if value := config["reads__trimming"].get("cut_from_end_r2", None):
         args_lst.append(f"-U -{value}")
 
-    if "max_n_bases" in config["reads__trimming"]:
-        args_lst.append(f"--max-n {config['reads__trimming']['max_n_bases']}")
-    if "max_expected_errors" in config["reads__trimming"]:
-        args_lst.append(f"--max-expected-errors {config['reads__trimming']['max_expected_errors']}")
-    if "trim_N_bases_on_ends" in config["reads__trimming"]:
+    if value := config["reads__trimming"].get("max_n_bases", None):
+        args_lst.append(f"--max-n {value}")
+    if value := config["reads__trimming"].get("max_expected_errors", None):
+        args_lst.append(f"--max-expected-errors {value}")
+    if config["reads__trimming"].get("trim_N_bases_on_ends", None):
         args_lst.append(f"--trim-n")
+    if config["reads__trimming"].get("nextseq_trimming_mode", None):
+        args_lst.append("--nextseq-trim")
 
     if config["reads__trimming"]["adapter_removal"]["do"]:
         args_lst += parse_adapter_removal_params()

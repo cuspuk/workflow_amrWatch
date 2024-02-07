@@ -127,6 +127,9 @@ definitions:
       quality_cutoff_from_5_end_r2:
         type: integer
         description: "Optional. Removes lower quality bases from the 5' end of the R2 read."
+      nextseq_trimming_mode:
+        type: boolean
+        description: "Optional. Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq)."
     required:
       - adapter_removal
     title: ReadsTrimming

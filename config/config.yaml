@@ -8,6 +8,7 @@ reads__trimming:
   quality_cutoff_from_3_end_r1: 20 # cutoff on 3' end of R1 read. The second step.
   quality_cutoff_from_5_end_r2: 20 # cutoff on 5' end of R2 read. The second step.
   quality_cutoff_from_3_end_r2: 20 # cutoff on 3' end of R2 read. The second step.
+  nextseq_trimming_mode: True # Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq).
 
   # 2nd stage - Adapter removal
   adapter_removal: # OPT - set "do" to false to skip this step.
