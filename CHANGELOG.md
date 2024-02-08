@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.6.0](https://github.com/xsitarcik/amrWatch/compare/v2.5.0...v2.6.0) (2024-02-08)
+
+
+### Features
+
+* added gtbdtk taxa conversion to ncbi ([3371f0b](https://github.com/xsitarcik/amrWatch/commit/3371f0bf73af2c757d3ee3ecc73cc8b30d735149))
+
 ## [2.5.0](https://github.com/xsitarcik/amrWatch/compare/v2.4.0...v2.5.0) (2024-02-08)
 
 
