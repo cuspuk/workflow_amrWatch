@@ -85,6 +85,8 @@ class GtdbNcbiTranslate(object):
         """Get GTDB-Tk classification files."""
 
         gtdbtk_bac_assignments = {}
+        gtdbtk_ar_assignments = {}
+
         if bac120_metadata_file:
             bac_summary = os.path.join(gtdbtk_output_dir, PATH_BAC120_SUMMARY_OUT.format(prefix=gtdbtk_prefix))
 
@@ -402,8 +404,8 @@ class GtdbNcbiTranslate(object):
                             gtdb_taxa, ncbi_rep_ids, ncbi_sp_classification, ncbi_lineages
                         )
 
-                        # ncbi_name_to_taxid = # TODO
-                        fout.write("{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv))
+                        tid = ncbi_name_to_taxid[ncbi_mv]
+                        fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv, tid))
 
                 # get NCBI majority vote classification for
                 # any genomes only placed in the backbone tree
@@ -447,7 +449,8 @@ class GtdbNcbiTranslate(object):
                         )
 
                         # ncbi_name_to_taxid = # TODO
-                        fout.write("{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv))
+                        tid = ncbi_name_to_taxid[ncbi_mv]
+                        fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv, tid))
 
                 # get NCBI majority vote classification for genomes
                 # assigned to a GTDB species cluster via ANI screening
@@ -462,7 +465,8 @@ class GtdbNcbiTranslate(object):
                         ncbi_mv = ncbi_sp_classification[gtdb_sp_rid]
 
                     # ncbi_name_to_taxid = # TODO
-                    fout.write("{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ";".join(ncbi_mv)))
+                    tid = ncbi_name_to_taxid[";".join(ncbi_mv)]
+                    fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ";".join(ncbi_mv), tid))
 
     def run(self, gtdbtk_output_dir, ar53_metadata_file, bac120_metadata_file, gtdbtk_prefix, output_file):
         """Translate GTDB to NCBI classification via majority vote."""

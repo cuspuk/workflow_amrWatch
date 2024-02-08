@@ -41,7 +41,7 @@ rule gtdbtk__convert_to_ncbi:
     output:
         "results/taxonomy/{sample}/ncbi_taxa.tsv",
     params:
-        gtdb_parent_dir=lambda wildcards, input: os.path.dirname(os.path.dirname(input.gtdb_outdir)),
+        gtdb_parent_dir=lambda wildcards, input: os.path.dirname(os.path.dirname(input.gtdb_tsv)),
     conda:
         "../envs/gtdbtk.yaml"
     log:
