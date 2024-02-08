@@ -3,10 +3,10 @@ rule gtdbtk__classify:
         assembly=infer_assembly_fasta,
         gtdb=os.path.join(config["gtdb_dirpath"], "db"),
     output:
-        dir=directory("results/taxonomy/{sample}/classify"),
+        gtdb_tsv="results/taxonomy/{sample}/classify/gtdbtk.bac120.summary.tsv",
     params:
         assembly_dir=lambda wildcards, input: os.path.dirname(input.assembly),
-        out_dir=lambda wildcards, output: os.path.dirname(output.dir),
+        out_dir=lambda wildcards, output: os.path.dirname(os.path.dirname(output.gtdb_tsv)),
     threads: min(config["threads"]["gtdb__classify"], config["max_threads"])
     conda:
         "../envs/gtdbtk.yaml"
@@ -21,17 +21,45 @@ rule gtdbtk__classify:
         " --cpus {threads} --tmpdir $TMPDIR --extension fasta --out_dir {params.out_dir} --mash_db {input.gtdb}) > {log} 2>&1"
 
 
+rule gtdbtk__download_metadata:
+    output:
+        protected("{gtdb_dir}/bac120_metadata.tsv"),
+    params:
+        gzipped=lambda wildcards, output: f"{output}.gz",
+    conda:
+        "../envs/coreutils.yaml"
+    log:
+        "{gtdb_dir}/download_metadata.log",
+    shell:
+        "(wget https://data.ace.uq.edu.au/public/gtdb/data/releases/latest/bac120_metadata.tsv.gz && gzip -d {params.gzipped}) > {log} 2>&1"
+
+
+rule gtdbtk__convert_to_ncbi:
+    input:
+        metadata=os.path.join(config["gtdb_dirpath"], "bac120_metadata.tsv"),
+        gtdb_tsv="results/taxonomy/{sample}/classify/gtdbtk.bac120.summary.tsv",
+    output:
+        "results/taxonomy/{sample}/ncbi_taxa.tsv",
+    params:
+        gtdb_parent_dir=lambda wildcards, input: os.path.dirname(os.path.dirname(input.gtdb_outdir)),
+    conda:
+        "../envs/gtdbtk.yaml"
+    log:
+        "logs/taxonomy/gtdb_convert_to_ncbi/{sample}.log",
+    script:
+        "../scripts/gtdbtk_ncbi_convert.py"
+
+
 checkpoint gtdbtk__parse_taxa:
     input:
-        gtdb_outdir="results/taxonomy/{sample}/classify",
+        gtdb_tsv="results/taxonomy/{sample}/classify/gtdbtk.bac120.summary.tsv",
+        ncbi_taxa="results/taxonomy/{sample}/ncbi_taxa.tsv",  # not a required dependency. Specified to simplify gathering of results.
     output:
         "results/taxonomy/{sample}/parsed_taxa.txt",
-    params:
-        gtdb_tsv=lambda wildcards, input: os.path.join(input.gtdb_outdir, "gtdbtk.bac120.summary.tsv"),
     conda:
         "../envs/coreutils.yaml"
     localrule: True
     log:
         "logs/taxonomy/parse_taxa/{sample}.log",
     shell:
-        '(cut -f2 {params.gtdb_tsv} | tail -n 1 | sed -e "s/.*;s__//") > {output} 2> {log}'
+        '(cut -f2 {input.gtdb_tsv} | tail -n 1 | sed -e "s/.*;s__//") > {output} 2> {log}'
