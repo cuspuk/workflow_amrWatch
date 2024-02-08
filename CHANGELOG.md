@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.5.0](https://github.com/xsitarcik/amrWatch/compare/v2.4.0...v2.5.0) (2024-02-08)
+
+
+### Features
+
+* added db to be set in config for mobsuite as ncbi_plasmids_db_dir ([2bcac0f](https://github.com/xsitarcik/amrWatch/commit/2bcac0f38bc5490d4c2bb88b7043aac75e5fe6ce))
+* added SISTR for salmonella ([3b102e1](https://github.com/xsitarcik/amrWatch/commit/3b102e1053f4a1eef5d83641613581e3ba3d06b8))
+
+
+### Bug Fixes
+
+* fixed rerunning gtdb classification if not empty directory ([46cdde7](https://github.com/xsitarcik/amrWatch/commit/46cdde78a2d154b66793ee8afd67e99b2451bcfe))
+
 ## [2.4.0](https://github.com/xsitarcik/amrWatch/compare/v2.3.0...v2.4.0) (2024-02-07)
 
 
