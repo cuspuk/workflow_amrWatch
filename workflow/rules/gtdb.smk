@@ -15,7 +15,7 @@ rule gtdbtk__classify:
     log:
         "logs/taxonomy/gtdb_classify/{sample}.log",
     shell:
-        "(rm -rf {output.dir} && export GTDBTK_DATA_PATH={input.gtdb:q} "
+        "(rm -rf {params.out_dir} && export GTDBTK_DATA_PATH={input.gtdb:q} "
         " && echo '{input.assembly}\t{wildcards.sample}' > $TMPDIR/batchfile_{wildcards.sample}.txt"
         " && gtdbtk classify_wf --batchfile $TMPDIR/batchfile_{wildcards.sample}.txt"
         " --cpus {threads} --tmpdir $TMPDIR --extension fasta --out_dir {params.out_dir} --mash_db {input.gtdb}) > {log} 2>&1"

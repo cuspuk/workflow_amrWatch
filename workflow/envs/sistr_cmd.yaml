@@ -3,6 +3,4 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - mob_suite=3.1.8
-  - biopython=1.83.0
-  - gsl=2.5
+  - sistr_cmd=1.0.2

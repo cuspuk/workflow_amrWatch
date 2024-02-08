@@ -150,19 +150,53 @@ rule sccmec__call:
     conda:
         "../envs/sccmec.yaml"
     log:
-        "logs/plasmids/{sample}/mob_typer.log",
+        "logs/amr_detect/{sample}/sccmec.log",
     shell:
         "staphopia-sccmec --assembly {input.assembly} --sccmec {params.db_dir} --ext {params.ext} > {output} 2>{log}"
 
 
+rule mob_suite__download_db:
+    output:
+        db=os.path.join(config["ncbi_plasmid_db_dir"], "ncbi_plasmid_full_seqs.fas.msh"),
+    params:
+        db_dir=lambda wildcards, output: os.path.dirname(output.db),
+    conda:
+        "../envs/mob_suite.yaml"
+    log:
+        "logs/plasmids/download_db.log",
+    shell:
+        "mob_init --database_directory {params.db_dir} > {log} 2>&1"
+
+
 rule mob_suite__typer:
     input:
-        infer_assembly_fasta,
+        fasta=infer_assembly_fasta,
+        db=os.path.join(config["ncbi_plasmid_db_dir"], "ncbi_plasmid_full_seqs.fas.msh"),
     output:
         "results/plasmids/{sample}/mob_typer.txt",
+    params:
+        db_dir=lambda wildcards, input: os.path.dirname(input.db),
     conda:
         "../envs/mob_suite.yaml"
     log:
         "logs/plasmids/{sample}/mob_typer.log",
     shell:
-        "mob_typer --infile {input} --out_file {output} > {log} 2>&1"
+        "mob_typer --infile {input.fasta} --database_directory {params.db_dir} --out_file {output} > {log} 2>&1"
+
+
+rule sistr_cmd__call:
+    input:
+        infer_assembly_fasta,
+    output:
+        serovar="results/amr_detect/{sample}/sistr_serovar.csv",
+        alleles="results/amr_detect/{sample}/sistr/allele-results.json",
+        cgmlst="results/amr_detect/{sample}/sistr/cgmlst-profiles.csv",
+    params:
+        out_dir=lambda wildcards, output: os.path.dirname(output.alleles),
+    conda:
+        "../envs/sistr_cmd.yaml"
+    log:
+        "logs/amr_detect/sistr/{sample}.log",
+    shell:
+        "(mkdir -p {params.out_dir} && sistr --qc --output-format tab --output-prediction {output.serovar}"
+        " --alleles-output {output.alleles} --cgmlst-profiles {output.cgmlst}) > {log} 2>&1"
