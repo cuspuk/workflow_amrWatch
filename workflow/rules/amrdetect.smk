@@ -155,18 +155,33 @@ rule sccmec__call:
         "staphopia-sccmec --assembly {input.assembly} --sccmec {params.db_dir} --ext {params.ext} > {output} 2>{log}"
 
 
+rule mob_suite__download_db:
+    output:
+        db=os.path.join(config["ncbi_plasmid_db_dir"], "ncbi_plasmid_full_seqs.fas.msh"),
+    params:
+        db_dir=lambda wildcards, output: os.path.dirname(output.db),
+    conda:
+        "../envs/mob_suite.yaml"
+    log:
+        "logs/plasmids/download_db.log",
+    shell:
+        "mob_init --database_directory {params.db_dir} > {log} 2>&1"
+
+
 rule mob_suite__typer:
     input:
         fasta=infer_assembly_fasta,
-        db_dir=config["ncbi_plasmid_db_dir"],  # if empty directory, mob_typer will download the database
+        db=os.path.join(config["ncbi_plasmid_db_dir"], "ncbi_plasmid_full_seqs.fas.msh"),
     output:
         "results/plasmids/{sample}/mob_typer.txt",
+    params:
+        db_dir=lambda wildcards, input: os.path.dirname(input.db),
     conda:
         "../envs/mob_suite.yaml"
     log:
         "logs/plasmids/{sample}/mob_typer.log",
     shell:
-        "mob_typer --infile {input.fasta} --database_directory {input.db_dir} --out_file {output} > {log} 2>&1"
+        "mob_typer --infile {input.fasta} --database_directory {params.db_dir} --out_file {output} > {log} 2>&1"
 
 
 rule sistr_cmd__call:
