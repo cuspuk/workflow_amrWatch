@@ -70,6 +70,7 @@ amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1" # Path to amrf
 spatyper_db_dir: "/data/genome/others/spatyper_db/2024-01-31" # Path to spatyper database directory. If it does not exist, the latest version will be downloaded. The last path element must be timestamp.
 SCCmec_db_dir: "/data/genome/others/SCCmec_db/2024-02-07" # Path to SCCmec database directory. If it does not exist, the latest version will be downloaded from https://github.com/staphopia/staphopia-sccmec.
 ncbi_plasmid_db_dir: "/data/genome/others/ncbi_plasmid_db/2024-02-08" # Path to NCBI plasmid database directory for Mob-suite. If it does not exist, it will be downloaded and initialized using mob_init using the latest version.
+rgi_db_dir: "/data/genome/others/rgi_db/2024-02-09/" # Path to the RGI amr database. If it does not exist, the latest version will be downloaded.
 
 ### RESOURCES #############################
 
