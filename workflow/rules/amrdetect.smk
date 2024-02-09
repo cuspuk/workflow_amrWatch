@@ -78,8 +78,8 @@ rule kleborate__call:
 
 rule spatyper__database_download:
     output:
-        repeats=os.path.join(config["spatyper_db_dir"], "sparepeats.fasta"),
-        order=os.path.join(config["spatyper_db_dir"], "spatypes.txt"),
+        repeats=protected(os.path.join(config["spatyper_db_dir"], "sparepeats.fasta")),
+        order=protected(os.path.join(config["spatyper_db_dir"], "spatypes.txt")),
     params:
         db_dir=lambda wildcards, output: os.path.dirname(output.repeats),
     localrule: True
@@ -121,9 +121,9 @@ rule etoki__call:
 
 rule sccmec__download_db:
     output:
-        db_proteins=os.path.join(config["SCCmec_db_dir"], "proteins.fasta"),
-        db_subtypes=os.path.join(config["SCCmec_db_dir"], "subtypes.fasta"),
-        db_primers=os.path.join(config["SCCmec_db_dir"], "primers.fasta"),
+        db_proteins=protected(os.path.join(config["SCCmec_db_dir"], "proteins.fasta")),
+        db_subtypes=protected(os.path.join(config["SCCmec_db_dir"], "subtypes.fasta")),
+        db_primers=protected(os.path.join(config["SCCmec_db_dir"], "primers.fasta")),
     params:
         repo="https://github.com/staphopia/staphopia-sccmec/archive/refs/heads/master.zip",
         repo_db_name="staphopia-sccmec-master/share/staphopia-sccmec/data",
@@ -157,7 +157,7 @@ rule sccmec__call:
 
 rule mob_suite__download_db:
     output:
-        db=os.path.join(config["ncbi_plasmid_db_dir"], "ncbi_plasmid_full_seqs.fas.msh"),
+        db=protected(os.path.join(config["ncbi_plasmid_db_dir"], "ncbi_plasmid_full_seqs.fas.msh")),
     params:
         db_dir=lambda wildcards, output: os.path.dirname(output.db),
     conda:
@@ -200,3 +200,37 @@ rule sistr_cmd__call:
     shell:
         "(mkdir -p {params.out_dir} && sistr --qc --output-format tab --output-prediction {output.serovar}"
         " --alleles-output {output.alleles} --cgmlst-profiles {output.cgmlst}) > {log} 2>&1"
+
+
+rule rgi_download_db:
+    output:
+        json=protected(os.path.join(config["rgi_db_dir"], "card.json")),
+    params:
+        db_dir=lambda wildcards, output: os.path.dirname(output.json),
+        db_url="https://card.mcmaster.ca/latest/data",
+    conda:
+        "../envs/curl.yaml"
+    log:
+        "logs/amr_detect/rgi/download.log",
+    shell:
+        "mkdir -p {params.db_dir} && (curl -SL {params.db_url} | tar xjvf - -C {params.db_dir}) > {log} 2>&1"
+
+
+rule rgi_load_db:
+    input:
+        json=os.path.join(config["rgi_db_dir"], "card.json"),
+        assembly=infer_assembly_fasta,
+    output:
+        "results/amr_detect/{sample}/rgi_main.tsv",
+    params:
+        extra="--include_nudge --low_quality",
+    conda:
+        "../envs/rgi.yaml"
+    threads: min(config["threads"]["amrfinder"], config["max_threads"])
+    log:
+        "logs/amr_detect/rgi/{sample}.log",
+    shell:
+        "(rgi clean --local && rgi load --card_json {input.json} --local"
+        " && rgi main --input_sequence {input.assembly} --local --clean {params.extra}"
+        " --output_file {output} --num_threads {threads} --split_prodigal_jobs"
+        " ) > {log} 2>&1"
