@@ -220,7 +220,7 @@ rule rgi_load_db:
     input:
         json=os.path.join(config["rgi_db_dir"], "card.json"),
     output:
-        loaded_db=directory("localDB"),
+        loaded_db=temp(directory("localDB")),
     conda:
         "../envs/rgi.yaml"
     log:
@@ -235,7 +235,7 @@ rule rgi_call:
         loaded_db="localDB/",
         assembly=infer_assembly_fasta,
     output:
-        txt="results/amr_detect/{sample}/rgi_main.tsv",
+        txt="results/amr_detect/{sample}/rgi_main.txt",
         json="results/amr_detect/{sample}/rgi_main.json",
     params:
         extra="--include_nudge",
