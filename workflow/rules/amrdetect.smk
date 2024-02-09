@@ -211,7 +211,7 @@ rule rgi_download_db:
     conda:
         "../envs/curl.yaml"
     log:
-        "logs/amr_detect/rgi/download.log",
+        os.path.join(config["rgi_db_dir"], "logs", "download.log"),
     shell:
         "mkdir -p {params.db_dir} && (curl -SL {params.db_url} | tar xjvf - -C {params.db_dir}) > {log} 2>&1"
 
@@ -219,6 +219,20 @@ rule rgi_download_db:
 rule rgi_load_db:
     input:
         json=os.path.join(config["rgi_db_dir"], "card.json"),
+    output:
+        loaded_db=directory("localDB"),
+    conda:
+        "../envs/rgi.yaml"
+    log:
+        "logs/amr_detect/rgi_db_load.log",
+    shell:
+        "(rm -rf {output.loaded_db} && rgi load --card_json {input.json} --local) > {log} 2>&1"
+
+
+rule rgi_call:
+    input:
+        json=os.path.join(config["rgi_db_dir"], "card.json"),
+        loaded_db=directory("localDB"),
         assembly=infer_assembly_fasta,
     output:
         "results/amr_detect/{sample}/rgi_main.tsv",
@@ -230,7 +244,5 @@ rule rgi_load_db:
     log:
         "logs/amr_detect/rgi/{sample}.log",
     shell:
-        "(rgi clean --local && rgi load --card_json {input.json} --local"
-        " && rgi main --input_sequence {input.assembly} --local --clean {params.extra}"
-        " --output_file {output} --num_threads {threads} --split_prodigal_jobs"
-        " ) > {log} 2>&1"
+        "rgi main --input_sequence {input.assembly} --local --clean {params.extra}"
+        " --output_file {output} --num_threads {threads} --split_prodigal_jobs > {log} 2>&1"
