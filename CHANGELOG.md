@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.7.0](https://github.com/xsitarcik/amrWatch/compare/v2.6.0...v2.7.0) (2024-02-09)
+
+
+### Features
+
+* added RGI database and caller ([6e4c3a6](https://github.com/xsitarcik/amrWatch/commit/6e4c3a6ede9bee8c15fc9c453da8aa4ebb2edbdb))
+
 ## [2.6.0](https://github.com/xsitarcik/amrWatch/compare/v2.5.0...v2.6.0) (2024-02-08)
 
 
