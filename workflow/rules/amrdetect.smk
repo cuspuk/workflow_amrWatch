@@ -232,12 +232,14 @@ rule rgi_load_db:
 rule rgi_call:
     input:
         json=os.path.join(config["rgi_db_dir"], "card.json"),
-        loaded_db=directory("localDB"),
+        loaded_db="localDB/",
         assembly=infer_assembly_fasta,
     output:
-        "results/amr_detect/{sample}/rgi_main.tsv",
+        txt="results/amr_detect/{sample}/rgi_main.tsv",
+        json="results/amr_detect/{sample}/rgi_main.json",
     params:
-        extra="--include_nudge --low_quality",
+        extra="--include_nudge",
+        out_prefix=lambda wildcards, output: os.path.splitext(output.txt)[0],
     conda:
         "../envs/rgi.yaml"
     threads: min(config["threads"]["amrfinder"], config["max_threads"])
@@ -245,4 +247,4 @@ rule rgi_call:
         "logs/amr_detect/rgi/{sample}.log",
     shell:
         "rgi main --input_sequence {input.assembly} --local --clean {params.extra}"
-        " --output_file {output} --num_threads {threads} --split_prodigal_jobs > {log} 2>&1"
+        " --output_file {params.out_prefix} --num_threads {threads} --split_prodigal_jobs > {log} 2>&1"
