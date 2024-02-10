@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.8.0](https://github.com/xsitarcik/amrWatch/compare/v2.7.0...v2.8.0) (2024-02-10)
+
+
+### Features
+
+* added check level for self contamination to control whether to warn or to fail ([3a5d26f](https://github.com/xsitarcik/amrWatch/commit/3a5d26f6046a57e7708aca830bed2aa4db807985))
+* added resfinder ([d01cc0a](https://github.com/xsitarcik/amrWatch/commit/d01cc0ab9557283796ef5e87751a593c95ffe47f))
+* added seqsero2 for salmonella ([99f4075](https://github.com/xsitarcik/amrWatch/commit/99f40754d15043d06ffa090f5597c08371c059d4))
+* isolated mlst db and exposed path to be set in config ([53fe1c4](https://github.com/xsitarcik/amrWatch/commit/53fe1c44893a679be87c81df03ed70e8105ee160))
+
+
+### Bug Fixes
+
+* sistr output produced with tab extension ([bd71abe](https://github.com/xsitarcik/amrWatch/commit/bd71abe81b41f5f05a02376b01877da2ebb8104a))
+
+
+### Performance Improvements
+
+* bumped sistr_cmd ([5b35a2e](https://github.com/xsitarcik/amrWatch/commit/5b35a2ea41a56990857c0d5c8deaf9c4a00832fa))
+
 ## [2.7.0](https://github.com/xsitarcik/amrWatch/compare/v2.6.0...v2.7.0) (2024-02-09)
 
 
