@@ -210,6 +210,7 @@ rule rgi_download_db:
         db_url="https://card.mcmaster.ca/latest/data",
     conda:
         "../envs/curl.yaml"
+    localrule: True
     log:
         os.path.join(config["rgi_db_dir"], "logs", "download.log"),
     shell:
@@ -232,7 +233,7 @@ rule rgi_load_db:
 rule rgi_call:
     input:
         json=os.path.join(config["rgi_db_dir"], "card.json"),
-        loaded_db="localDB/",
+        loaded_db="localDB",
         assembly=infer_assembly_fasta,
     output:
         txt="results/amr_detect/{sample}/rgi_main.txt",
@@ -261,6 +262,7 @@ rule resfinder_download_db:
         disinfinder_db_url="https://bitbucket.org/genomicepidemiology/disinfinder_db/",
     conda:
         "../envs/git.yaml"
+    localrule: True
     log:
         os.path.join(config["rgi_db_dir"], "logs", "download.log"),
     shell:
@@ -278,7 +280,7 @@ rule resfinder_call:
         assembly=infer_assembly_fasta,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
-        tsv="results/amr_detect/{sample}/ResFinder_results.txt",
+        tsv="results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
     params:
         species=get_taxonomy_for_resfinder,
         outdir=lambda wildcards, output: os.path.dirname(output.tsv),
