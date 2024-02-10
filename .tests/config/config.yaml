@@ -51,6 +51,7 @@ spatyper_db_dir: "/data/genome/others/spatyper_db/2024-01-31"
 SCCmec_db_dir: "/data/genome/others/SCCmec_db/2024-01-31"
 ncbi_plasmid_db_dir: "/data/genome/others/ncbi_plasmid_db/2024-02-07" # For Mob-suite. Path to NCBI plasmid database directory. If it does not exist, the latest version will be downloaded.
 rgi_db_dir: "/data/genome/others/rgi_db/2024-02-09/" # Path to the RGI amr database. If it does not exist, the latest version will be downloaded.
+mlst_db_dir: "/data/genome/others/mlst_db/2024-01-12/" # Path to the MLST database. Must be provided and contain blast and pubmlst data.
 
 resfinder:
   db_dir: "/data/genome/others/resfinder_db/2024-02-10" # Path to resfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.

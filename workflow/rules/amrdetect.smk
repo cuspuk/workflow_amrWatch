@@ -33,6 +33,8 @@ rule mlst__call:
     input:
         contigs=infer_assembly_fasta,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
+        blast_mlst=os.path.join(config["mlst_db_dir"], "blast", "mlst.fa"),
+        pubmlst=os.path.join(config["mlst_db_dir"], "pubmlst"),
     output:
         "results/amr_detect/{sample}/mlst.tsv",
     params:
@@ -42,7 +44,7 @@ rule mlst__call:
     log:
         "logs/amr_detect/mlst/{sample}.log",
     shell:
-        "mlst {input.contigs} {params.scheme_arg} > {output} 2> {log}"
+        "mlst {input.contigs} --blastdb {params.blast_mlst} --datadir {params.pubmlst} {params.scheme_arg} > {output} 2> {log}"
 
 
 rule abricate__call:
