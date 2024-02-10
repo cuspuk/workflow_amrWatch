@@ -297,3 +297,36 @@ rule resfinder_call:
         " --point --db_path_point {input.pointfinder_db}"
         " --acquired --db_path_res {input.resfinder_db}"
         " -o {params.outdir} > {log} 2>&1"
+
+
+rule seqsero2__call:
+    input:
+        infer_assembly_fasta,
+    output:
+        tsv="results/amr_detect/{sample}/seqsero_summary.tsv",
+    params:
+        out_dir=lambda wildcards, output: os.path.join(os.path.dirname(output.tsv), "seqsero"),
+        header="\t".join(
+            [
+                "Sample name",
+                "Output directory",
+                "Input files",
+                "O antigen prediction",
+                "H1 antigen prediction(fliC)",
+                "H2 antigen prediction(fljB)",
+                "Predicted identification",
+                "Predicted antigenic profile",
+                "Predicted serotype",
+                "Note",
+            ]
+        ),
+    conda:
+        "../envs/seqsero.yaml"
+    log:
+        "logs/amr_detect/seqsero/{sample}.log",
+    shell:
+        "(mkdir -p {params.out_dir}"
+        " && SeqSero2_package.py -t 4 -m k -s -i {input} -n {wildcards.sample} -d {params.out_dir}"
+        " && echo -e {params.header} > {output.tsv}"
+        " cat {params.out_dir}/SeqSero_result.tsv >> {output.tsv}"
+        " ) > {log} 2>&1"

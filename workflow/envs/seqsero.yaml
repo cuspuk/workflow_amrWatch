@@ -1,0 +1,6 @@
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - seqsero2=1.2.1
