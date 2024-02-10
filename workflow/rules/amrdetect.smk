@@ -44,7 +44,7 @@ rule mlst__call:
     log:
         "logs/amr_detect/mlst/{sample}.log",
     shell:
-        "mlst {input.contigs} --blastdb {params.blast_mlst} --datadir {params.pubmlst} {params.scheme_arg} > {output} 2> {log}"
+        "mlst {input.contigs} --blastdb {input.blast_mlst} --datadir {input.pubmlst} {params.scheme_arg} > {output} 2> {log}"
 
 
 rule abricate__call:
