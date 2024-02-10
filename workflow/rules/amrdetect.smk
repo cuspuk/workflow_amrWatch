@@ -201,7 +201,7 @@ rule sistr_cmd__call:
         "logs/amr_detect/sistr/{sample}.log",
     shell:
         "(mkdir -p {params.out_dir} && sistr --qc --output-format tab --output-prediction {output.serovar}"
-        " --alleles-output {output.alleles} --cgmlst-profiles {output.cgmlst}) > {log} 2>&1"
+        " --alleles-output {output.alleles} --cgmlst-profiles {output.cgmlst} {input}) > {log} 2>&1"
 
 
 rule rgi_download_db:
@@ -329,6 +329,6 @@ rule seqsero2__call:
     shell:
         "(mkdir -p {params.out_dir}"
         " && SeqSero2_package.py -t 4 -m k -s -i {input} -n {wildcards.sample} -d {params.out_dir}"
-        " && echo -e {params.header} > {output.tsv}"
-        " cat {params.out_dir}/SeqSero_result.tsv >> {output.tsv}"
+        " && echo -e {params.header:q} > {output.tsv}"
+        " && cat {params.out_dir}/SeqSero_result.tsv >> {output.tsv}"
         " ) > {log} 2>&1"
