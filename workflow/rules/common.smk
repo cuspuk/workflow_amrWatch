@@ -118,6 +118,7 @@ def infer_outputs_for_sample(wildcards):
             "results/amr_detect/{sample}/mlst.tsv",
             "results/amr_detect/{sample}/abricate.tsv",
             "results/amr_detect/{sample}/rgi_main.txt",
+            "results/amr_detect/{sample}/ResFinder_results.txt",
             "results/plasmids/{sample}/mob_typer.txt",
             "results/checks/{sample}/summary.txt",
         ] + get_taxonomy_dependant_outputs(wildcards.sample, taxa)
@@ -167,6 +168,11 @@ def get_taxonomy_for_mlst(wildcards):
     except KeyError:
         print(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
         return ""
+
+
+def get_taxonomy_for_resfinder(wildcards):
+    taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
+    return taxa.lower()
 
 
 def infer_relevant_checks(wildcards):

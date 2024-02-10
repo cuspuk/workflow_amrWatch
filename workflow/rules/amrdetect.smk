@@ -248,3 +248,50 @@ rule rgi_call:
     shell:
         "rgi main --input_sequence {input.assembly} --local --clean {params.extra}"
         " --output_file {params.out_prefix} --num_threads {threads} --split_prodigal_jobs > {log} 2>&1"
+
+
+rule resfinder_download_db:
+    output:
+        resfinder_db=directory(os.path.join(config["rgi_db_dir"], "resfinder_db")),
+        pointfinder_db=directory(os.path.join(config["rgi_db_dir"], "pointfinder_db")),
+        disinfinder_db=directory(os.path.join(config["rgi_db_dir"], "disinfinder_db")),
+    params:
+        resfinder_db_url="https://bitbucket.org/genomicepidemiology/resfinder_db/",
+        pointfinder_db_url="https://bitbucket.org/genomicepidemiology/pointfinder_db/",
+        disinfinder_db_url="https://bitbucket.org/genomicepidemiology/disinfinder_db/",
+    conda:
+        "../envs/git.yaml"
+    log:
+        os.path.join(config["rgi_db_dir"], "logs", "download.log"),
+    shell:
+        "( git clone {params.resfinder_db_url} {output.resfinder_db}"
+        " && git clone {params.pointfinder_db_url} {output.pointfinder_db}"
+        " && git clone {params.disinfinder_db_url} {output.disinfinder_db}"
+        " ) > {log} 2>&1"
+
+
+rule resfinder_call:
+    input:
+        resfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "resfinder_db")),
+        pointfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "pointfinder_db")),
+        disinfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "disinfinder_db")),
+        assembly=infer_assembly_fasta,
+        taxa="results/taxonomy/{sample}/parsed_taxa.txt",
+    output:
+        tsv="results/amr_detect/{sample}/ResFinder_results.txt",
+    params:
+        species=get_taxonomy_for_resfinder,
+        outdir=lambda wildcards, output: os.path.dirname(output.tsv),
+        min_cov=config["resfinder"]["min_coverage"],
+        threshold=config["resfinder"]["threshold"],
+    conda:
+        "../envs/resfinder.yaml"
+    log:
+        "logs/amr_detect/resfinder/{sample}.log",
+    shell:
+        "python -m resfinder--inputfasta {input.assembly} --ignore_missing_species"
+        " --min_cov {params.min_cov} --threshold {params.threshold} -s {params.species:q}"
+        " --disinfectant --db_path_disinf {input.disinfinder_db}"
+        " --point --db_path_point {input.pointfinder_db}"
+        " --acquired --db_path_res {input.resfinder_db}"
+        " -o {params.outdir} > {log} 2>&1"
