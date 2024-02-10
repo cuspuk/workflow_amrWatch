@@ -105,7 +105,7 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> list[str]:
     elif taxa.startswith("Escherichia") or taxa.startswith("Shigella"):
         outputs.append("results/amr_detect/{sample}/etoki_ebeis.tsv")
     elif taxa.startswith("Salmonella"):
-        outputs.append("results/amr_detect/{sample}/sistr_serovar.csv")
+        outputs.append("results/amr_detect/{sample}/sistr_serovar.tab")
         outputs.append("results/amr_detect/{sample}/seqsero_summary.tsv")
     return outputs
 
