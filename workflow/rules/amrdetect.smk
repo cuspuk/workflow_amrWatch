@@ -272,9 +272,9 @@ rule resfinder_download_db:
 
 rule resfinder_call:
     input:
-        resfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "resfinder_db")),
-        pointfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "pointfinder_db")),
-        disinfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "disinfinder_db")),
+        resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
+        pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
+        disinfinder_db=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
         assembly=infer_assembly_fasta,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
@@ -289,7 +289,7 @@ rule resfinder_call:
     log:
         "logs/amr_detect/resfinder/{sample}.log",
     shell:
-        "python -m resfinder--inputfasta {input.assembly} --ignore_missing_species"
+        "python -m resfinder --inputfasta {input.assembly} --ignore_missing_species"
         " --min_cov {params.min_cov} --threshold {params.threshold} -s {params.species:q}"
         " --disinfectant --db_path_disinf {input.disinfinder_db}"
         " --point --db_path_point {input.pointfinder_db}"
