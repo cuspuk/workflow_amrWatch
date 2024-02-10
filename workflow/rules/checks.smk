@@ -52,6 +52,7 @@ rule check_self_contamination:
         "results/checks/{sample}/self_contamination_check.txt",
     params:
         max_rows=config["self_contamination"]["max_ambiguous_rows"],
+        check_level=config["self_contamination"]["check_level"],
     log:
         "logs/checks/self_contamination/{sample}.log",
     conda:

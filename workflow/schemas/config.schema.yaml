@@ -229,9 +229,16 @@ definitions:
         type: integer
         description: "Threshold for polymorph rows. Check fails if this threshold is exceeded."
         minimum: 0
+      check_level:
+        type: string
+        enum:
+          - "FAIL"
+          - "WARN"
+        description: "Control check level, if FAIL the workflow ends, if WARN, the check is just informative."
     required:
       - polymorph_rate
       - max_ambiguous_rows
+      - check_level
   CoverageCheck:
     additionalProperties: false
     title: CoverageCheck

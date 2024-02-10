@@ -52,7 +52,8 @@ assembly__unicycler:
 
 self_contamination:
   polymorph_rate: 0.2 # Variant rows with MAF larger than this value are declared as polymorph.
-  max_ambiguous_rows: 800 # Threshold for polymorph rows. This is a FAIL check - workflow does not proceed to the next stage.
+  max_ambiguous_rows: 800 # Threshold for polymorph rows, used for self-contamination check. This is a FAIL check - workflow does not proceed to the next stage.
+  check_level: "WARN" # Allowed: ["FAIL", "WARN"]. If "FAIL", the workflow proceeds to the next stage. If "WARN", the workflow proceeds to the next stage but with a warning.
 
 coverage_check:
   warn_threshold: 50 # Soft threshold for mean coverage. This is only a WARNING check.
