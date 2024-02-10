@@ -2,6 +2,5 @@ channels:
   - defaults
   - bioconda
   - conda-forge
-  - r
 dependencies:
-  - sistr_cmd=1.1.1
+  - resfinder=4.4.2

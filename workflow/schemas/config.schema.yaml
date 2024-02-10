@@ -40,6 +40,10 @@ definitions:
         type: string
         description: "Path to RGI amr directory. If it does not exist, the latest version will be downloaded."
         pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+      mlst_db_dir:
+        type: string
+        description: "Path to the MLST database. Must be provided and contain blast and pubmlst data."
+        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
       max_mem_mb:
         type: integer
         description: "Maximum memory in megabytes to allocate for any job."
@@ -51,6 +55,9 @@ definitions:
       abricate:
         type: object
         "$ref": "#/definitions/Abricate"
+      resfinder:
+        type: object
+        "$ref": "#/definitions/Resfinder"
       foreign_contamination:
         type: object
         "$ref": "#/definitions/ForeignContamination"
@@ -78,6 +85,15 @@ definitions:
       - assembly__unicycler
       - resources
       - threads
+      - resfinder
+      - abricate
+      - amrfinder_db_dir
+      - spatyper_db_dir
+      - SCCmec_db_dir
+      - ncbi_plasmid_db_dir
+      - rgi_db_dir
+      - max_threads
+      - max_mem_mb
     title: AmrWatchWorkflow
   ReadsTrimming:
     type: object
@@ -217,9 +233,16 @@ definitions:
         type: integer
         description: "Threshold for polymorph rows. Check fails if this threshold is exceeded."
         minimum: 0
+      check_level:
+        type: string
+        enum:
+          - "FAIL"
+          - "WARN"
+        description: "Control check level, if FAIL the workflow ends, if WARN, the check is just informative."
     required:
       - polymorph_rate
       - max_ambiguous_rows
+      - check_level
   CoverageCheck:
     additionalProperties: false
     title: CoverageCheck
@@ -270,6 +293,30 @@ definitions:
       - db
       - min_coverage
       - min_identity
+  Resfinder:
+    additionalProperties: false
+    title: Resfinder
+    properties:
+      db_dir:
+        type: string
+        description: "Path to resfinder DB directory. If it does not exist, the latest version will be downloaded."
+        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+      min_coverage:
+        type: number
+        description: "Minimum (breadth-of) coverage of ResFinder within the range 0-1 (default: 0.6)."
+        minimum: 0
+        maximum: 1
+        default: 0
+      threshold:
+        type: number
+        description: "Threshold for identity of ResFinder within the range 0-1 (default: 0.8)"
+        minimum: 0
+        maximum: 1
+        default: 0.8
+    required:
+      - db_dir
+      - min_coverage
+      - threshold
   ForeignContamination:
     additionalProperties: false
     title: ForeignContamination

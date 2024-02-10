@@ -33,6 +33,8 @@ rule mlst__call:
     input:
         contigs=infer_assembly_fasta,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
+        blast_mlst=os.path.join(config["mlst_db_dir"], "blast", "mlst.fa"),
+        pubmlst=os.path.join(config["mlst_db_dir"], "pubmlst"),
     output:
         "results/amr_detect/{sample}/mlst.tsv",
     params:
@@ -42,7 +44,7 @@ rule mlst__call:
     log:
         "logs/amr_detect/mlst/{sample}.log",
     shell:
-        "mlst {input.contigs} {params.scheme_arg} > {output} 2> {log}"
+        "mlst {input.contigs} --blastdb {input.blast_mlst} --datadir {input.pubmlst} {params.scheme_arg} > {output} 2> {log}"
 
 
 rule abricate__call:
@@ -188,18 +190,16 @@ rule sistr_cmd__call:
     input:
         infer_assembly_fasta,
     output:
-        serovar="results/amr_detect/{sample}/sistr_serovar.csv",
-        alleles="results/amr_detect/{sample}/sistr/allele-results.json",
-        cgmlst="results/amr_detect/{sample}/sistr/cgmlst-profiles.csv",
+        serovar="results/amr_detect/{sample}/sistr_serovar.tab",
     params:
-        out_dir=lambda wildcards, output: os.path.dirname(output.alleles),
+        out_dir=lambda wildcards, output: os.path.dirname(output.serovar),
     conda:
         "../envs/sistr_cmd.yaml"
     log:
         "logs/amr_detect/sistr/{sample}.log",
     shell:
         "(mkdir -p {params.out_dir} && sistr --qc --output-format tab --output-prediction {output.serovar}"
-        " --alleles-output {output.alleles} --cgmlst-profiles {output.cgmlst}) > {log} 2>&1"
+        " --no-cgmlst {input}) > {log} 2>&1"
 
 
 rule rgi_download_db:
@@ -210,6 +210,7 @@ rule rgi_download_db:
         db_url="https://card.mcmaster.ca/latest/data",
     conda:
         "../envs/curl.yaml"
+    localrule: True
     log:
         os.path.join(config["rgi_db_dir"], "logs", "download.log"),
     shell:
@@ -232,7 +233,7 @@ rule rgi_load_db:
 rule rgi_call:
     input:
         json=os.path.join(config["rgi_db_dir"], "card.json"),
-        loaded_db="localDB/",
+        loaded_db="localDB",
         assembly=infer_assembly_fasta,
     output:
         txt="results/amr_detect/{sample}/rgi_main.txt",
@@ -248,3 +249,84 @@ rule rgi_call:
     shell:
         "rgi main --input_sequence {input.assembly} --local --clean {params.extra}"
         " --output_file {params.out_prefix} --num_threads {threads} --split_prodigal_jobs > {log} 2>&1"
+
+
+rule resfinder_download_db:
+    output:
+        resfinder_db=directory(os.path.join(config["rgi_db_dir"], "resfinder_db")),
+        pointfinder_db=directory(os.path.join(config["rgi_db_dir"], "pointfinder_db")),
+        disinfinder_db=directory(os.path.join(config["rgi_db_dir"], "disinfinder_db")),
+    params:
+        resfinder_db_url="https://bitbucket.org/genomicepidemiology/resfinder_db/",
+        pointfinder_db_url="https://bitbucket.org/genomicepidemiology/pointfinder_db/",
+        disinfinder_db_url="https://bitbucket.org/genomicepidemiology/disinfinder_db/",
+    conda:
+        "../envs/git.yaml"
+    localrule: True
+    log:
+        os.path.join(config["rgi_db_dir"], "logs", "download.log"),
+    shell:
+        "( git clone {params.resfinder_db_url} {output.resfinder_db}"
+        " && git clone {params.pointfinder_db_url} {output.pointfinder_db}"
+        " && git clone {params.disinfinder_db_url} {output.disinfinder_db}"
+        " ) > {log} 2>&1"
+
+
+rule resfinder_call:
+    input:
+        resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
+        pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
+        disinfinder_db=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
+        assembly=infer_assembly_fasta,
+        taxa="results/taxonomy/{sample}/parsed_taxa.txt",
+    output:
+        tsv="results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
+    params:
+        species=get_taxonomy_for_resfinder,
+        outdir=lambda wildcards, output: os.path.dirname(output.tsv),
+        min_cov=config["resfinder"]["min_coverage"],
+        threshold=config["resfinder"]["threshold"],
+    conda:
+        "../envs/resfinder.yaml"
+    log:
+        "logs/amr_detect/resfinder/{sample}.log",
+    shell:
+        "python -m resfinder --inputfasta {input.assembly} --ignore_missing_species"
+        " --min_cov {params.min_cov} --threshold {params.threshold} -s {params.species:q}"
+        " --disinfectant --db_path_disinf {input.disinfinder_db}"
+        " --point --db_path_point {input.pointfinder_db}"
+        " --acquired --db_path_res {input.resfinder_db}"
+        " -o {params.outdir} > {log} 2>&1"
+
+
+rule seqsero2__call:
+    input:
+        infer_assembly_fasta,
+    output:
+        tsv="results/amr_detect/{sample}/seqsero_summary.tsv",
+    params:
+        out_dir=lambda wildcards, output: os.path.join(os.path.dirname(output.tsv), "seqsero"),
+        header="\t".join(
+            [
+                "Sample name",
+                "Output directory",
+                "Input files",
+                "O antigen prediction",
+                "H1 antigen prediction(fliC)",
+                "H2 antigen prediction(fljB)",
+                "Predicted identification",
+                "Predicted antigenic profile",
+                "Predicted serotype",
+                "Note",
+            ]
+        ),
+    conda:
+        "../envs/seqsero.yaml"
+    log:
+        "logs/amr_detect/seqsero/{sample}.log",
+    shell:
+        "(mkdir -p {params.out_dir}"
+        " && SeqSero2_package.py -t 4 -m k -s -i {input} -n {wildcards.sample} -d {params.out_dir}"
+        " && echo -e {params.header:q} > {output.tsv}"
+        " && cat {params.out_dir}/SeqSero_result.tsv >> {output.tsv}"
+        " ) > {log} 2>&1"
