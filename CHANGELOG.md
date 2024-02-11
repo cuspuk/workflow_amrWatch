@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.8.1](https://github.com/xsitarcik/amrWatch/compare/v2.8.0...v2.8.1) (2024-02-11)
+
+
+### Bug Fixes
+
+* cleanup localDB for RGI using onsuccess instead of temp flag as snakemake cannot handle checkpoints in this case ([14c8dce](https://github.com/xsitarcik/amrWatch/commit/14c8dce6d2ffcdbb328d325df5c198ff2f17c210))
+
 ## [2.8.0](https://github.com/xsitarcik/amrWatch/compare/v2.7.0...v2.8.0) (2024-02-10)
 
 
