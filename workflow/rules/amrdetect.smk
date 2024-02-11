@@ -221,7 +221,7 @@ rule rgi_load_db:
     input:
         json=os.path.join(config["rgi_db_dir"], "card.json"),
     output:
-        loaded_db=temp(directory("localDB")),
+        loaded_db=directory("localDB"),
     conda:
         "../envs/rgi.yaml"
     log:
