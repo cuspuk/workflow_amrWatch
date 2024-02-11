@@ -20,3 +20,9 @@ rule all:
     input:
         **get_outputs(),
     localrule: True
+
+
+onsuccess:
+    if os.path.exists("localDB"):
+        print("Cleaning up loaded RGI database...")
+        shell("rm -rf localDB")
