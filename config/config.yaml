@@ -75,7 +75,7 @@ rgi_db_dir: "/data/genome/others/rgi_db/2024-02-09/" # Path to the RGI amr datab
 mlst_db_dir: "/data/genome/others/mlst_db/2024-01-12/" # Path to the MLST database. Must be provided and contain blast and pubmlst data.
 
 resfinder:
-  db_dir: "/data/genome/others/resfinder_db/2024-02-10" # Path to resfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
+  db_dir: "/data/genome/others/resfinder_db/2024-02-10" # Path to resfinder database directory. If it does not exist, will be downloaded.
   min_coverage: 0.6 # Minimum (breadth-of) coverage of ResFinder within the range 0-1 (default: 0.6).
   threshold: 0.8 # Threshold for identity of ResFinder within the range 0-1 (default: 0.8).
 
