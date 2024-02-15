@@ -11,7 +11,7 @@ rule bwa__build_index:
         "v3.3.3/bio/bwa/index"
 
 
-rule bwa__map_reads_back_to_assembly:
+rule bwa__map_to_assembly:
     input:
         reads=["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"],
         idx=multiext("results/assembly/{sample}/bwa_index/bwa", ".amb", ".ann", ".bwt", ".pac", ".sa"),
@@ -108,7 +108,7 @@ rule samtools__index:
         "v3.3.3/bio/samtools/index"
 
 
-rule qualimap__mapping_quality_report:
+rule qualimap__report:
     input:
         bam="results/self_contamination/{sample}/markdup.bam",
         bai="results/self_contamination/{sample}/markdup.bam.bai",
@@ -137,7 +137,7 @@ rule samtools__faidx:
         "v3.3.3/bio/samtools/faidx"
 
 
-rule bcftools_mpileup:
+rule bcftools__mpileup:
     input:
         alignments="results/self_contamination/{sample}/markdup.bam",
         ref="results/assembly/{sample}/assembly.fasta",
@@ -156,7 +156,7 @@ rule bcftools_mpileup:
         "v3.3.3/bio/bcftools/mpileup"
 
 
-rule bcftools__call_variants:
+rule bcftools__variants:
     input:
         pileup="results/self_contamination/{sample}/piled.bcf",
     output:
@@ -174,7 +174,7 @@ rule bcftools__call_variants:
         "v3.3.3/bio/bcftools/call"
 
 
-rule bcftools__normalize_vcf:
+rule bcftools__norm:
     input:
         "results/self_contamination/{sample}/called.bcf",
     output:
@@ -191,7 +191,7 @@ rule bcftools__normalize_vcf:
         "v3.3.3/bio/bcftools/norm"
 
 
-rule bcftools__filter_vcf:
+rule bcftools__filter:
     input:
         "results/self_contamination/{sample}/norm.bcf",
     output:
