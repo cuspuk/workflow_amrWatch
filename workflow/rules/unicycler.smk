@@ -1,4 +1,4 @@
-rule unicycler__assemble_reads_into_contigs:
+rule unicycler__assemble:
     input:
         paired=["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"],
     output:
@@ -15,7 +15,7 @@ rule unicycler__assemble_reads_into_contigs:
         "v3.3.0/bio/unicycler"
 
 
-rule bandage__visualise_contig_overlaps:
+rule bandage__visualize:
     input:
         "results/assembly/{sample}/assembly.gfa",
     output:

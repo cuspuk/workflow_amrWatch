@@ -1,4 +1,4 @@
-rule cutadapt__trim_reads_pe:
+rule cutadapt__trim:
     input:
         infer_fastqs_for_trimming,
     output:
@@ -16,7 +16,7 @@ rule cutadapt__trim_reads_pe:
         "v3.3.3/bio/cutadapt/pe"
 
 
-rule fastqc__quality_report:
+rule fastqc__report:
     input:
         read=infer_fastq_path_for_fastqc,
     output:
@@ -39,7 +39,7 @@ rule fastqc__quality_report:
         "https://github.com/xsitarcik/wrappers/raw/v1.12.6/wrappers/fastqc/quality"
 
 
-rule curl__download_kraken_db:
+rule kraken__download_db:
     output:
         protected("{prefix_dir}/hash.k2d"),
     params:

@@ -78,7 +78,7 @@ rule kleborate__call:
         "kleborate --all -o {output} -a {input} > {log} 2>&1"
 
 
-rule spatyper__database_download:
+rule spatyper__download_db:
     output:
         repeats=protected(os.path.join(config["spatyper_db_dir"], "sparepeats.fasta")),
         order=protected(os.path.join(config["spatyper_db_dir"], "spatypes.txt")),
@@ -163,7 +163,7 @@ rule mob_suite__download_db:
     params:
         db_dir=lambda wildcards, output: os.path.dirname(output.db),
     conda:
-        "../envs/mob_suite.yaml"
+        "../envs/frozen/mob_suite.yaml"
     log:
         "logs/plasmids/download_db.log",
     shell:
@@ -186,7 +186,7 @@ rule mob_suite__typer:
         "mob_typer --infile {input.fasta} --database_directory {params.db_dir} --out_file {output} > {log} 2>&1"
 
 
-rule sistr_cmd__call:
+rule sistr__cmd__call:
     input:
         infer_assembly_fasta,
     output:
@@ -202,7 +202,7 @@ rule sistr_cmd__call:
         " --no-cgmlst {input}) > {log} 2>&1"
 
 
-rule rgi_download_db:
+rule rgi__download_db:
     output:
         json=protected(os.path.join(config["rgi_db_dir"], "card.json")),
     params:
@@ -217,7 +217,7 @@ rule rgi_download_db:
         "mkdir -p {params.db_dir} && (curl -SL {params.db_url} | tar xjvf - -C {params.db_dir}) > {log} 2>&1"
 
 
-rule rgi_load_db:
+rule rgi__load_db:
     input:
         json=os.path.join(config["rgi_db_dir"], "card.json"),
     output:
@@ -230,7 +230,7 @@ rule rgi_load_db:
         "(rm -rf {output.loaded_db} && rgi load --card_json {input.json} --local) > {log} 2>&1"
 
 
-rule rgi_call:
+rule rgi__call:
     input:
         json=os.path.join(config["rgi_db_dir"], "card.json"),
         loaded_db="localDB",
@@ -251,11 +251,11 @@ rule rgi_call:
         " --output_file {params.out_prefix} --num_threads {threads} --split_prodigal_jobs > {log} 2>&1"
 
 
-rule resfinder_download_db:
+rule resfinder__download_db:
     output:
-        resfinder_db=directory(os.path.join(config["rgi_db_dir"], "resfinder_db")),
-        pointfinder_db=directory(os.path.join(config["rgi_db_dir"], "pointfinder_db")),
-        disinfinder_db=directory(os.path.join(config["rgi_db_dir"], "disinfinder_db")),
+        resfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "resfinder_db")),
+        pointfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "pointfinder_db")),
+        disinfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "disinfinder_db")),
     params:
         resfinder_db_url="https://bitbucket.org/genomicepidemiology/resfinder_db/",
         pointfinder_db_url="https://bitbucket.org/genomicepidemiology/pointfinder_db/",
@@ -272,7 +272,7 @@ rule resfinder_download_db:
         " ) > {log} 2>&1"
 
 
-rule resfinder_call:
+rule resfinder__call:
     input:
         resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
         pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
