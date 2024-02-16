@@ -91,7 +91,12 @@ def get_outputs():
 
     if len(get_sample_names_with_reads_as_input()) > 1:
         outputs["multiqc"] = "results/summary/multiqc.html"
-
+    else:
+        outputs["qc"] = [
+            "results/summary/fastqc/{sample}_R1_fastqc.html",
+            "results/summary/fastqc/{sample}_R2_fastqc.html",
+            "results/kraken/{sample}.bracken",
+        ]
     return outputs
 
 
