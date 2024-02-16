@@ -163,7 +163,7 @@ rule mob_suite__download_db:
     params:
         db_dir=lambda wildcards, output: os.path.dirname(output.db),
     conda:
-        "../envs/mob_suite.yaml"
+        "../envs/frozen/mob_suite.yaml"
     log:
         "logs/plasmids/download_db.log",
     shell:
