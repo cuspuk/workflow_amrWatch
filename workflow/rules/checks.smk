@@ -3,13 +3,16 @@ checkpoint assembly_constructed:
         "results/assembly/{sample}/assembly.gfa",
     output:
         "results/checks/{sample}/assembly_constructed.txt",
+    params:
+        happy_msg="\t".join(["PASS", "assembly_construction", "success", "Assembly is not empty"]),
+        sad_msg="\t".join(["FAIL", "assembly_construction", "failure", "Assembly construction failed"]),
     conda:
         "../envs/coreutils.yaml"
     localrule: True
     log:
         "logs/checks/assembly_constructed/{sample}.log",
     shell:
-        "(([ -s {input} ] && echo 'PASS: Assembly is not empty') || echo 'FAIL: Assembly construction failed') > {output} 2> {log}"
+        "(([ -s {input} ] && echo {params.happy_msg:q}) || echo {params.sad_msg:q}) > {output} 2> {log}"
 
 
 rule assembly_not_requested:
@@ -17,11 +20,13 @@ rule assembly_not_requested:
         "results/checks/{sample}/check_skipping.txt",
     conda:
         "../envs/coreutils.yaml"
+    params:
+        message="\t".join(["PASS", "assembly_not_requested", "true", "Assembly provided as input"]),
     log:
         "logs/checks/assembly/{sample}.log",
     localrule: True
     shell:
-        "echo 'PASS: Assembly provided as input' > {output} 2> {log}"
+        "echo -e {params.message} > {output} 2> {log}"
 
 
 rule check_assembly_quality:
@@ -56,10 +61,10 @@ rule check_self_contamination:
     log:
         "logs/checks/self_contamination/{sample}.log",
     conda:
-        "../envs/grep.yaml"
+        "../envs/python.yaml"
     localrule: True
     script:
-        "../scripts/self_contamination.sh"
+        "../scripts/self_contamination.py"
 
 
 rule check_coverage_from_qualimap:

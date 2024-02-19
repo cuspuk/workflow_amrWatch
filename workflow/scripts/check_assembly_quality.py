@@ -1,5 +1,102 @@
 import os
 import sys
+from dataclasses import dataclass
+from enum import StrEnum
+
+
+class QCResult(StrEnum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+    WARN = "WARN"
+
+
+@dataclass
+class QCRow:
+    result: QCResult
+    parameter: str
+    value: int | float | str
+    comment: str
+
+    def __str__(self):
+        return f"{self.result}\t{self.parameter}\t{self.value}\t{self.comment}"
+
+    @staticmethod
+    def header():
+        return f"result\tparameter\tvalue\tcomment"
+
+
+@dataclass
+class AssemblyQuality:
+    dead_ends: int
+    basepairs: int
+    contigs: int
+
+    def _evaluate_base_pairs(self, min_length_in_bp: int, max_length_in_bp: int) -> QCRow:
+        parameter = "assembly length"
+        if self.basepairs < min_length_in_bp:
+            return QCRow(
+                QCResult.FAIL,
+                parameter,
+                self.basepairs,
+                f"Number of basepairs in assembly is lower than given threshold ({self.basepairs}<{min_length_in_bp})",
+            )
+        if self.basepairs > max_length_in_bp:
+            return QCRow(
+                QCResult.FAIL,
+                parameter,
+                self.basepairs,
+                f"Number of basepairs in assembly is higher than given threshold ({self.basepairs}>{max_length_in_bp})",
+            )
+        return QCRow(
+            QCResult.PASS,
+            parameter,
+            self.basepairs,
+            f"Number of basepairs in assembly fulfills the criteria ({min_length_in_bp}<={self.basepairs}<={max_length_in_bp})",
+        )
+
+    def _evaluate_contigs(self, max_contigs: int) -> QCRow:
+        if self.contigs > max_contigs:
+            return QCRow(
+                QCResult.FAIL,
+                "number_of_contigs",
+                self.contigs,
+                f"Number of contigs is greater than threshold ({self.contigs}>{max_contigs})",
+            )
+        return QCRow(
+            QCResult.PASS,
+            "number_of_contigs",
+            self.contigs,
+            f"Number of contigs fulfills criteria ({self.contigs}<={max_contigs})",
+        )
+
+    def _evaluate_dead_ends(self, max_dead_ends: int):
+        if self.dead_ends > max_dead_ends:
+            return QCRow(
+                QCResult.WARN,
+                "number_of_dead_ends",
+                self.dead_ends,
+                f"Number of dead ends is greater than threshold ({self.dead_ends}>{max_dead_ends})",
+            )
+        return QCRow(
+            QCResult.PASS,
+            "number_of_dead_ends",
+            self.dead_ends,
+            f"Number of dead ends fulfills criteria ({self.dead_ends}<={max_dead_ends})",
+        )
+
+    def evaluate(
+        self,
+        max_dead_ends: int,
+        max_contigs: int,
+        min_length_in_bp: int,
+        max_length_in_bp: int,
+    ):
+        rows = [
+            self._evaluate_base_pairs(min_length_in_bp, max_length_in_bp),
+            self._evaluate_contigs(max_contigs),
+            self._evaluate_dead_ends(max_dead_ends),
+        ]
+        return rows
 
 
 def parse_assembly_metrics(bandage_output_file: str):
@@ -32,23 +129,10 @@ def parse_seqkit_stats(seqkit_stats_file: str):
 def get_assembly_quality_decision(
     bandage_output_file: str,
     seqkit_stats_file: str,
-    max_dead_ends: int,
-    max_contigs: int,
-    min_length_in_bp: int,
-    max_length_in_bp: int,
 ):
     dead_ends, basepairs = parse_assembly_metrics(bandage_output_file)
     contigs = parse_seqkit_stats(seqkit_stats_file)
-
-    if basepairs < min_length_in_bp:
-        return f"FAIL: Number of basepairs in assembly is lower than given threshold ({basepairs}<{min_length_in_bp})"
-    if basepairs > max_length_in_bp:
-        return f"FAIL: Number of basepairs in assembly is higher than given threshold ({basepairs}>{max_length_in_bp})"
-    if contigs > max_contigs:
-        return f"FAIL: Number of contigs is {contigs} which is greater than threshold {max_contigs}"
-    if dead_ends > max_dead_ends:
-        return f"WARN: Number of dead ends is {dead_ends} which is greater than threshold {max_dead_ends}"
-    return f"PASS: Assembly quality fulfills criteria, assembly length ({max_length_in_bp}>={basepairs}>={min_length_in_bp}), number of contigs ({contigs}<={max_contigs}) and dead ends ({dead_ends}<={max_dead_ends})"
+    return AssemblyQuality(dead_ends, basepairs, contigs)
 
 
 def evaluate_assembly_quality(
@@ -60,17 +144,17 @@ def evaluate_assembly_quality(
     min_length_in_bp: int,
     max_length_in_bp: int,
 ):
-    decision = get_assembly_quality_decision(
-        bandage_output_file, seqkit_stats_file, max_dead_ends, max_contigs, min_length_in_bp, max_length_in_bp
-    )
+    parsed_values = get_assembly_quality_decision(bandage_output_file, seqkit_stats_file)
+    decisions = parsed_values.evaluate(max_dead_ends, max_contigs, min_length_in_bp, max_length_in_bp)
 
     output_dir = os.path.dirname(output_path)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, mode=0o777, exist_ok=True)
 
     with open(output_path, "w") as f:
-        f.write(decision)
-        f.write("\n")
+        for decision in decisions:
+            f.write(str(decision))
+            f.write("\n")
 
 
 if __name__ == "__main__":
