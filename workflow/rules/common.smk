@@ -89,14 +89,16 @@ def get_outputs():
         "final_results": expand("results/checks/{sample}/.final_results_requested.txt", sample=sample_names),
     }
 
-    if len(get_sample_names_with_reads_as_input()) > 1:
-        outputs["multiqc"] = "results/summary/multiqc.html"
-    else:
-        outputs["qc"] = [
-            "results/summary/fastqc/{sample}_R1_fastqc.html",
-            "results/summary/fastqc/{sample}_R2_fastqc.html",
-            "results/kraken/{sample}.bracken",
-        ]
+    if samples_with_reads := get_sample_names_with_reads_as_input():
+        if len(samples_with_reads) > 1:
+            outputs["multiqc"] = "results/summary/multiqc.html"
+        else:
+            sample = samples_with_reads[0]
+            outputs["qc"] = [
+                f"results/summary/fastqc/{sample}_R1_fastqc.html",
+                f"results/summary/fastqc/{sample}_R2_fastqc.html",
+                f"results/kraken/{sample}.bracken",
+            ]
     return outputs
 
 
