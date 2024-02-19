@@ -179,7 +179,7 @@ rule mob_suite__typer:
     params:
         db_dir=lambda wildcards, input: os.path.dirname(input.db),
     conda:
-        "../envs/mob_suite.yaml"
+        "../envs/frozen/mob_suite.yaml"
     log:
         "logs/plasmids/{sample}/mob_typer.log",
     shell:
