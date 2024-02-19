@@ -95,8 +95,8 @@ def get_outputs():
         else:
             sample = samples_with_reads[0]
             outputs["qc"] = [
-                f"results/summary/fastqc/{sample}_R1_fastqc.html",
-                f"results/summary/fastqc/{sample}_R2_fastqc.html",
+                f"results/reads/trimmed/fastqc/{sample}_R1/fastqc_data.txt",
+                f"results/reads/trimmed/fastqc/{sample}_R2/fastqc_data.txt",
                 f"results/kraken/{sample}.bracken",
             ]
     return outputs
