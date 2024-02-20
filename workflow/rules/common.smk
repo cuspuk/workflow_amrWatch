@@ -96,7 +96,7 @@ def check_all_checks_success_for_sample(sample: str):
 def get_outputs():
     sample_names = get_sample_names()
     outputs = {
-        "final_results": expand("results/checks/{sample}/.final_results_requested.txt", sample=sample_names),
+        "final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names),
     }
 
     if samples_with_reads := get_sample_names_with_reads_as_input():
@@ -138,11 +138,11 @@ def infer_outputs_for_sample(wildcards):
             "results/amr_detect/{sample}/rgi_main.txt",
             "results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
             "results/plasmids/{sample}/mob_typer.txt",
-            "results/checks/{sample}/summary.txt",
+            "results/checks/{sample}/qc_summary.tsv",
         ] + get_taxonomy_dependant_outputs(wildcards.sample, taxa)
 
     else:
-        return "results/checks/{sample}/summary.txt"
+        return "results/checks/{sample}/qc_summary.tsv"
 
 
 ### Wildcard handling #################################################################################################
@@ -195,18 +195,18 @@ def get_taxonomy_for_resfinder(wildcards):
 
 def infer_relevant_checks(wildcards):
     if sample_has_asssembly_as_input(wildcards.sample):
-        return ["results/checks/{sample}/check_skipping.txt"]
+        return ["results/checks/{sample}/check_skipping.tsv"]
 
     checks = [
-        "results/checks/{sample}/foreign_contamination.txt",
-        "results/checks/{sample}/assembly_constructed.txt",
+        "results/checks/{sample}/foreign_contamination.tsv",
+        "results/checks/{sample}/assembly_constructed.tsv",
     ]
 
     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         checks += [
-            "results/checks/{sample}/assembly_quality.txt",
-            "results/checks/{sample}/coverage_check.txt",
-            "results/checks/{sample}/self_contamination_check.txt",
+            "results/checks/{sample}/assembly_quality.tsv",
+            "results/checks/{sample}/coverage_check.tsv",
+            "results/checks/{sample}/self_contamination_check.tsv",
         ]
 
     return checks
