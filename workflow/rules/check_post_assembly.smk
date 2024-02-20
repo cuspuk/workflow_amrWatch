@@ -92,11 +92,13 @@ checkpoint checkpoint_request_post_assembly_checks_if_relevant:
         "results/checks/{sample}/qc_summary.tsv",
     log:
         "logs/checks/summary/{sample}.log",
+    params:
+        header="result\tparameter\tvalue\tcomment",
     conda:
         "../envs/coreutils.yaml"
     localrule: True
     shell:
-        "cat {input} > {output} 2>&1"
+        "(echo -e {params.header:q} && cat {input}) > {output} 2> {log}"
 
 
 rule request_all_relevant_outputs:
