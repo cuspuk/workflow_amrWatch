@@ -1,4 +1,4 @@
-checkpoint assembly_constructed:
+checkpoint checkpoint_assembly_construction:
     input:
         "results/assembly/{sample}/assembly.gfa",
     output:
@@ -15,7 +15,7 @@ checkpoint assembly_constructed:
         "(([ -s {input} ] && echo {params.happy_msg:q}) || echo {params.sad_msg:q}) > {output} 2> {log}"
 
 
-rule assembly_not_requested:
+rule log_that_assembly_was_not_requested:
     output:
         "results/checks/{sample}/check_skipping.tsv",
     conda:
@@ -85,7 +85,7 @@ rule check_coverage_from_qualimap:
         "../scripts/coverage_check.py"
 
 
-checkpoint summary_all_checks:
+checkpoint checkpoint_request_post_assembly_checks_if_relevant:
     input:
         infer_relevant_checks,
     output:
@@ -99,7 +99,7 @@ checkpoint summary_all_checks:
         "cat {input} > {output} 2>&1"
 
 
-rule get_final_outputs:
+rule request_all_relevant_outputs:
     input:
         infer_outputs_for_sample,
     output:

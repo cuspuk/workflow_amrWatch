@@ -79,22 +79,22 @@ def get_key_for_value_from_db(value: str, db: dict) -> str:
 
 
 def get_parsed_taxa_from_gtdbtk_for_sample(sample: str):
-    with checkpoints.gtdbtk__parse_taxa.get(sample=sample).output[0].open() as f:
+    with checkpoints.checkpoint_parse_taxa_gtdbtk.get(sample=sample).output[0].open() as f:
         return f.read().strip()
 
 
 def check_preassembly_QC_for_sample(sample: str) -> bool:
-    with checkpoints.pre_assembly_QC.get(sample=sample).output[0].open() as f:
+    with checkpoints.checkpoint_pre_assembly_QC.get(sample=sample).output[0].open() as f:
         return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
 
 
 def check_assembly_construction_success_for_sample(sample: str):
-    with checkpoints.assembly_constructed.get(sample=sample).output[0].open() as f:
+    with checkpoints.checkpoint_assembly_construction.get(sample=sample).output[0].open() as f:
         return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
 
 
 def check_all_checks_success_for_sample(sample: str):
-    with checkpoints.summary_all_checks.get(sample=sample).output[0].open() as f:
+    with checkpoints.checkpoint_request_post_assembly_checks_if_relevant.get(sample=sample).output[0].open() as f:
         return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
 
 

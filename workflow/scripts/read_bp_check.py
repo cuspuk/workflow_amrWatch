@@ -3,7 +3,7 @@ import sys
 from dataclasses import dataclass
 from enum import StrEnum
 
-CUTADAPT_LINE_PREFIX = "        Total written (filtered):"
+CUTADAPT_LINE_PREFIX = "Total written (filtered):"
 CUTADAPT_UNITS = "bp"
 
 
