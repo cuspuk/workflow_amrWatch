@@ -30,7 +30,7 @@ rule check_number_of_bases:
         "../scripts/read_bp_check.py"
 
 
-checkpoint summary_pre_assembly_checks:
+checkpoint pre_assembly_QC:
     input:
         bracken="results/checks/{sample}/foreign_contamination.tsv",
         bps="results/checks/{sample}/basepairs_for_assembly.tsv",

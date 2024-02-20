@@ -83,9 +83,14 @@ def get_parsed_taxa_from_gtdbtk_for_sample(sample: str):
         return f.read().strip()
 
 
+def check_preassembly_QC_for_sample(sample: str) -> bool:
+    with checkpoints.pre_assembly_QC.get(sample=sample).output[0].open() as f:
+        return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
+
+
 def check_assembly_construction_success_for_sample(sample: str):
     with checkpoints.assembly_constructed.get(sample=sample).output[0].open() as f:
-        return f.read().startswith("PASS")
+        return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
 
 
 def check_all_checks_success_for_sample(sample: str):
@@ -191,11 +196,6 @@ def get_taxonomy_for_mlst(wildcards):
 def get_taxonomy_for_resfinder(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
     return taxa.lower()
-
-
-def check_preassembly_QC_for_sample(sample: str) -> bool:
-    with checkpoints.pre_assembly_QC.get(sample=sample).output[0].open() as f:
-        return f.read().startswith("PASS")
 
 
 def infer_relevant_checks(wildcards):
