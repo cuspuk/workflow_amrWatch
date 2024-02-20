@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.9.0](https://github.com/xsitarcik/amrWatch/compare/v2.8.2...v2.9.0) (2024-02-20)
+
+
+### Features
+
+* added check for bp before assembly, bracken added to be other condition for assembly ([25763b3](https://github.com/xsitarcik/amrWatch/commit/25763b35969369ab360def7f402b0ccdee9a6972))
+* reworked checks to produce tsv format to increase parsability ([c6ab8fc](https://github.com/xsitarcik/amrWatch/commit/c6ab8fc6811e7ab3c193c79cdced23558d18d413))
+
+
+### Bug Fixes
+
+* added check for adapters fasta as it cant be directly checked from snakemake rule ([c581821](https://github.com/xsitarcik/amrWatch/commit/c58182195084e73e8765c43c713f537615f4d6f3))
+* added header for qc_summary tsv ([8475964](https://github.com/xsitarcik/amrWatch/commit/8475964702cd1d0575e13c7fa5fc5f89e6767071))
+* check tsvs are removed as they are summarized in other file ([6381e45](https://github.com/xsitarcik/amrWatch/commit/6381e45d00b741454d60a6d9074bc79bd455add8))
+* fix download for gtdb metadata ([8b21a46](https://github.com/xsitarcik/amrWatch/commit/8b21a4600804ab8882fcd8f044c2bac2a141c78d))
+* marked bwa_index in selfcontamination check as temporary ([21930e8](https://github.com/xsitarcik/amrWatch/commit/21930e89ca5b76962ace0646453f1761cb8b654c))
+* multiqc now works with bracken instead of kraken ([360e3b1](https://github.com/xsitarcik/amrWatch/commit/360e3b19c381290818f3614dfdc713fbdd40a699))
+* request qc outputs even when one sample is provided ([2d8cc30](https://github.com/xsitarcik/amrWatch/commit/2d8cc3049de76c6541f8400e8b93f6190215cf8c))
+
 ## [2.8.2](https://github.com/xsitarcik/amrWatch/compare/v2.8.1...v2.8.2) (2024-02-16)
 
 
