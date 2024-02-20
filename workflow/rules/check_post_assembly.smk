@@ -35,7 +35,7 @@ rule check_assembly_quality:
         svg="results/assembly/{sample}/bandage/bandage.svg",
         stats="results/assembly/{sample}/seqkit_stats.tsv",
     output:
-        "results/checks/{sample}/assembly_quality.tsv",
+        temp("results/checks/{sample}/assembly_quality.tsv"),
     params:
         max_dead_ends=config["assembly__unicycler"]["max_dead_ends"],
         max_contigs=config["assembly__unicycler"]["max_contigs"],
@@ -54,7 +54,7 @@ rule check_self_contamination:
     input:
         "results/self_contamination/{sample}/filtered.vcf",
     output:
-        "results/checks/{sample}/self_contamination_check.tsv",
+        temp("results/checks/{sample}/self_contamination_check.tsv"),
     params:
         max_rows=config["self_contamination"]["max_ambiguous_rows"],
         check_level=config["self_contamination"]["check_level"],
@@ -71,7 +71,7 @@ rule check_coverage_from_qualimap:
     input:
         "results/self_contamination/{sample}/markdup/bamqc",
     output:
-        "results/checks/{sample}/coverage_check.tsv",
+        temp("results/checks/{sample}/coverage_check.tsv"),
     params:
         genome_results_file=lambda wildcards, input: os.path.join(input[0], "genome_results.txt"),
         warn_threshold=config["coverage_check"]["warn_threshold"],
