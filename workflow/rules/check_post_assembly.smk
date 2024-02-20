@@ -1,27 +1,32 @@
-checkpoint assembly_constructed:
+checkpoint checkpoint_assembly_construction:
     input:
         "results/assembly/{sample}/assembly.gfa",
     output:
-        "results/checks/{sample}/assembly_constructed.txt",
+        "results/checks/{sample}/assembly_constructed.tsv",
+    params:
+        happy_msg="\t".join(["PASS", "assembly_construction", "success", "Assembly is not empty"]),
+        sad_msg="\t".join(["FAIL", "assembly_construction", "failure", "Assembly construction failed"]),
     conda:
         "../envs/coreutils.yaml"
     localrule: True
     log:
         "logs/checks/assembly_constructed/{sample}.log",
     shell:
-        "(([ -s {input} ] && echo 'PASS: Assembly is not empty') || echo 'FAIL: Assembly construction failed') > {output} 2> {log}"
+        "(([ -s {input} ] && echo {params.happy_msg:q}) || echo {params.sad_msg:q}) > {output} 2> {log}"
 
 
-rule assembly_not_requested:
+rule log_that_assembly_was_not_requested:
     output:
-        "results/checks/{sample}/check_skipping.txt",
+        "results/checks/{sample}/check_skipping.tsv",
     conda:
         "../envs/coreutils.yaml"
+    params:
+        message="\t".join(["PASS", "assembly_not_requested", "true", "Assembly provided as input"]),
     log:
         "logs/checks/assembly/{sample}.log",
     localrule: True
     shell:
-        "echo 'PASS: Assembly provided as input' > {output} 2> {log}"
+        "echo -e {params.message} > {output} 2> {log}"
 
 
 rule check_assembly_quality:
@@ -30,7 +35,7 @@ rule check_assembly_quality:
         svg="results/assembly/{sample}/bandage/bandage.svg",
         stats="results/assembly/{sample}/seqkit_stats.tsv",
     output:
-        "results/checks/{sample}/assembly_quality.txt",
+        temp("results/checks/{sample}/assembly_quality.tsv"),
     params:
         max_dead_ends=config["assembly__unicycler"]["max_dead_ends"],
         max_contigs=config["assembly__unicycler"]["max_contigs"],
@@ -49,24 +54,24 @@ rule check_self_contamination:
     input:
         "results/self_contamination/{sample}/filtered.vcf",
     output:
-        "results/checks/{sample}/self_contamination_check.txt",
+        temp("results/checks/{sample}/self_contamination_check.tsv"),
     params:
         max_rows=config["self_contamination"]["max_ambiguous_rows"],
         check_level=config["self_contamination"]["check_level"],
     log:
         "logs/checks/self_contamination/{sample}.log",
     conda:
-        "../envs/grep.yaml"
+        "../envs/python.yaml"
     localrule: True
     script:
-        "../scripts/self_contamination.sh"
+        "../scripts/self_contamination.py"
 
 
 rule check_coverage_from_qualimap:
     input:
         "results/self_contamination/{sample}/markdup/bamqc",
     output:
-        "results/checks/{sample}/coverage_check.txt",
+        temp("results/checks/{sample}/coverage_check.tsv"),
     params:
         genome_results_file=lambda wildcards, input: os.path.join(input[0], "genome_results.txt"),
         warn_threshold=config["coverage_check"]["warn_threshold"],
@@ -80,41 +85,27 @@ rule check_coverage_from_qualimap:
         "../scripts/coverage_check.py"
 
 
-rule check_foreign_contamination:
-    input:
-        "results/kraken/{sample}.bracken",
-    output:
-        "results/checks/{sample}/foreign_contamination.txt",
-    params:
-        fraction_threshold=config["foreign_contamination"]["abundance_check_fraction"],
-    log:
-        "logs/checks/foreign_contamination/{sample}.log",
-    localrule: True
-    conda:
-        "../envs/python.yaml"
-    script:
-        "../scripts/genera_check.py"
-
-
-checkpoint summary_all_checks:
+checkpoint checkpoint_request_post_assembly_checks_if_relevant:
     input:
         infer_relevant_checks,
     output:
-        "results/checks/{sample}/summary.txt",
+        "results/checks/{sample}/qc_summary.tsv",
     log:
         "logs/checks/summary/{sample}.log",
+    params:
+        header="result\tparameter\tvalue\tcomment",
     conda:
         "../envs/coreutils.yaml"
     localrule: True
     shell:
-        "cat {input} > {output} 2>&1"
+        "(echo -e {params.header:q} && cat {input}) > {output} 2> {log}"
 
 
-rule get_final_outputs:
+rule request_all_relevant_outputs:
     input:
         infer_outputs_for_sample,
     output:
-        temp("results/checks/{sample}/.final_results_requested.txt"),
+        temp("results/checks/{sample}/.final_results_requested.tsv"),
     conda:
         "../envs/coreutils.yaml"
     localrule: True

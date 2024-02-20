@@ -83,7 +83,8 @@ rule bracken__correction:
         kraken_tax=os.path.join(config["foreign_contamination"]["kraken_dir"], "hash.k2d"),
         report="results/kraken/{sample}.kreport2",
     output:
-        "results/kraken/{sample}.bracken",
+        bracken="results/kraken/{sample}.bracken",
+        kreport="results/kraken/{sample}_bracken_genuses.kreport2",
     params:
         db_dir=lambda wildcards, input: os.path.dirname(input.kraken_tax),
         read_length=config["foreign_contamination"]["read_length"],
@@ -95,7 +96,7 @@ rule bracken__correction:
     conda:
         "../envs/bracken.yaml"
     shell:
-        "bracken -d {params.db_dir} -i {input.report} -o {output} -r {params.read_length}"
+        "bracken -d {params.db_dir} -i {input.report} -o {output.bracken} -r {params.read_length}"
         " -t {params.threshold} -l {params.classification_level} > {log} 2>&1"
 
 
@@ -107,7 +108,9 @@ rule multiqc__report:
             sample=get_sample_names_with_reads_as_input(),
             pair=["R1", "R2"],
         ),
-        kraken=expand("results/kraken/{sample}.kreport2", sample=get_sample_names_with_reads_as_input()),
+        bracken=expand(
+            "results/kraken/{sample}_bracken_genuses.kreport2", sample=get_sample_names_with_reads_as_input()
+        ),
     output:
         "results/summary/multiqc.html",
     params:

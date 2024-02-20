@@ -31,7 +31,7 @@ rule gtdbtk__download_metadata:
     log:
         "{gtdb_dir}/download_metadata.log",
     shell:
-        "(wget https://data.ace.uq.edu.au/public/gtdb/data/releases/latest/bac120_metadata.tsv.gz && gzip -d {params.gzipped}) > {log} 2>&1"
+        "(wget https://data.ace.uq.edu.au/public/gtdb/data/releases/latest/bac120_metadata.tsv.gz -O {params.gzipped} && gzip -d {params.gzipped}) > {log} 2>&1"
 
 
 rule gtdbtk__convert_to_ncbi:
@@ -50,7 +50,7 @@ rule gtdbtk__convert_to_ncbi:
         "../scripts/gtdbtk_ncbi_convert.py"
 
 
-checkpoint gtdbtk__parse_taxa:
+checkpoint checkpoint_parse_taxa_gtdbtk:
     input:
         gtdb_tsv="results/taxonomy/{sample}/classify/gtdbtk.bac120.summary.tsv",
         ncbi_taxa="results/taxonomy/{sample}/ncbi_taxa.tsv",  # not a required dependency. Specified to simplify gathering of results.

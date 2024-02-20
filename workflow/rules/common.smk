@@ -15,6 +15,16 @@ pepfile: config["pepfile"]
 validate(pep.sample_table, "../schemas/samples.schema.yaml")
 
 
+def validate_dynamic_config():
+    if config["reads__trimming"]["adapter_removal"]["do"]:
+        if not os.path.exists(config["reads__trimming"]["adapter_removal"]["adapters_fasta"]):
+            adapter_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
+            raise ValueError(f"Adapter removal is enabled, but the {adapter_file=} does not exist")
+
+
+validate_dynamic_config()
+
+
 def get_sample_names() -> list[str]:
     return list(pep.sample_table["sample_name"].values)
 
@@ -69,34 +79,42 @@ def get_key_for_value_from_db(value: str, db: dict) -> str:
 
 
 def get_parsed_taxa_from_gtdbtk_for_sample(sample: str):
-    with checkpoints.gtdbtk__parse_taxa.get(sample=sample).output[0].open() as f:
+    with checkpoints.checkpoint_parse_taxa_gtdbtk.get(sample=sample).output[0].open() as f:
         return f.read().strip()
 
 
+def check_preassembly_QC_for_sample(sample: str) -> bool:
+    with checkpoints.checkpoint_pre_assembly_QC.get(sample=sample).output[0].open() as f:
+        return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
+
+
 def check_assembly_construction_success_for_sample(sample: str):
-    with checkpoints.assembly_constructed.get(sample=sample).output[0].open() as f:
-        return f.read().startswith("PASS:")
+    with checkpoints.checkpoint_assembly_construction.get(sample=sample).output[0].open() as f:
+        return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
 
 
 def check_all_checks_success_for_sample(sample: str):
-    with checkpoints.summary_all_checks.get(sample=sample).output[0].open() as f:
-        return all([line.startswith(("PASS:", "WARN:")) for line in f.readlines()])
+    with checkpoints.checkpoint_request_post_assembly_checks_if_relevant.get(sample=sample).output[0].open() as f:
+        header = f.readline()
+        return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
 
 
 def get_outputs():
     sample_names = get_sample_names()
     outputs = {
-        "final_results": expand("results/checks/{sample}/.final_results_requested.txt", sample=sample_names),
+        "final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names),
     }
 
-    if len(get_sample_names_with_reads_as_input()) > 1:
-        outputs["multiqc"] = "results/summary/multiqc.html"
-    else:
-        outputs["qc"] = [
-            "results/summary/fastqc/{sample}_R1_fastqc.html",
-            "results/summary/fastqc/{sample}_R2_fastqc.html",
-            "results/kraken/{sample}.bracken",
-        ]
+    if samples_with_reads := get_sample_names_with_reads_as_input():
+        if len(samples_with_reads) > 1:
+            outputs["multiqc"] = "results/summary/multiqc.html"
+        else:
+            sample = samples_with_reads[0]
+            outputs["qc"] = [
+                f"results/reads/trimmed/fastqc/{sample}_R1/fastqc_data.txt",
+                f"results/reads/trimmed/fastqc/{sample}_R2/fastqc_data.txt",
+                f"results/kraken/{sample}.bracken",
+            ]
     return outputs
 
 
@@ -126,11 +144,11 @@ def infer_outputs_for_sample(wildcards):
             "results/amr_detect/{sample}/rgi_main.txt",
             "results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
             "results/plasmids/{sample}/mob_typer.txt",
-            "results/checks/{sample}/summary.txt",
+            "results/checks/{sample}/qc_summary.tsv",
         ] + get_taxonomy_dependant_outputs(wildcards.sample, taxa)
 
     else:
-        return "results/checks/{sample}/summary.txt"
+        return "results/checks/{sample}/qc_summary.tsv"
 
 
 ### Wildcard handling #################################################################################################
@@ -183,18 +201,18 @@ def get_taxonomy_for_resfinder(wildcards):
 
 def infer_relevant_checks(wildcards):
     if sample_has_asssembly_as_input(wildcards.sample):
-        return ["results/checks/{sample}/check_skipping.txt"]
+        return ["results/checks/{sample}/check_skipping.tsv"]
 
-    checks = [
-        "results/checks/{sample}/foreign_contamination.txt",
-        "results/checks/{sample}/assembly_constructed.txt",
-    ]
+    checks = ["results/checks/{sample}/pre_assembly_summary.tsv"]
+
+    if not check_preassembly_QC_for_sample(wildcards.sample):
+        return checks
 
     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         checks += [
-            "results/checks/{sample}/assembly_quality.txt",
-            "results/checks/{sample}/coverage_check.txt",
-            "results/checks/{sample}/self_contamination_check.txt",
+            "results/checks/{sample}/assembly_quality.tsv",
+            "results/checks/{sample}/coverage_check.tsv",
+            "results/checks/{sample}/self_contamination_check.tsv",
         ]
 
     return checks

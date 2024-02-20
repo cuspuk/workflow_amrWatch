@@ -1,8 +1,31 @@
 import locale
 import os
 import sys
+from dataclasses import dataclass
+from enum import StrEnum
 
 _REGEX_VALUE = "     mean coverageData = "
+
+
+class QCResult(StrEnum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+    WARN = "WARN"
+
+
+@dataclass
+class QCRow:
+    result: QCResult
+    parameter: str
+    value: int | float | str
+    comment: str
+
+    def __str__(self):
+        return f"{self.result}\t{self.parameter}\t{self.value}\t{self.comment}"
+
+    @staticmethod
+    def header():
+        return f"result\tparameter\tvalue\tcomment"
 
 
 def convert_qualimap_coverage_value(string_value: str):
@@ -33,13 +56,27 @@ def parse_qualimap_for_coverage(filename: str) -> float:
     raise ValueError(f"Regex={_REGEX_VALUE} did not matched any row in qualimap file={filename}")
 
 
-def get_decision_for_coverage(coverage: float, warn_threshold: float, fail_threshold: float) -> str:
+def get_decision_for_coverage(coverage: float, warn_threshold: float, fail_threshold: float) -> QCRow:
     if coverage < fail_threshold:
-        return f"FAIL: Mean coverage is lower than hard minimum threshold ({coverage}<{fail_threshold})"
+        return QCRow(
+            QCResult.FAIL,
+            "mean_coverage",
+            coverage,
+            f"Mean coverage is lower than hard minimum threshold ({coverage}<{fail_threshold})",
+        )
     if coverage < warn_threshold:
-        return f"WARN: Mean coverage is higher than hard threshold but lower than soft threshold ({fail_threshold}<={coverage}<{warn_threshold})"
-
-    return f"PASS: Mean coverage is higher than soft threshold ({coverage}>={warn_threshold})"
+        return QCRow(
+            QCResult.WARN,
+            "mean_coverage",
+            coverage,
+            f"Mean coverage is higher than hard threshold but lower than soft threshold ({fail_threshold}<={coverage}<{warn_threshold})",
+        )
+    return QCRow(
+        QCResult.PASS,
+        "mean_coverage",
+        coverage,
+        f"Mean coverage is higher than soft threshold ({coverage}>={warn_threshold})",
+    )
 
 
 def evaluate_coverage_check(filename: str, output_path: str, warn_threshold: float, fail_threshold: float):
@@ -50,7 +87,7 @@ def evaluate_coverage_check(filename: str, output_path: str, warn_threshold: flo
         os.makedirs(output_dir, mode=0o777, exist_ok=False)
 
     with open(output_path, "w") as f:
-        f.write(decision)
+        f.write(str(decision))
         f.write("\n")
 
 

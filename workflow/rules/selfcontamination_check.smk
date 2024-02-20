@@ -2,7 +2,7 @@ rule bwa__build_index:
     input:
         "results/assembly/{sample}/assembly.fasta",
     output:
-        idx=multiext("results/assembly/{sample}/bwa_index/bwa", ".amb", ".ann", ".bwt", ".pac", ".sa"),
+        idx=temp(multiext("results/assembly/{sample}/bwa_index/bwa", ".amb", ".ann", ".bwt", ".pac", ".sa")),
     params:
         extra="-a bwtsw",
     log:

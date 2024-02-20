@@ -1,6 +1,29 @@
 import os
 import sys
+from dataclasses import dataclass
+from enum import StrEnum
 from typing import TypedDict
+
+
+class QCResult(StrEnum):
+    PASS = "PASS"
+    FAIL = "FAIL"
+    WARN = "WARN"
+
+
+@dataclass
+class QCRow:
+    result: QCResult
+    parameter: str
+    value: int | float | str
+    comment: str
+
+    def __str__(self):
+        return f"{self.result}\t{self.parameter}\t{self.value}\t{self.comment}"
+
+    @staticmethod
+    def header():
+        return f"result\tparameter\tvalue\tcomment"
 
 
 class GenusFraction(TypedDict):
@@ -20,12 +43,19 @@ def get_abundant_genera_list(bracken_file: str, threshold_fraction: float) -> li
     return genera_list
 
 
-def get_genera_check_decision(bracken_file: str, threshold_fraction: float) -> str:
+def get_genera_check_decision(bracken_file: str, threshold_fraction: float) -> QCRow:
     genera_list = get_abundant_genera_list(bracken_file, threshold_fraction)
-    genera_log = ", ".join([f"{g['genus']}:{g['fraction']}" for g in genera_list])
+    genera_log = ",".join([f"{g['genus']}:{g['fraction']}" for g in genera_list])
     if (genera_count := len(genera_list)) > 1:
-        return f"FAIL: There have been {genera_count} genera with fraction > {threshold_fraction}: {genera_log}"
-    return f"PASS: Only one genus with fraction > {threshold_fraction}: {genera_log}"
+        return QCRow(
+            QCResult.FAIL,
+            "foreign_contamination",
+            genera_log,
+            f"There have been {genera_count} genera with fraction > {threshold_fraction}",
+        )
+    return QCRow(
+        QCResult.PASS, "foreign_contamination", genera_log, f"Only one genus with fraction > {threshold_fraction}"
+    )
 
 
 def evaluate_foreign_contamination(bracken_file: str, output_path: str, threshold_fraction: float):
@@ -36,7 +66,7 @@ def evaluate_foreign_contamination(bracken_file: str, output_path: str, threshol
         os.makedirs(output_dir, mode=0o777, exist_ok=False)
 
     with open(output_path, "w") as f:
-        f.write(decision)
+        f.write(str(decision))
         f.write("\n")
 
 
