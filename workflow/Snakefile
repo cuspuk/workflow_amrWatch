@@ -6,7 +6,8 @@ min_version("7.25.0")
 include: "rules/common.smk"
 include: "rules/reads.smk"
 include: "rules/unicycler.smk"
-include: "rules/checks.smk"
+include: "rules/check_post_assembly.smk"
+include: "rules/check_pre_assembly.smk"
 include: "rules/selfcontamination_check.smk"
 
 

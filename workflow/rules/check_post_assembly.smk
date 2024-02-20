@@ -85,22 +85,6 @@ rule check_coverage_from_qualimap:
         "../scripts/coverage_check.py"
 
 
-rule check_foreign_contamination:
-    input:
-        "results/kraken/{sample}.bracken",
-    output:
-        "results/checks/{sample}/foreign_contamination.tsv",
-    params:
-        fraction_threshold=config["foreign_contamination"]["abundance_check_fraction"],
-    log:
-        "logs/checks/foreign_contamination/{sample}.log",
-    localrule: True
-    conda:
-        "../envs/python.yaml"
-    script:
-        "../scripts/genera_check.py"
-
-
 checkpoint summary_all_checks:
     input:
         infer_relevant_checks,

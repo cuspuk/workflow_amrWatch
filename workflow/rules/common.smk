@@ -197,10 +197,10 @@ def infer_relevant_checks(wildcards):
     if sample_has_asssembly_as_input(wildcards.sample):
         return ["results/checks/{sample}/check_skipping.tsv"]
 
-    checks = [
-        "results/checks/{sample}/foreign_contamination.tsv",
-        "results/checks/{sample}/assembly_constructed.tsv",
-    ]
+    checks = ["results/checks/{sample}/pre_assembly_summary.tsv"]
+
+    if not check_preassembly_QC_for_sample(wildcards.sample):
+        return checks
 
     if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         checks += [

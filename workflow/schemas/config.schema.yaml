@@ -49,6 +49,10 @@ definitions:
         description: "Maximum memory in megabytes to allocate for any job."
         Minimum: 2048
         default: 2048
+      min_basepairs_for_assembly:
+        type: integer
+        description: "Minimum number of basepairs for assembly. FAIL check - If the assembly is shorter, the workflow does not proceed to the next stage."
+        default: 0
       reads__trimming:
         type: object
         "$ref": "#/definitions/ReadsTrimming"
@@ -79,6 +83,7 @@ definitions:
         "$ref": "#/definitions/Threads"
         default: { "kraken": 1, "bracken": 1 }
     required:
+      - min_basepairs_for_assembly
       - gtdb_dirpath
       - reads__trimming
       - foreign_contamination
