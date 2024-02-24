@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.10.0](https://github.com/xsitarcik/amrWatch/compare/v2.9.0...v2.10.0) (2024-02-24)
+
+
+### Features
+
+* added iscrispol for salmonella enterica ([9903705](https://github.com/xsitarcik/amrWatch/commit/9903705837c27e46a618a1fd494d47a109a2711d))
+
+
+### Bug Fixes
+
+* renamed min_bp to trimmed_fastq_length to increase readability ([367b48d](https://github.com/xsitarcik/amrWatch/commit/367b48d36fd778b557009409b85a00aefa7519d8))
+* statements about missing taxa in dictionaries are moved to stderr ([e6892ee](https://github.com/xsitarcik/amrWatch/commit/e6892eee99fdc576392ae6ad858a1b735e50d37c))
+
 ## [2.9.0](https://github.com/xsitarcik/amrWatch/compare/v2.8.2...v2.9.0) (2024-02-20)
 
 
