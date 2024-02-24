@@ -41,11 +41,17 @@ def get_decision_for_basepairs(filename: str, min_bp: int):
                 bp = extract_number_of_basepairs(line)
                 if bp < min_bp:
                     return QCRow(
-                        QCResult.FAIL, "min_bp", bp, f"Number of basepairs is less than threshold ({bp}<{min_bp})"
+                        QCResult.FAIL,
+                        "trimmed_fastq_length",
+                        bp,
+                        f"Total number of basepairs in trimmed fastq less than threshold ({bp}<{min_bp})",
                     )
                 else:
                     return QCRow(
-                        QCResult.PASS, "min_bp", bp, f"Number of basepairs fulfills the criteria ({bp}>={min_bp})"
+                        QCResult.PASS,
+                        "trimmed_fastq_length",
+                        bp,
+                        f"Total number of basepairs in trimmed fastq fulfills the criteria ({bp}>={min_bp})",
                     )
     raise ValueError(f"Regex={CUTADAPT_LINE_PREFIX} did not matched any row in cutadapt file={filename}")
 
