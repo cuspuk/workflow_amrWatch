@@ -116,9 +116,22 @@ rule etoki__call:
     conda:
         "../envs/etoki.yaml"
     log:
-        "logs/amr_detect/etoki/{sample}.log",
+        "logs/amr_detect/etoki_ebeis/{sample}.log",
     shell:
         "EToKi.py EBEis -q {input} > {output} 2>{log}"
+
+
+rule etoki__iscrispol:
+    input:
+        infer_assembly_fasta,
+    output:
+        "results/amr_detect/{sample}/crispol.tsv",
+    conda:
+        "../envs/etoki.yaml"
+    log:
+        "logs/amr_detect/etoki_iscrispol/{sample}.log",
+    shell:
+        "EToKi.py isCRISPOL {input} > {output} 2>{log}"
 
 
 rule sccmec__download_db:

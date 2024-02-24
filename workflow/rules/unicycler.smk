@@ -1,6 +1,7 @@
 rule unicycler__assemble:
     input:
         paired=["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"],
+        qc_check="results/checks/{sample}/pre_assembly_summary.tsv",  # NOTE just to say implicitly that this is a dependency
     output:
         contigs="results/assembly/{sample}/assembly.fasta",
         gfa="results/assembly/{sample}/assembly.gfa",
