@@ -182,7 +182,7 @@ def get_organism_for_amrfinder(wildcards):
         matched_organism = get_key_for_value_from_db(taxa, AMRFINDER_MAP)
         return f"--organism {matched_organism}"
     except KeyError:
-        print(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map")
+        print(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map", file=sys.stderr)
         return ""
 
 
@@ -192,7 +192,7 @@ def get_taxonomy_for_mlst(wildcards):
         matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
         return f"--scheme {matched_organism}"
     except KeyError:
-        print(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
+        print(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map", file=sys.stderr)
         return ""
 
 
