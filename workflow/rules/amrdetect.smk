@@ -131,7 +131,7 @@ rule etoki__iscrispol:
     log:
         "logs/amr_detect/etoki_iscrispol/{sample}.log",
     shell:
-        "EToKi.py ISCRISpol {input} > {output} 2>{log}"
+        "EToKi.py isCRISPOL {input} > {output} 2>{log}"
 
 
 rule sccmec__download_db:
