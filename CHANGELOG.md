@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.1](https://github.com/xsitarcik/amrWatch/compare/v2.10.0...v2.10.1) (2024-03-12)
+
+
+### Bug Fixes
+
+* assembly fasta are checked for existence if using from pepfile ([bdf29d8](https://github.com/xsitarcik/amrWatch/commit/bdf29d859c97074fa63b74bf669db656e66c2ee5))
+
 ## [2.10.0](https://github.com/xsitarcik/amrWatch/compare/v2.9.0...v2.10.0) (2024-02-24)
 
 
