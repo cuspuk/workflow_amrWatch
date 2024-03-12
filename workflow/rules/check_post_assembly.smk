@@ -16,6 +16,8 @@ checkpoint checkpoint_assembly_construction:
 
 
 rule log_that_assembly_was_not_requested:
+    input:
+        infer_assembly_fasta,
     output:
         "results/checks/{sample}/check_skipping.tsv",
     conda:
