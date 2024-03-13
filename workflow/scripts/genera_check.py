@@ -23,7 +23,7 @@ class QCRow:
 
     @staticmethod
     def header():
-        return f"result\tparameter\tvalue\tcomment"
+        return "result\tparameter\tvalue\tcomment"
 
 
 class GenusFraction(TypedDict):

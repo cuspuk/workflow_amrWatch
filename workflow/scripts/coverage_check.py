@@ -25,7 +25,7 @@ class QCRow:
 
     @staticmethod
     def header():
-        return f"result\tparameter\tvalue\tcomment"
+        return "result\tparameter\tvalue\tcomment"
 
 
 def convert_qualimap_coverage_value(string_value: str):
