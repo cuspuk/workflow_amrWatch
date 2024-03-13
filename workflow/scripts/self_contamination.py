@@ -23,7 +23,7 @@ class QCRow:
 
     @staticmethod
     def header():
-        return f"result\tparameter\tvalue\tcomment"
+        return "result\tparameter\tvalue\tcomment"
 
 
 def get_ambiguous_rows(vcf_file: str) -> int:
