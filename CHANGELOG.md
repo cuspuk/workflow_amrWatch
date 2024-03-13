@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.10.2](https://github.com/xsitarcik/amrWatch/compare/v2.10.1...v2.10.2) (2024-03-13)
+
+
+### Performance Improvements
+
+* bumped wrapper versions ([eb86fee](https://github.com/xsitarcik/amrWatch/commit/eb86fee1c7e08fa9ca622ab299fcdc73b200b6b4))
+
 ## [2.10.1](https://github.com/xsitarcik/amrWatch/compare/v2.10.0...v2.10.1) (2024-03-12)
 
 
