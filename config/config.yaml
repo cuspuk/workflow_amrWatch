@@ -68,7 +68,7 @@ abricate:
   min_identity: 80 # Minimum identity of the query sequence to the database sequence (default: 75).
   min_coverage: 75 # Minimum coverage of the query sequence by the database sequence (default: 0).
 
-amrfinder_db_dir: "/data/genome/others/amrfinder_db/2023-11-15.1" # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
+amrfinder_db_dir: "/data/genome/others/amrfinder_db/2024-01-31.1" # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
 # Valid DB version must be provided. See https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus/database/latest/
 spatyper_db_dir: "/data/genome/others/spatyper_db/2024-01-31" # Path to spatyper database directory. If it does not exist, the latest version will be downloaded. The last path element must be timestamp.
 SCCmec_db_dir: "/data/genome/others/SCCmec_db/2024-02-07" # Path to SCCmec database directory. If it does not exist, the latest version will be downloaded from https://github.com/staphopia/staphopia-sccmec.
