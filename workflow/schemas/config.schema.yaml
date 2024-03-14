@@ -23,27 +23,27 @@ definitions:
       amrfinder_db_dir:
         type: string
         description: "Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version."
-        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+        pattern: '.*/\d{4}-\d{2}-\d{2}\.\d{1}\/?$'
       spatyper_db_dir:
         type: string
         description: "Path to spatyper database directory. If it does not exist, the latest version from online repo will be downloaded."
-        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+        pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
       SCCmec_db_dir:
         type: string
         description: "Path to SCCmec database directory. If it does not exist, the latest version from online repo will be downloaded."
-        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+        pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
       ncbi_plasmid_db_dir:
         type: string
         description: "Path to NCBI plasmid directory. If it does not exist, the latest version will be downloaded using mob_init."
-        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+        pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
       rgi_db_dir:
         type: string
         description: "Path to RGI amr directory. If it does not exist, the latest version will be downloaded."
-        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+        pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
       mlst_db_dir:
         type: string
         description: "Path to the MLST database. Must be provided and contain blast and pubmlst data."
-        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+        pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
       max_mem_mb:
         type: integer
         description: "Maximum memory in megabytes to allocate for any job."
@@ -269,21 +269,10 @@ definitions:
     additionalProperties: false
     title: Abricate
     properties:
-      db:
+      db_dir:
         type: string
-        enum:
-          [
-            "argannot",
-            "ecoh",
-            "ecoli_vf",
-            "megares",
-            "card",
-            "ncbi",
-            "plasmidfinder",
-            "resfinder",
-            "vfdb",
-          ]
-        default: "vfdb"
+        description: 'Path to the abricate DB. Will be downloaded if the path does not exist. Must be timestamped and end on a valid abricate db_tag - Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"]'
+        pattern: '.*/\d{4}-\d{2}-\d{2}/(argannot|ecoh|ecoli_vf|megares|card|ncbi|plasmidfinder|resfinder|vfdb)\/?$'
       min_coverage:
         type: integer
         description: "Minimum coverage of the hit to be reported."
@@ -295,7 +284,7 @@ definitions:
         minimum: 0
         default: 75
     required:
-      - db
+      - db_dir
       - min_coverage
       - min_identity
   Resfinder:
@@ -305,7 +294,7 @@ definitions:
       db_dir:
         type: string
         description: "Path to resfinder DB directory. If it does not exist, the latest version will be downloaded."
-        pattern: '.*/\d{4}-\d{2}-\d{2}.*'
+        pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
       min_coverage:
         type: number
         description: "Minimum (breadth-of) coverage of ResFinder within the range 0-1 (default: 0.6)."
@@ -329,7 +318,7 @@ definitions:
       kraken_dir:
         type: string
         description: "Directory with the kraken DB files. If does not exist, the workflow tries to download DB by using the basename."
-        pattern: '.*k2_.*_\d{8}$'
+        pattern: '.*k2_.*_\d{8}\/?$'
       save_memory:
         type: boolean
         description: "if true, kraken limits RAM memory usage but sacrifices speed"
