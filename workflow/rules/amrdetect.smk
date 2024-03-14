@@ -47,13 +47,30 @@ rule mlst__call:
         "mlst {input.contigs} --blastdb {input.blast_mlst} --datadir {input.pubmlst} {params.scheme_arg} > {output} 2> {log}"
 
 
+rule abricate_download_db:
+    output:
+        db=protected(os.path.join(config["abricate"]["db_dir"], "sequences")),
+    params:
+        db_name=lambda wildcards, output: os.path.basename(os.path.dirname(output.db)),
+        db_dir=lambda wildcards, output: os.path.dirname(os.path.dirname(output.db)),
+    localrule: True
+    conda:
+        "../envs/abricate.yaml"
+    log:
+        os.path.join(os.path.dirname(config["amrfinder_db_dir"]), "logs", "download"),
+    shell:
+        "abricate-get_db --db={params.db_name} --dbdir={params.db_dir} > {log} 2>&1"
+
+
 rule abricate__call:
     input:
-        infer_assembly_fasta,
+        fasta=infer_assembly_fasta,
+        db=os.path.join(config["abricate"]["db_dir"], "sequences"),
     output:
         "results/amr_detect/{sample}/abricate.tsv",
     params:
-        abricate_db=config["abricate"]["db"],
+        db_name=lambda wildcards, input: os.path.basename(os.path.dirname(input.db)),
+        db_dir=lambda wildcards, input: os.path.dirname(os.path.dirname(input.db)),
         min_identity=config["abricate"]["min_identity"],
         min_coverage=config["abricate"]["min_coverage"],
     conda:
@@ -61,8 +78,8 @@ rule abricate__call:
     log:
         "logs/amr_detect/abricate/{sample}.log",
     shell:
-        "abricate --db {params.abricate_db} --minid {params.min_identity} --mincov {params.min_coverage}"
-        " {input} > {output} 2> {log}"
+        "abricate --datadir {db_dir} --db {params.db_name} --minid {params.min_identity} --mincov {params.min_coverage}"
+        " {input.fasta} > {output} 2> {log}"
 
 
 rule kleborate__call:
