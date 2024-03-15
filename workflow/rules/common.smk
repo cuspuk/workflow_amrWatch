@@ -192,6 +192,16 @@ def infer_fastqs_for_trimming(wildcards) -> list[str]:
     return pep.sample_table.loc[wildcards.sample][["fq1", "fq2"]]
 
 
+def infer_resfinder_input(wildcards):
+    if config["resfinder"]["input_to_use"] == "assembly":
+        return infer_assembly_fasta(wildcards)
+    if sample_has_asssembly_as_input(wildcards.sample):
+        raise ValueError(
+            f"resfinder input_to_use is set to reads, but pepfile gives that input for sample={wildcards.sample} is assembly not reads"
+        )
+    return ["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"]
+
+
 def infer_fastq_path_for_fastqc(wildcards):
     if wildcards.step != "original":
         return "results/reads/{step}/{sample}_{pair}.fastq.gz"
