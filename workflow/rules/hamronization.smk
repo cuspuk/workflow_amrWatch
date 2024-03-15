@@ -7,7 +7,7 @@ rule abricate__version_tool:
     log:
         "logs/versions/abricate_tool.log",
     shell:
-        "abricate --version > {output} 2> {log}"
+        "(abricate --version | tr -s '[:blank:]' '\n' | tail -1 > {output}) 2> {log}"
 
 
 rule amrfinder__version_tool:
@@ -48,8 +48,8 @@ rule abricate__version_db:
     log:
         "logs/versions/abricate_db.log",
     shell:
-        "abricate --list --datadir {params.db_dir} | grep {params.db_name}"
-        " | tr -s '[:blank:]' '\n' | tail -1 > {output} 2> {log}"
+        "(abricate --list --datadir {params.db_dir} | grep {params.db_name}"
+        " | tr -s '[:blank:]' '\n' | tail -1 > {output}) 2> {log}"
 
 
 rule amrfinder__version_db:
@@ -64,7 +64,7 @@ rule amrfinder__version_db:
         "logs/versions/amrfinder_db.log",
     shell:
         "(amrfinder -V -d {input.db} | grep 'Database version:'"
-        " | tr ':' '\n' | tail -1 | tr -d ' ') > {output} 2> {log}"
+        " | tr ':' '\n' | tail -1 | tr -d ' ' > {output}) 2> {log}"
 
 
 rule rgi__version_db:
