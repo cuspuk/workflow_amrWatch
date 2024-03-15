@@ -10,6 +10,7 @@ include: "rules/check_post_assembly.smk"
 include: "rules/check_pre_assembly.smk"
 include: "rules/selfcontamination_check.smk"
 include: "rules/hamronization.smk"
+include: "rules/summary.smk"
 
 
 if not config["gtdb_hack"]:

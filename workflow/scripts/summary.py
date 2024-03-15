@@ -112,9 +112,7 @@ mapping_functions = {
 }
 
 
-def run(
-    results: dict[str, str], output_file: str, out_delimiter: str, missing_values_placeholder: str, sample_name: str
-):
+def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_name: str):
 
     print("Processing results...", file=sys.stderr)
     print(f"Results: {results}", file=sys.stderr)
@@ -140,6 +138,5 @@ if __name__ == "__main__":
         results=snakemake.input,
         output_file=snakemake.output.tsv,
         out_delimiter=snakemake.params.delimiter,
-        missing_values_placeholder=snakemake.params.placeholder,
         sample_name=snakemake.params.sample_name,
     )

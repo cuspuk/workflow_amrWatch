@@ -124,7 +124,10 @@ def request_hamronize_or_nothing(wildcards):
 
 def get_outputs():
     sample_names = get_sample_names()
-    outputs = {"final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names)}
+    outputs = {
+        "final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names),
+        "summary": expand("results/summary/per_sample/{sample}.tsv", sample=sample_names),
+    }
     if len(sample_names) > 1:
         outputs["hamronization"] = "results/hamronization/hamronization_requested.txt"
 
