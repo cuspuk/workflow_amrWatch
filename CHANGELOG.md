@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.11.0](https://github.com/xsitarcik/amrWatch/compare/v2.10.2...v2.11.0) (2024-03-15)
+
+
+### Features
+
+* added hamronization ([087efdb](https://github.com/xsitarcik/amrWatch/commit/087efdbb37bdda5624375764c7b2693e5f3150d0))
+* added resfinder and pointfinder to hamronization, added hamronization summary on sample basis ([811d5f4](https://github.com/xsitarcik/amrWatch/commit/811d5f4caba217ec8946c11cd4cbfe207d240bb5))
+* added version storing for rgi,amrfinder,abricate ([610e636](https://github.com/xsitarcik/amrWatch/commit/610e636c55f7837b3d83a758a07f98d859ad0746))
+
+
+### Bug Fixes
+
+* added resfinder and pointfinder correct index for hamronization ([539119d](https://github.com/xsitarcik/amrWatch/commit/539119d9a424bd1db84d607449ea1821ef8c9e4b))
+* dont request hamronize summary when no samples passed qc ([22d91a1](https://github.com/xsitarcik/amrWatch/commit/22d91a1e24f463393106012a6200d9a33ce68bf0))
+* hamronize amrfinder replaced by amrfinderplus ([2625b1a](https://github.com/xsitarcik/amrWatch/commit/2625b1af354999f11e679d64107bf040dfb32ca9))
+* hamronize fixed for abricate ([d4e1e59](https://github.com/xsitarcik/amrWatch/commit/d4e1e59538aaa3c71a92d4f835c492b10eb4530a))
+* handle case when pointfinder has no output ([5346bc7](https://github.com/xsitarcik/amrWatch/commit/5346bc7701661830570aeba3ddb02889cfde90c9))
+* logging for version getters ([bda7f67](https://github.com/xsitarcik/amrWatch/commit/bda7f6786f5960e1e83d0c5f06b2e58d8e53b007))
+
 ## [2.10.2](https://github.com/xsitarcik/amrWatch/compare/v2.10.1...v2.10.2) (2024-03-13)
 
 
