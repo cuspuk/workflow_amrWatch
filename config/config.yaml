@@ -34,7 +34,7 @@ reads__trimming:
   max_expected_errors: 3 # OPT - Discard read if R1 or R2 has more expected errors than this.
 
 foreign_contamination:
-  kraken_dir: "/data/genome/metagenome/kraken/k2_pluspf_20230314" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
+  kraken_dir: "/data/genome/metagenome/kraken/k2_pluspf_20240112" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
   save_memory: true # If true, kraken limits RAM memory usage but sacrifices speed.
   read_length: 100 # Distribution will be used from this read length (default: 50).
   classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
