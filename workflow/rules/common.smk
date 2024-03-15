@@ -99,11 +99,32 @@ def check_all_checks_success_for_sample(sample: str):
         return all([line.startswith(("PASS", "WARN")) for line in f.readlines()])
 
 
+def get_sample_names_passing_all_checks():
+    sample_names = get_sample_names()
+    return [s for s in sample_names if check_all_checks_success_for_sample(s)]
+
+
+def infer_amr_detection_results_for_harmonize(wildcards):
+    sample_names = get_sample_names_passing_all_checks()
+    rgi = [f"results/hamronization/rgi/{sample}.tsv" for sample in sample_names]
+    amrfinder = [f"results/hamronization/amrfinder/{sample}.tsv" for sample in sample_names]
+    abricate = [f"results/hamronization/abricate/{sample}.tsv" for sample in sample_names]
+    return rgi + amrfinder + abricate
+
+
+def request_hamronize_or_nothing(wildcards):
+    passed_samples = get_sample_names_passing_all_checks()
+    if len(passed_samples) > 1:
+        return expand("results/hamronization/summary.{ext}", ext=["tsv", "html"])
+    else:
+        return "results/hamronization/not_enough_samples_passed.txt"
+
+
 def get_outputs():
     sample_names = get_sample_names()
-    outputs = {
-        "final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names),
-    }
+    outputs = {"final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names)}
+    if len(sample_names) > 1:
+        outputs["hamronization"] = "results/hamronization/hamronization_requested.txt"
 
     if samples_with_reads := get_sample_names_with_reads_as_input():
         if len(samples_with_reads) > 1:
