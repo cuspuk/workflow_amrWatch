@@ -9,7 +9,7 @@ with open(snakemake.input.db_version, "r") as f:
     db_version = f.read().strip()
 
 input_file_name = ""
-if snakemake.params.tool in ["rgi", "amrfinderplus"]:
+if snakemake.params.tool != "abricate":
     input_file_name = f"--input_file_name {snakemake.params.sample_name}"
 
 shell(

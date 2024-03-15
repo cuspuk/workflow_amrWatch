@@ -36,7 +36,7 @@ rule rgi__version_tool:
 
 rule resfinder__version_tool:
     output:
-        "results/.versions/rgi_tool.txt",
+        "results/.versions/resfinder_tool.txt",
     localrule: True
     conda:
         "../envs/resfinder.yaml"
@@ -166,6 +166,8 @@ use rule hamronize__rgi as harmonize__resfinder with:
         db_version="results/.versions/resfinder_db.txt",
     output:
         tsv="results/hamronization/resfinder/{sample}.tsv",
+    params:
+        sample_name=lambda wildcards: wildcards.sample,
     localrule: True
     params:
         tool="resfinder",
@@ -180,6 +182,8 @@ use rule hamronize__rgi as hamronize__pointfinder with:
         db_version="results/.versions/pointfinder_db.txt",
     output:
         tsv="results/hamronization/pointfinder/{sample}.tsv",
+    params:
+        sample_name=lambda wildcards: wildcards.sample,
     localrule: True
     params:
         tool="pointfinder",
