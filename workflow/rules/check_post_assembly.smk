@@ -105,7 +105,7 @@ checkpoint checkpoint_request_post_assembly_checks_if_relevant:
 
 rule request_all_relevant_outputs:
     input:
-        infer_outputs_for_sample,
+        infer_outputs_for_sample_as_list,
     output:
         temp("results/checks/{sample}/.final_results_requested.tsv"),
     conda:
