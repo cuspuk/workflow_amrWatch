@@ -112,7 +112,7 @@ rule hamronize__amrfinder:
     localrule: True
     params:
         sample_name=lambda wildcards: wildcards.sample,
-        tool="amrfinder",
+        tool="amrfinderplus",
     log:
         "logs/hamronization/amrfinder/{sample}.log",
     conda:
