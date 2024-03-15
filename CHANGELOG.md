@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.0](https://github.com/xsitarcik/amrWatch/compare/v2.12.0...v2.13.0) (2024-03-15)
+
+
+### Features
+
+* added resfinder option to be run from reads or assembly ([6f04c9d](https://github.com/xsitarcik/amrWatch/commit/6f04c9d20a3b6daa29c29065901344de5f063bdb))
+
 ## [2.12.0](https://github.com/xsitarcik/amrWatch/compare/v2.11.0...v2.12.0) (2024-03-15)
 
 
