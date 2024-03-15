@@ -307,10 +307,18 @@ definitions:
         minimum: 0
         maximum: 1
         default: 0.8
+      input_to_use:
+        type: string
+        enum:
+          - "assembly"
+          - "reads"
+        description: "If 'assembly', resfinder is run on assembly. If 'reads', resfinder is run on reads (of last processed step)."
+        default: "reads"
     required:
       - db_dir
       - min_coverage
       - threshold
+      - input_to_use
   ForeignContamination:
     additionalProperties: false
     title: ForeignContamination

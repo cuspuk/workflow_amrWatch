@@ -307,7 +307,8 @@ rule resfinder__call:
         resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
         pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
         disinfinder_db=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
-        assembly=infer_assembly_fasta,
+        # assembly=infer_assembly_fasta,
+        inferred_input=infer_resfinder_input,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
         tsv="results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
@@ -315,6 +316,7 @@ rule resfinder__call:
     params:
         species=get_taxonomy_for_resfinder,
         outdir=lambda wildcards, output: os.path.dirname(output.tsv),
+        input_arg=lambda wildcards, input: "--inputfasta" if isinstance(input.inferred_input, str) else "--inputfastq",
         min_cov=config["resfinder"]["min_coverage"],
         threshold=config["resfinder"]["threshold"],
     conda:
@@ -322,7 +324,7 @@ rule resfinder__call:
     log:
         "logs/amr_detect/resfinder/{sample}.log",
     shell:
-        "(python -m resfinder --inputfasta {input.assembly} --ignore_missing_species"
+        "(python -m resfinder {params.input_arg} {input.inferred_input} --ignore_missing_species"
         " --min_cov {params.min_cov} --threshold {params.threshold} -s {params.species:q}"
         " --disinfectant --db_path_disinf {input.disinfinder_db}"
         " --point --db_path_point {input.pointfinder_db}"
