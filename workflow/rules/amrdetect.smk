@@ -310,8 +310,8 @@ rule resfinder__call:
         assembly=infer_assembly_fasta,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
-        tsv="results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
-        point="results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
+        tsv="results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
+        pointfinder="results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
     params:
         species=get_taxonomy_for_resfinder,
         outdir=lambda wildcards, output: os.path.dirname(output.tsv),
@@ -322,12 +322,12 @@ rule resfinder__call:
     log:
         "logs/amr_detect/resfinder/{sample}.log",
     shell:
-        "python -m resfinder --inputfasta {input.assembly} --ignore_missing_species"
+        "(python -m resfinder --inputfasta {input.assembly} --ignore_missing_species"
         " --min_cov {params.min_cov} --threshold {params.threshold} -s {params.species:q}"
         " --disinfectant --db_path_disinf {input.disinfinder_db}"
         " --point --db_path_point {input.pointfinder_db}"
         " --acquired --db_path_res {input.resfinder_db}"
-        " -o {params.outdir} > {log} 2>&1"
+        " -o {params.outdir} && touch {output.pointfinder} > {log} 2>&1"
 
 
 rule seqsero2__call:
