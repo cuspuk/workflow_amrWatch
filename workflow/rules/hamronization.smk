@@ -34,6 +34,18 @@ rule rgi__version_tool:
         "rgi main --version > {output} 2> {log}"
 
 
+rule resfinder__version_tool:
+    output:
+        "results/.versions/rgi_tool.txt",
+    localrule: True
+    conda:
+        "../envs/resfinder.yaml"
+    log:
+        "logs/versions/resfinder_tool.log",
+    shell:
+        "python -m resfinder --version > {output} 2> {log}"
+
+
 rule abricate__version_db:
     input:
         db=os.path.join(config["abricate"]["db_dir"], "sequences"),
@@ -83,11 +95,27 @@ rule rgi__version_db:
         "../scripts/rgi_get_version_db.py"
 
 
+rule resfinder__version_db:
+    input:
+        db=os.path.join(config["resfinder"]["db_dir"], "{type}finder_db"),
+    output:
+        "results/.versions/{type}finder_db.txt",
+    params:
+        version=lambda wildcards, input: os.path.join(input.db, "VERSION"),
+    localrule: True
+    conda:
+        "../envs/coreutils.yaml"
+    log:
+        "logs/versions/{type}finder_db.log",
+    shell:
+        "cat {params.version} > {output} 2> {log}"
+
+
 rule hamronize__rgi:
     input:
         result="results/amr_detect/{sample}/rgi_main.txt",
-        version="results/.versions/rgi_db.txt",
-        db_version="results/.versions/rgi_tool.txt",
+        version="results/.versions/rgi_tool.txt",
+        db_version="results/.versions/rgi_db.txt",
     output:
         tsv="results/hamronization/rgi/{sample}.tsv",
     localrule: True
@@ -102,11 +130,11 @@ rule hamronize__rgi:
         "../scripts/hamronize.py"
 
 
-rule hamronize__amrfinder:
+use rule hamronize__rgi as hamronize__amrfinder with:
     input:
         result="results/amr_detect/{sample}/amrfinder.tsv",
-        version="results/.versions/amrfinder_db.txt",
-        db_version="results/.versions/amrfinder_tool.txt",
+        version="results/.versions/amrfinder_tool.txt",
+        db_version="results/.versions/amrfinder_db.txt",
     output:
         tsv="results/hamronization/amrfinder/{sample}.tsv",
     localrule: True
@@ -115,17 +143,13 @@ rule hamronize__amrfinder:
         tool="amrfinderplus",
     log:
         "logs/hamronization/amrfinder/{sample}.log",
-    conda:
-        "../envs/hamronize.yaml"
-    script:
-        "../scripts/hamronize.py"
 
 
-rule hamronize__abricate:
+use rule hamronize__rgi as hamronize__abricate with:
     input:
         result="results/amr_detect/{sample}/abricate.tsv",
-        version="results/.versions/abricate_db.txt",
-        db_version="results/.versions/abricate_tool.txt",
+        version="results/.versions/abricate_tool.txt",
+        db_version="results/.versions/abricate_db.txt",
     output:
         tsv="results/hamronization/abricate/{sample}.tsv",
     localrule: True
@@ -133,10 +157,51 @@ rule hamronize__abricate:
         tool="abricate",
     log:
         "logs/hamronization/abricate/{sample}.log",
+
+
+use rule hamronize__rgi as harmonize__resfinder with:
+    input:
+        result="results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
+        version="results/.versions/resfinder_tool.txt",
+        db_version="results/.versions/resfinder_db.txt",
+    output:
+        tsv="results/hamronization/resfinder/{sample}.tsv",
+    localrule: True
+    params:
+        tool="resfinder",
+    log:
+        "logs/hamronization/resfinder/{sample}.log",
+
+
+use rule hamronize__rgi as hamronize__pointfinder with:
+    input:
+        result="results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
+        version="results/.versions/resfinder_tool.txt",
+        db_version="results/.versions/pointfinder_db.txt",
+    output:
+        tsv="results/hamronization/pointfinder/{sample}.tsv",
+    localrule: True
+    params:
+        tool="pointfinder",
+    log:
+        "logs/hamronization/pointfinder/{sample}.log",
+
+
+rule hamronize__sample_summary:
+    input:
+        expand(
+            "results/hamronization/{tool}/{{sample}}.tsv",
+            tool=["rgi", "amrfinder", "abricate", "resfinder", "pointfinder"],
+        ),
+    output:
+        tsv="results/hamronization/summary/{sample}.tsv",
+    localrule: True
     conda:
         "../envs/hamronize.yaml"
-    script:
-        "../scripts/hamronize.py"
+    log:
+        "logs/hamronization/summary/{sample}.log",
+    shell:
+        "hamronize summarize -o {output} -t tsv {input} > {log} 2>&1"
 
 
 rule hamronize__summarize:

@@ -311,6 +311,7 @@ rule resfinder__call:
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
         tsv="results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
+        point="results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
     params:
         species=get_taxonomy_for_resfinder,
         outdir=lambda wildcards, output: os.path.dirname(output.tsv),

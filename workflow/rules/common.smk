@@ -108,8 +108,10 @@ def infer_amr_detection_results_for_harmonize(wildcards):
     sample_names = get_sample_names_passing_all_checks()
     rgi = [f"results/hamronization/rgi/{sample}.tsv" for sample in sample_names]
     amrfinder = [f"results/hamronization/amrfinder/{sample}.tsv" for sample in sample_names]
-    abricate = [f"results/hamronization/abricate/{sample}.tsv" for sample in sample_names]
-    return rgi + amrfinder + abricate
+    # abricate = [f"results/hamronization/abricate/{sample}.tsv" for sample in sample_names]
+    resfinder = [f"results/hamronization/resfinder/{sample}.tsv" for sample in sample_names]
+    pointfinder = [f"results/hamronization/pointfinder/{sample}.tsv" for sample in sample_names]
+    return rgi + amrfinder + resfinder + pointfinder
 
 
 def request_hamronize_or_nothing(wildcards):
@@ -166,7 +168,8 @@ def infer_outputs_for_sample(wildcards):
             "results/amr_detect/{sample}/abricate.tsv",
             "results/amr_detect/{sample}/rgi_main.txt",
             "results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
-            "results/plasmids/{sample}/mob_typer.txt",
+            "results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
+            "results/hamronization/summary/{sample}.tsv" "results/plasmids/{sample}/mob_typer.txt",
             "results/checks/{sample}/qc_summary.tsv",
         ] + get_taxonomy_dependant_outputs(wildcards.sample, taxa)
 
