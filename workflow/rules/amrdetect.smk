@@ -327,7 +327,7 @@ rule resfinder__call:
         " --disinfectant --db_path_disinf {input.disinfinder_db}"
         " --point --db_path_point {input.pointfinder_db}"
         " --acquired --db_path_res {input.resfinder_db}"
-        " -o {params.outdir} && touch {output.pointfinder} > {log} 2>&1"
+        " -o {params.outdir} && touch {output.pointfinder}) > {log} 2>&1"
 
 
 rule seqsero2__call:
