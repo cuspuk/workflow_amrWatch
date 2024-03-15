@@ -166,10 +166,9 @@ use rule hamronize__rgi as harmonize__resfinder with:
         db_version="results/.versions/resfinder_db.txt",
     output:
         tsv="results/hamronization/resfinder/{sample}.tsv",
-    params:
-        sample_name=lambda wildcards: wildcards.sample,
     localrule: True
     params:
+        sample_name=lambda wildcards: wildcards.sample,
         tool="resfinder",
     log:
         "logs/hamronization/resfinder/{sample}.log",
@@ -182,11 +181,10 @@ use rule hamronize__rgi as hamronize__pointfinder with:
         db_version="results/.versions/pointfinder_db.txt",
     output:
         tsv="results/hamronization/pointfinder/{sample}.tsv",
-    params:
-        sample_name=lambda wildcards: wildcards.sample,
     localrule: True
     params:
         tool="pointfinder",
+        sample_name=lambda wildcards: wildcards.sample,
     log:
         "logs/hamronization/pointfinder/{sample}.log",
 
