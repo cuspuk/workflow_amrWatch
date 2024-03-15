@@ -234,3 +234,15 @@ rule request_hamronize_summary:
         "logs/checks/request_hamronize_summary.log",
     shell:
         "echo {params.value} > {output} 2> {log}"
+
+
+rule log_skipping_hamornize_summary:
+    output:
+        "results/hamronization/not_enough_samples_passed.txt",
+    localrule: True
+    conda:
+        "../envs/coreutils.yaml"
+    log:
+        "logs/checks/log_skipping_hamornize_summary.log",
+    shell:
+        "touch {output} 2> {log}"
