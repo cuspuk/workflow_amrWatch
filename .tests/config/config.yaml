@@ -31,6 +31,7 @@ foreign_contamination:
   classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
   bracken_threshold: 10 # Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation (default: 10).
   abundance_check_fraction: 0.01 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1 (default: 0.01).
+  max_human_fraction: 0.5 # Maximum fraction of human reads in the sample as given by bracken. FAIL check - If higher, the workflow does not proceed to the next stage.
 
 min_basepairs_for_assembly: 50000 # Minimum number of basepairs for assembly. FAIL check - If the assembly is shorter, the workflow does not proceed to the next stage.
 

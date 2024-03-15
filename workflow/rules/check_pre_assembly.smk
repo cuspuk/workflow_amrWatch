@@ -14,6 +14,23 @@ rule check_foreign_contamination:
         "../scripts/genera_check.py"
 
 
+rule check_human_contamination:
+    input:
+        "results/kraken/{sample}.bracken",
+    output:
+        temp("results/checks/{sample}/human_contamination.tsv"),
+    params:
+        human_fraction=config["foreign_contamination"]["max_human_fraction"],
+        taxonomy_id="9605",
+    log:
+        "logs/checks/human_contamination/{sample}.log",
+    localrule: True
+    conda:
+        "../envs/python.yaml"
+    script:
+        "../scripts/human_check.py"
+
+
 rule check_number_of_bases:
     input:
         "results/reads/trimmed/{sample}.qc.txt",
@@ -32,8 +49,9 @@ rule check_number_of_bases:
 
 checkpoint checkpoint_pre_assembly_QC:
     input:
-        bracken="results/checks/{sample}/foreign_contamination.tsv",
-        bps="results/checks/{sample}/basepairs_for_assembly.tsv",
+        foreign_contamination="results/checks/{sample}/foreign_contamination.tsv",
+        basepairs="results/checks/{sample}/basepairs_for_assembly.tsv",
+        human_contamination="results/checks/{sample}/human_contamination.tsv",
     output:
         "results/checks/{sample}/pre_assembly_summary.tsv",
     log:

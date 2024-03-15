@@ -348,8 +348,17 @@ definitions:
         default: 0.01
         minimum: 0
         maximum: 1
+      max_human_fraction:
+        description: "Maximum fraction of human reads allowed in the sample as given by bracken."
+        type: number
+        default: 0.5
+        minimum: 0
+        maximum: 1
     required:
       - kraken_dir
+      - max_human_fraction
+      - abundance_check_fraction
+      - bracken_threshold
   AssemblyUnicycler:
     additionalProperties: false
     title: AssemblyUnicycler
