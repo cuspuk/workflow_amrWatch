@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.12.0](https://github.com/xsitarcik/amrWatch/compare/v2.11.0...v2.12.0) (2024-03-15)
+
+
+### Features
+
+* added check for human contamination ([9d5f819](https://github.com/xsitarcik/amrWatch/commit/9d5f819bc3e975f77ee09c6ab63d17e5e902639d))
+
 ## [2.11.0](https://github.com/xsitarcik/amrWatch/compare/v2.10.2...v2.11.0) (2024-03-15)
 
 
