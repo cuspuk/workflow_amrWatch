@@ -161,7 +161,7 @@ use rule hamronize__rgi as hamronize__abricate with:
 
 use rule hamronize__rgi as harmonize__resfinder with:
     input:
-        result="results/amr_detect/{sample}/resfinder/ResFinder_results.txt",
+        result="results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
         version="results/.versions/resfinder_tool.txt",
         db_version="results/.versions/resfinder_db.txt",
     output:
