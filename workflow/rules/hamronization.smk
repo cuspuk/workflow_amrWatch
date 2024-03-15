@@ -38,7 +38,7 @@ rule abricate__version_db:
     input:
         db=os.path.join(config["abricate"]["db_dir"], "sequences"),
     output:
-        "results/.versions/abricate_db.tsv",
+        "results/.versions/abricate_db.txt",
     params:
         db_name=lambda wildcards, input: os.path.basename(os.path.dirname(input.db)),
         db_dir=lambda wildcards, input: os.path.dirname(os.path.dirname(input.db)),
@@ -161,7 +161,7 @@ rule request_hamronize_summary:
     params:
         value=lambda wildcards, input: "REQUESTED" if len(input) > 0 else "NOT_REQUESTED",
     conda:
-        "../envs/hamronize.yaml"
+        "../envs/coreutils.yaml"
     log:
         "logs/checks/request_hamronize_summary.log",
     shell:
