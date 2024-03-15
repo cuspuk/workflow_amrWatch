@@ -78,7 +78,7 @@ rule abricate__call:
     log:
         "logs/amr_detect/abricate/{sample}.log",
     shell:
-        "abricate --datadir {db_dir} --db {params.db_name} --minid {params.min_identity} --mincov {params.min_coverage}"
+        "abricate --datadir {params.db_dir} --db {params.db_name} --minid {params.min_identity} --mincov {params.min_coverage}"
         " {input.fasta} > {output} 2> {log}"
 
 

@@ -49,7 +49,7 @@ rule abricate__version_db:
         "logs/versions/abricate_db.log",
     shell:
         "abricate --list --datadir {params.db_dir} | grep {params.db_name}"
-        " | | tr -s '[:blank:]' '\n' | tail -1 > {output} 2> {log}"
+        " | tr -s '[:blank:]' '\n' | tail -1 > {output} 2> {log}"
 
 
 rule amrfinder__version_db:
@@ -85,7 +85,7 @@ rule rgi__version_db:
 
 rule hamronize__rgi:
     input:
-        rgi="results/amr_detect/{sample}/rgi_main.txt",
+        result="results/amr_detect/{sample}/rgi_main.txt",
         version="results/.versions/rgi_db.txt",
         db_version="results/.versions/rgi_tool.txt",
     output:
@@ -104,13 +104,14 @@ rule hamronize__rgi:
 
 rule hamronize__amrfinder:
     input:
-        tsv="results/amr_detect/{sample}/amrfinder.tsv",
+        result="results/amr_detect/{sample}/amrfinder.tsv",
         version="results/.versions/amrfinder_db.txt",
         db_version="results/.versions/amrfinder_tool.txt",
     output:
         tsv="results/hamronization/amrfinder/{sample}.tsv",
     localrule: True
     params:
+        sample_name=lambda wildcards: wildcards.sample,
         tool="amrfinder",
     log:
         "logs/hamronization/amrfinder/{sample}.log",
@@ -122,7 +123,7 @@ rule hamronize__amrfinder:
 
 rule hamronize__abricate:
     input:
-        tsv="results/amr_detect/{sample}/abricate.tsv",
+        result="results/amr_detect/{sample}/abricate.tsv",
         version="results/.versions/abricate_db.txt",
         db_version="results/.versions/abricate_tool.txt",
     output:
@@ -144,7 +145,7 @@ rule hamronize__summarize:
     output:
         tsv="results/hamronization/summary.{ext}",
     params:
-        type_format=lambda wildcards, output: "tsv" if wildcards.exit == "tsv" else "interactive",
+        type_format=lambda wildcards, output: "tsv" if wildcards.ext == "tsv" else "interactive",
     log:
         "logs/hamronization/summary_{ext}.log",
     conda:

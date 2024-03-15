@@ -17,5 +17,5 @@ shell(
     " {input_file_name}"
     " --analysis_software_version {version}"
     " --reference_database_version {db_version}"
-    " {snakemake.input.rgi} --output {snakemake.output.tsv} --format tsv {log}"
+    " {snakemake.input.result} --output {snakemake.output.tsv} --format tsv {log}"
 )
