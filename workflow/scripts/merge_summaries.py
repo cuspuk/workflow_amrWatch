@@ -62,13 +62,15 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
 
     amrfinder_tuples: list[tuple[str, str]] = []
     for result in analysis_results:
+        tuples = [
+            (x.split(amrfinder_uniq_tag)[0], x.split(amrfinder_uniq_tag)[1])
+            for x in result.keys()
+            if amrfinder_uniq_tag in x
+        ]
         amrfinder_tuples.extend(
-            [
-                (x.split(amrfinder_uniq_tag)[0], x.split(amrfinder_uniq_tag)[1])
-                for x in result.keys()
-                if amrfinder_uniq_tag in x
-            ]
+            [amrfinder_tuple for amrfinder_tuple in tuples if amrfinder_tuple not in amrfinder_tuples]
         )
+
     amrfinder_tuples.sort()
     amrfinder_columns = [y for _, y in amrfinder_tuples]
 
@@ -81,8 +83,6 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         + amrfinder_columns
         + abricate_columns
     )
-    for result in analysis_results:
-        common_header.extend([x for x in result.keys() if x not in common_header])
 
     merged_results: list[dict[str, str]] = [
         {column: result.get(column, nan_value) for column in common_header} for result in analysis_results

@@ -28,7 +28,7 @@ rule log_that_assembly_was_not_requested:
         "logs/checks/assembly/{sample}.log",
     localrule: True
     shell:
-        "echo -e {params.message} > {output} 2> {log}"
+        "echo {params.message:q} > {output} 2> {log}"
 
 
 rule check_assembly_quality:
