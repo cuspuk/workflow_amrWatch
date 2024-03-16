@@ -185,8 +185,9 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
             "hamronization": "results/hamronization/summary/{sample}.tsv",
             "plasmids": "results/plasmids/{sample}/mob_typer.txt",
             "qc_checks": "results/checks/{sample}/qc_summary.tsv",
-            "seqkit": "results/assembly/{sample}/seqkit_stats.tsv",
         }
+        if not sample_has_asssembly_as_input(wildcards.sample):
+            outputs["seqkit"] = ("results/assembly/{sample}/seqkit_stats.tsv",)
         taxa_outputs = get_taxonomy_dependant_outputs(wildcards.sample, taxa)
         return outputs | taxa_outputs
     else:
@@ -214,6 +215,8 @@ def infer_results_to_summarize_for_sample(wildcards):
         "seqkit",
         "qc_checks",
     ]
+    if sample_has_asssembly_as_input(wildcards.sample):
+        reports.remove("seqkit")
     return {key: val for key, val in dct.items() if key in reports}
 
 
