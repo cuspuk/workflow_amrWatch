@@ -29,8 +29,8 @@ def get_human_fraction(bracken_file: str, taxonomy_id: str) -> float:
     with open(bracken_file, "r") as f:
         lines = f.readlines()
         for line in lines[1:]:
-            taxonomy_id, fraction = [line.strip().split("\t")[i] for i in (1, -1)]
-            if taxonomy_id == taxonomy_id:
+            taxa_id, fraction = [line.strip().split("\t")[i] for i in (1, -1)]
+            if taxa_id == taxonomy_id:
                 return float(fraction)
     return 0.0
 

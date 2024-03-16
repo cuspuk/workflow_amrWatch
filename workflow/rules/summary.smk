@@ -1,7 +1,7 @@
 
 rule summary__results_per_sample:
     input:
-        infer_results_to_summarize_for_sample,
+        unpack(infer_results_to_summarize_for_sample),
     output:
         tsv="results/summary/per_sample/{sample}.tsv",
     params:

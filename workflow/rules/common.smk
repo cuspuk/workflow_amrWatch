@@ -166,6 +166,7 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
         taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
 
         outputs = {
+            "taxonomy": "results/taxonomy/{sample}/parsed_taxa.txt",
             "amrfinder": "results/amr_detect/{sample}/amrfinder.tsv",
             "mlst": "results/amr_detect/{sample}/mlst.tsv",
             "abricate": "results/amr_detect/{sample}/abricate.tsv",
@@ -204,7 +205,7 @@ def infer_results_to_summarize_for_sample(wildcards):
         "seqkit",
         "qc_checks",
     ]
-    return {k: dct[k] for k in reports}
+    return {key: val for key, val in dct.items() if key in reports}
 
 
 ### Wildcard handling #################################################################################################
