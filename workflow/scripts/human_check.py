@@ -29,8 +29,8 @@ def get_human_fraction(bracken_file: str, taxonomy_id: str) -> float:
     with open(bracken_file, "r") as f:
         lines = f.readlines()
         for line in lines[1:]:
-            taxonomy_id, fraction = [line.strip().split("\t")[i] for i in (1, -1)]
-            if taxonomy_id == taxonomy_id:
+            taxa_id, fraction = [line.strip().split("\t")[i] for i in (1, -1)]
+            if taxa_id == taxonomy_id:
                 return float(fraction)
     return 0.0
 
@@ -44,13 +44,13 @@ def get_human_check_decision(bracken_file: str, taxonomy_id: str, threshold_frac
             QCResult.FAIL,
             "human_contamination",
             human_fraction_str,
-            f"Found contamination by {taxonomy_id=} as its fraction is higher than given maximum ({human_fraction} > {threshold_fraction}",
+            f"Found contamination by {taxonomy_id=} as its fraction is higher than given maximum ({human_fraction_str} > {threshold_fraction}",
         )
     return QCRow(
         QCResult.PASS,
         "human_contamination",
         human_fraction_str,
-        f"No contamination by {taxonomy_id=} as its fraction is lower or equal than maximum ( {human_fraction} <= {threshold_fraction})",
+        f"No contamination by {taxonomy_id=} as its fraction is lower or equal than maximum ( {human_fraction_str} <= {threshold_fraction})",
     )
 
 

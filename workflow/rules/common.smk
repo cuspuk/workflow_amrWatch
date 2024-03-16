@@ -15,16 +15,6 @@ pepfile: config["pepfile"]
 validate(pep.sample_table, "../schemas/samples.schema.yaml")
 
 
-def validate_dynamic_config():
-    if config["reads__trimming"]["adapter_removal"]["do"]:
-        if not os.path.exists(config["reads__trimming"]["adapter_removal"]["adapters_fasta"]):
-            adapter_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
-            raise ValueError(f"Adapter removal is enabled, but the {adapter_file=} does not exist")
-
-
-validate_dynamic_config()
-
-
 def get_sample_names() -> list[str]:
     return list(pep.sample_table["sample_name"].values)
 
@@ -35,6 +25,25 @@ def sample_has_asssembly_as_input(sample: str) -> bool:
         return True
     except KeyError:
         return False
+
+
+def validate_dynamic_config():
+    if config["reads__trimming"]["adapter_removal"]["do"]:
+        if not os.path.exists(config["reads__trimming"]["adapter_removal"]["adapters_fasta"]):
+            adapter_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
+            raise ValueError(f"Adapter removal is enabled, but the {adapter_file=} does not exist")
+
+    if config["resfinder"]["input_to_use"] == "reads":
+        samples_with_assembly_as_input = [
+            sample for sample in get_sample_names() if sample_has_asssembly_as_input(sample)
+        ]
+        if samples_with_assembly_as_input:
+            raise ValueError(
+                f"resfinder input_to_use is set to reads, but pepfile gives that input is assembly not reads. Relevant samples: {samples_with_assembly_as_input}"
+            )
+
+
+validate_dynamic_config()
 
 
 def get_sample_names_with_reads_as_input() -> list[str]:
@@ -124,7 +133,10 @@ def request_hamronize_or_nothing(wildcards):
 
 def get_outputs():
     sample_names = get_sample_names()
-    outputs = {"final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names)}
+    outputs = {
+        "final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names),
+        "summary": "results/summary/summary.tsv",
+    }
     if len(sample_names) > 1:
         outputs["hamronization"] = "results/hamronization/hamronization_requested.txt"
 
@@ -141,41 +153,76 @@ def get_outputs():
     return outputs
 
 
-def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> list[str]:
-    outputs = []
+def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
+    outputs: dict[str, str] = {}
     if taxa.startswith("Klebsiella"):
-        outputs.append("results/amr_detect/{sample}/kleborate.tsv")
+        outputs["kleborate"] = "results/amr_detect/{sample}/kleborate.tsv"
     elif "Staphylococcus" in taxa and "aureus" in taxa:
-        outputs.append("results/amr_detect/{sample}/spa_typer.tsv")
-        outputs.append("results/amr_detect/{sample}/SCCmec.tsv")
+        outputs["spa_typer"] = "results/amr_detect/{sample}/spa_typer.tsv"
+        outputs["SCCmec"] = "results/amr_detect/{sample}/SCCmec.tsv"
     elif taxa.startswith("Escherichia") or taxa.startswith("Shigella"):
-        outputs.append("results/amr_detect/{sample}/etoki_ebeis.tsv")
+        outputs["etoki_ebeis"] = "results/amr_detect/{sample}/etoki_ebeis.tsv"
     elif taxa.startswith("Salmonella"):
-        outputs.append("results/amr_detect/{sample}/sistr_serovar.tab")
-        outputs.append("results/amr_detect/{sample}/seqsero_summary.tsv")
+        outputs["sistr"] = "results/amr_detect/{sample}/sistr_serovar.tab"
+        outputs["seroseq"] = "results/amr_detect/{sample}/seqsero_summary.tsv"
         if "enterica" in taxa:
-            outputs.append("results/amr_detect/{sample}/crispol.tsv")
+            outputs["crispol"] = "results/amr_detect/{sample}/crispol.tsv"
     return outputs
 
 
-def infer_outputs_for_sample(wildcards):
+def infer_outputs_for_sample(wildcards) -> dict[str, str]:
     if check_all_checks_success_for_sample(wildcards.sample):
         taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
 
-        return [
-            "results/amr_detect/{sample}/amrfinder.tsv",
-            "results/amr_detect/{sample}/mlst.tsv",
-            "results/amr_detect/{sample}/abricate.tsv",
-            "results/amr_detect/{sample}/rgi_main.txt",
-            "results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
-            "results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
-            "results/hamronization/summary/{sample}.tsv",
-            "results/plasmids/{sample}/mob_typer.txt",
-            "results/checks/{sample}/qc_summary.tsv",
-        ] + get_taxonomy_dependant_outputs(wildcards.sample, taxa)
-
+        outputs = {
+            "taxonomy": "results/taxonomy/{sample}/parsed_taxa.txt",
+            "amrfinder": "results/amr_detect/{sample}/amrfinder.tsv",
+            "mlst": "results/amr_detect/{sample}/mlst.tsv",
+            "abricate": "results/amr_detect/{sample}/abricate.tsv",
+            "rgi": "results/amr_detect/{sample}/rgi_main.txt",
+            "resfinder": "results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
+            "pointfinder": "results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
+            "hamronization": "results/hamronization/summary/{sample}.tsv",
+            "plasmids": "results/plasmids/{sample}/mob_typer.txt",
+            "qc_checks": "results/checks/{sample}/qc_summary.tsv",
+        }
+        if not sample_has_asssembly_as_input(wildcards.sample):
+            outputs["seqkit"] = ("results/assembly/{sample}/seqkit_stats.tsv",)
+        taxa_outputs = get_taxonomy_dependant_outputs(wildcards.sample, taxa)
+        return outputs | taxa_outputs
     else:
-        return "results/checks/{sample}/qc_summary.tsv"
+        return {
+            "qc_checks": "results/checks/{sample}/qc_summary.tsv",
+        }
+
+
+def infer_outputs_for_sample_as_list(wildcards):
+    return list(infer_outputs_for_sample(wildcards).values())
+
+
+def infer_results_to_summarize_for_sample(wildcards):
+    dct = infer_outputs_for_sample(wildcards)
+    reports = [
+        "taxonomy",
+        "mlst",
+        "spatyper",
+        "sistr",
+        "seroseq",
+        "kleborate",
+        "plasmids",
+        "amrfinder",
+        "abricate",
+        "seqkit",
+        "qc_checks",
+    ]
+    if sample_has_asssembly_as_input(wildcards.sample):
+        reports.remove("seqkit")
+
+    out_dict = {}
+    for report in reports:
+        if report in dct:
+            out_dict[report] = dct[report]
+    return out_dict
 
 
 ### Wildcard handling #################################################################################################
