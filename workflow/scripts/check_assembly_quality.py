@@ -32,7 +32,7 @@ class AssemblyQuality:
     contigs: int
 
     def _evaluate_base_pairs(self, min_length_in_bp: int, max_length_in_bp: int) -> QCRow:
-        parameter = "assembly length"
+        parameter = "assembly_length"
         if self.basepairs < min_length_in_bp:
             return QCRow(
                 QCResult.FAIL,

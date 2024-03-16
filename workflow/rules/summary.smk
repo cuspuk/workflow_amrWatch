@@ -7,9 +7,29 @@ rule summary__results_per_sample:
     params:
         delimiter="\t",
         sample_name=lambda wildcards: wildcards.sample,
+        amrfinder_uniq_tag=":AMRFINDER:",
+    localrule: True
     conda:
         "../envs/python.yaml"
     log:
         "logs/summary/summary_results/{sample}.log",
     script:
         "../scripts/summary.py"
+
+
+rule merge__summary_results_per_sample:
+    input:
+        tsvs=expand("results/summary/per_sample/{sample}.tsv", sample=get_sample_names()),
+    output:
+        tsv="results/summary/summary.tsv",
+    params:
+        delimiter="\t",
+        amrfinder_uniq_tag=":AMRFINDER:",
+        nan_value="NaN",
+    localrule: True
+    conda:
+        "../envs/python.yaml"
+    log:
+        "logs/summary/merge_summaries.log",
+    script:
+        "../scripts/merge_summaries.py"

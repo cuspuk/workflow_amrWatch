@@ -135,7 +135,7 @@ def get_outputs():
     sample_names = get_sample_names()
     outputs = {
         "final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names),
-        "summary": expand("results/summary/per_sample/{sample}.tsv", sample=sample_names),
+        "summary": "results/summary/summary.tsv",
     }
     if len(sample_names) > 1:
         outputs["hamronization"] = "results/hamronization/hamronization_requested.txt"
@@ -217,7 +217,12 @@ def infer_results_to_summarize_for_sample(wildcards):
     ]
     if sample_has_asssembly_as_input(wildcards.sample):
         reports.remove("seqkit")
-    return {key: val for key, val in dct.items() if key in reports}
+
+    out_dict = {}
+    for report in reports:
+        if report in dct:
+            out_dict[report] = dct[report]
+    return out_dict
 
 
 ### Wildcard handling #################################################################################################
