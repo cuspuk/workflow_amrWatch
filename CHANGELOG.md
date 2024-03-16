@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.14.0](https://github.com/xsitarcik/amrWatch/compare/v2.13.0...v2.14.0) (2024-03-16)
+
+
+### Features
+
+* added merge summary for all samples ([119bddd](https://github.com/xsitarcik/amrWatch/commit/119bddd29b962977a3143513984e087c5ed6aa6c))
+* added summarization of results per sample ([98de13d](https://github.com/xsitarcik/amrWatch/commit/98de13d5a6c9a1fcfcc46af1b5bae82dcefc7049))
+
+
+### Bug Fixes
+
+* added reorder for amrfinder columns in summary ([3ebe858](https://github.com/xsitarcik/amrWatch/commit/3ebe858172767f7db3d0ac2b7ef31b86e57c4758))
+* check resfinder input validity before workflow start ([4b6a7d8](https://github.com/xsitarcik/amrWatch/commit/4b6a7d828cb9e9c4cb69a55f958c2ff5e772590c))
+* human check contamination fixed ([d29c2a0](https://github.com/xsitarcik/amrWatch/commit/d29c2a07c264092c1db8db8225f6bb9febccb3b8))
+* merged summary for amrfinder with class having __ as separator ([61f16bd](https://github.com/xsitarcik/amrWatch/commit/61f16bdd2aee226baf7fe692bb8229795248f9dc))
+* summary skips seqkit if input are assemblies ([f5e0e28](https://github.com/xsitarcik/amrWatch/commit/f5e0e28e78ce745d0431810f228ef9bb5b4f763f))
+
 ## [2.13.0](https://github.com/xsitarcik/amrWatch/compare/v2.12.0...v2.13.0) (2024-03-15)
 
 
