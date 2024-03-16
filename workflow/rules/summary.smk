@@ -7,7 +7,7 @@ rule summary__results_per_sample:
     params:
         delimiter="\t",
         sample_name=lambda wildcards: wildcards.sample,
-        amrfinder_uniq_tag=":AMRFINDER:",
+        amrfinder_uniq_tag="__",
     localrule: True
     conda:
         "../envs/python.yaml"
@@ -24,7 +24,7 @@ rule merge__summary_results_per_sample:
         tsv="results/summary/summary.tsv",
     params:
         delimiter="\t",
-        amrfinder_uniq_tag=":AMRFINDER:",
+        amrfinder_uniq_tag="__",
         nan_value="NaN",
     localrule: True
     conda:

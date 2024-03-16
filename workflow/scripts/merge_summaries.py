@@ -4,8 +4,8 @@ import sys
 
 def load_tsv(tsv_path: str) -> dict[str, str]:
     with open(tsv_path, "r") as f:
-        header = f.readline().rstrip().split("\t")
-        row = f.readline().rstrip().split("\t")
+        header = f.readline().strip().split("\t")
+        row = f.readline().strip().split("\t")
         if len(header) != len(row):
             raise ValueError("Header and row length mismatch")
         return dict(zip(header, row))
@@ -17,7 +17,6 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
 
     base_columns = ["sample", "taxonomy", "mlst", "spa_type"]
     technical_columns = [
-        "number_of_contigs",
         "number_of_contigs",
         "number_of_dead_ends",
         "mean_coverage",
@@ -72,7 +71,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         )
 
     amrfinder_tuples.sort()
-    amrfinder_columns = [y for _, y in amrfinder_tuples]
+    amrfinder_columns = [f"{x}{amrfinder_uniq_tag}{y}" for x, y in amrfinder_tuples]
 
     common_header: list[str] = (
         base_columns
