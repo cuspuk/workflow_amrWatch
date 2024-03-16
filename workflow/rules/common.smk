@@ -15,16 +15,6 @@ pepfile: config["pepfile"]
 validate(pep.sample_table, "../schemas/samples.schema.yaml")
 
 
-def validate_dynamic_config():
-    if config["reads__trimming"]["adapter_removal"]["do"]:
-        if not os.path.exists(config["reads__trimming"]["adapter_removal"]["adapters_fasta"]):
-            adapter_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
-            raise ValueError(f"Adapter removal is enabled, but the {adapter_file=} does not exist")
-
-
-validate_dynamic_config()
-
-
 def get_sample_names() -> list[str]:
     return list(pep.sample_table["sample_name"].values)
 
@@ -35,6 +25,25 @@ def sample_has_asssembly_as_input(sample: str) -> bool:
         return True
     except KeyError:
         return False
+
+
+def validate_dynamic_config():
+    if config["reads__trimming"]["adapter_removal"]["do"]:
+        if not os.path.exists(config["reads__trimming"]["adapter_removal"]["adapters_fasta"]):
+            adapter_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
+            raise ValueError(f"Adapter removal is enabled, but the {adapter_file=} does not exist")
+
+    if config["resfinder"]["input_to_use"] == "reads":
+        samples_with_assembly_as_input = [
+            sample for sample in get_sample_names() if sample_has_asssembly_as_input(sample)
+        ]
+        if samples_with_assembly_as_input:
+            raise ValueError(
+                f"resfinder input_to_use is set to reads, but pepfile gives that input is assembly not reads. Relevant samples: {samples_with_assembly_as_input}"
+            )
+
+
+validate_dynamic_config()
 
 
 def get_sample_names_with_reads_as_input() -> list[str]:

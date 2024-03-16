@@ -44,13 +44,13 @@ def get_human_check_decision(bracken_file: str, taxonomy_id: str, threshold_frac
             QCResult.FAIL,
             "human_contamination",
             human_fraction_str,
-            f"Found contamination by {taxonomy_id=} as its fraction is higher than given maximum ({human_fraction} > {threshold_fraction}",
+            f"Found contamination by {taxonomy_id=} as its fraction is higher than given maximum ({human_fraction_str} > {threshold_fraction}",
         )
     return QCRow(
         QCResult.PASS,
         "human_contamination",
         human_fraction_str,
-        f"No contamination by {taxonomy_id=} as its fraction is lower or equal than maximum ( {human_fraction} <= {threshold_fraction})",
+        f"No contamination by {taxonomy_id=} as its fraction is lower or equal than maximum ( {human_fraction_str} <= {threshold_fraction})",
     )
 
 
