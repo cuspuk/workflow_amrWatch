@@ -17,6 +17,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
 
     base_columns = ["sample", "taxonomy", "mlst", "spa_type"]
     technical_columns = [
+        "assembly_length",
         "number_of_contigs",
         "number_of_dead_ends",
         "mean_coverage",
