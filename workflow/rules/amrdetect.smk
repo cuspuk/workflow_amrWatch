@@ -302,14 +302,92 @@ rule resfinder__download_db:
         " ) > {log} 2>&1"
 
 
+rule resfinder__kma_index:
+    input:
+        resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
+        pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
+        disinfinder_db=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
+    output:
+        resfinder_out=[
+            os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "{value}.comp.b").format(value=value)
+            for value in [
+                "misc",
+                "pseudomonicacid",
+                "fusidicacid",
+                "phenicol",
+                "glycopeptide",
+                "trimethoprim",
+                "oxazolidinone",
+                "tetracycline",
+                "quinolone",
+                "nitroimidazole",
+                "fosfomycin",
+                "aminoglycoside",
+                "macrolide",
+                "sulphonamide",
+                "rifampicin",
+                "colistin",
+                "beta-lactam",
+            ]
+        ],
+        pointfinder_out=[
+            os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "{value}", "{value}.comp.b").format(
+                value=value
+            )
+            for value in [
+                "campylobacter",
+                "escherichia_coli",
+                "enterococcus_faecalis",
+                "enterococcus_faecium",
+                "neisseria_gonorrhoeae",
+                "salmonella",
+                "helicobacter_pylori",
+                "klebsiella",
+                "plasmodium_falciparum",
+                "staphylococcus_aureus",
+                "mycobacterium_tuberculosis",
+            ]
+        ],
+        disinfinder_out=[os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "disinfectants.comp.b")],
+    params:
+        suffix=".comp.b",
+    log:
+        os.path.join(config["rgi_db_dir"], "logs", "kma_index.log"),
+    conda:
+        "../envs/resfinder.yaml"
+    script:
+        "../scripts/kma_index.py"
+
+
 rule resfinder__call:
     input:
         resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
         pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
         disinfinder_db=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
-        # assembly=infer_assembly_fasta,
         inferred_input=infer_resfinder_input,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
+        kma_resfinder=expand(
+            os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "{value}.comp.b"),
+            value=[
+                "misc",
+                "pseudomonicacid",
+                "fusidicacid",
+                "phenicol",
+                "glycopeptide",
+                "trimethoprim",
+                "oxazolidinone",
+                "tetracycline",
+                "quinolone",
+                "nitroimidazole",
+                "fosfomycin",
+                "aminoglycoside",
+                "macrolide",
+                "sulphonamide",
+                "rifampicin",
+                "colistin",
+                "beta-lactam",
+            ],
+        ),
     output:
         tsv="results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
         pointfinder="results/amr_detect/{sample}/resfinder/PointFinder_results.txt",

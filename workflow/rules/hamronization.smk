@@ -193,7 +193,12 @@ rule hamronize__sample_summary:
     input:
         expand(
             "results/hamronization/{tool}/{{sample}}.tsv",
-            tool=["rgi", "amrfinder", "abricate", "resfinder", "pointfinder"],
+                tool=["rgi", "amrfinder", "abricate", "resfinder", "pointfinder"],
+            )
+        if config["resfinder"]["input_to_use"] == "assembly"
+        else expand(
+            "results/hamronization/{tool}/{{sample}}.tsv",
+            tool=["rgi", "amrfinder", "abricate"],
         ),
     output:
         tsv="results/hamronization/summary/{sample}.tsv",
