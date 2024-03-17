@@ -339,6 +339,10 @@ rule resfinder__kma_index:
                 "enterococcus_faecium",
                 "neisseria_gonorrhoeae",
                 "salmonella",
+                "helicobacter_pylori",
+                "klebsiella",
+                "plasmodium_falciparum",
+                "staphylococcus_aureus",
                 "mycobacterium_tuberculosis",
             ]
         ],
