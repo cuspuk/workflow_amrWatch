@@ -306,10 +306,13 @@ rule resfinder__kma_index:
     input:
         resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
         pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
+        disinfinder_db=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
     output:
         resfinder_out=[
             os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "{value}.comp.b").format(value=value)
             for value in [
+                "misc",
+                "pseudomonicacid",
                 "fusidicacid",
                 "phenicol",
                 "glycopeptide",
@@ -341,6 +344,7 @@ rule resfinder__kma_index:
                 "mycobacterium_tuberculosis",
             ]
         ],
+        disinfinder_out=[os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "disinfectants.comp.b")],
     params:
         suffix=".comp.b",
     log:
@@ -361,6 +365,8 @@ rule resfinder__call:
         kma_resfinder=expand(
             os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "{value}.comp.b"),
             value=[
+                "misc",
+                "pseudomonicacid",
                 "fusidicacid",
                 "phenicol",
                 "glycopeptide",
