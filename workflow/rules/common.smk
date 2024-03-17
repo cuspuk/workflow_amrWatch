@@ -118,8 +118,12 @@ def infer_amr_detection_results_for_harmonize(wildcards):
     rgi = [f"results/hamronization/rgi/{sample}.tsv" for sample in sample_names]
     amrfinder = [f"results/hamronization/amrfinder/{sample}.tsv" for sample in sample_names]
     # abricate = [f"results/hamronization/abricate/{sample}.tsv" for sample in sample_names]
-    resfinder = [f"results/hamronization/resfinder/{sample}.tsv" for sample in sample_names]
-    pointfinder = [f"results/hamronization/pointfinder/{sample}.tsv" for sample in sample_names]
+    if config["resfinder"]["input_to_use"] == "assembly":
+        resfinder = [f"results/hamronization/resfinder/{sample}.tsv" for sample in sample_names]
+        pointfinder = [f"results/hamronization/pointfinder/{sample}.tsv" for sample in sample_names]
+    else:
+        resfinder = []
+        pointfinder = []
     return rgi + amrfinder + resfinder + pointfinder
 
 

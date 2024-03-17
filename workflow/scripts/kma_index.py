@@ -34,7 +34,7 @@ for name in resfinder_names:
     )
 
 for name in disinfinder_names:
-    print(f"Processing pointfinder: {name}", file=sys.stderr)
+    print(f"Processing disinfinder: {name}", file=sys.stderr)
     shell(
         "kma_index -i {snakemake.input.disinfinder_db}/{name}.fsa -o {snakemake.input.disinfinder_db}/{name} >> {snakemake.log} 2>&1"
     )
@@ -42,5 +42,5 @@ for name in disinfinder_names:
 for name in pointfinder_names:
     print(f"Processing pointfinder: {name}", file=sys.stderr)
     shell(
-        "kma_index -i {snakemake.input.pointfinder_db}/{name}/*.fsa -o {snakemake.input.pointfinder_db}/{name} >> {snakemake.log} 2>&1"
+        "kma_index -i {snakemake.input.pointfinder_db}/{name}/*.fsa -o {snakemake.input.pointfinder_db}/{name}/{name} >> {snakemake.log} 2>&1"
     )
