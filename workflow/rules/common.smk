@@ -187,7 +187,7 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
             "qc_checks": "results/checks/{sample}/qc_summary.tsv",
         }
         if not sample_has_asssembly_as_input(wildcards.sample):
-            outputs["seqkit"] = ("results/assembly/{sample}/seqkit_stats.tsv",)
+            outputs["seqkit"] = "results/assembly/{sample}/seqkit_stats.tsv"
         taxa_outputs = get_taxonomy_dependant_outputs(wildcards.sample, taxa)
         return outputs | taxa_outputs
     else:
