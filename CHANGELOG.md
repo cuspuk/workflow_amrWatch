@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.14.1](https://github.com/xsitarcik/amrWatch/compare/v2.14.0...v2.14.1) (2024-03-17)
+
+
+### Bug Fixes
+
+* added assembly_length into summary ([88e3707](https://github.com/xsitarcik/amrWatch/commit/88e370778e0a22b58e2a98766c1d41540c089dfc))
+* seqkit parsed into summary ([6b2c835](https://github.com/xsitarcik/amrWatch/commit/6b2c83593343c398af2e8d278d416ebe85ea0365))
+
 ## [2.14.0](https://github.com/xsitarcik/amrWatch/compare/v2.13.0...v2.14.0) (2024-03-16)
 
 
