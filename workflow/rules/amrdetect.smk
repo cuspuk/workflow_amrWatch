@@ -331,9 +331,7 @@ rule resfinder__kma_index:
             ]
         ],
         pointfinder_out=[
-            os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "{value}", "{value}.comp.b").format(
-                value=value
-            )
+            os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "{value}.comp.b").format(value=value)
             for value in [
                 "campylobacter",
                 "escherichia_coli",
