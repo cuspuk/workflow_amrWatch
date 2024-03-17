@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.14.2](https://github.com/xsitarcik/amrWatch/compare/v2.14.1...v2.14.2) (2024-03-17)
+
+
+### Bug Fixes
+
+* added kma_index needed for resfinder ([1851d8e](https://github.com/xsitarcik/amrWatch/commit/1851d8e8a8426fb996f2170fd9b2747ce0626bc6))
+* hamronize skips resfinder if fastq ([a755088](https://github.com/xsitarcik/amrWatch/commit/a7550889c3766daf2a98a3a2238540e32a9e4ba4))
+* skip resfinder even for per sample summary hamronization ([ba660c3](https://github.com/xsitarcik/amrWatch/commit/ba660c3fee56f1e5489f6ac43d5f617248a3fd63))
+
 ## [2.14.1](https://github.com/xsitarcik/amrWatch/compare/v2.14.0...v2.14.1) (2024-03-17)
 
 
