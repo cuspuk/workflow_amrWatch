@@ -328,7 +328,9 @@ rule resfinder__kma_index:
             ]
         ],
         pointfinder_out=[
-            os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "{value}.comp.b").format(value=value)
+            os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "{value}", "{value}.comp.b").format(
+                value=value
+            )
             for value in [
                 "campylobacter",
                 "escherichia_coli",
@@ -341,6 +343,8 @@ rule resfinder__kma_index:
         ],
     params:
         suffix=".comp.b",
+    log:
+        os.path.join(config["rgi_db_dir"], "logs", "kma_index.log"),
     conda:
         "../envs/resfinder.yaml"
     script:
