@@ -236,7 +236,7 @@ def infer_assembly_fasta(wildcards) -> str:
     if sample_has_asssembly_as_input(wildcards.sample):
         return get_fasta_for_sample_from_pep(wildcards.sample)
     else:
-        return "results/assembly/{sample}/assembly.fasta"
+        return "results/assembly/{sample}/assembly_cleaned.fasta"
 
 
 def infer_fastqs_for_trimming(wildcards) -> list[str]:

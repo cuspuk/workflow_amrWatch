@@ -52,20 +52,6 @@ rule bandage__info:
         "(mkdir -p {params.dir} && Bandage info {input} > {output}) 2> {log}"
 
 
-rule seqkit__stats:
-    input:
-        fasta="results/assembly/{sample}/assembly.fasta",
-    output:
-        stats="results/assembly/{sample}/seqkit_stats.tsv",
-    params:
-        command="stats",
-        extra="--tabular --basename",
-    log:
-        "logs/assembly/seqkit/{sample}.log",
-    wrapper:
-        "v3.4.1/bio/seqkit"
-
-
 rule seqkit__cleanup_headers:
     input:
         fasta="results/assembly/{sample}/assembly.fasta",
@@ -82,3 +68,17 @@ rule seqkit__cleanup_headers:
         " | seqkit replace -p ' ' -r '__'"
         " | seqkit replace -p '=' -r '_'"
         " > {output}) 2> {log}"
+
+
+rule seqkit__stats:
+    input:
+        fasta="results/assembly/{sample}/assembly_cleaned.fasta",
+    output:
+        stats="results/assembly/{sample}/seqkit_stats.tsv",
+    params:
+        command="stats",
+        extra="--tabular --basename",
+    log:
+        "logs/assembly/seqkit/{sample}.log",
+    wrapper:
+        "v3.4.1/bio/seqkit"
