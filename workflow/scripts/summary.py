@@ -1,6 +1,18 @@
 import functools
 import os
+import re
 import sys
+
+
+def atoi(text: str):
+    return int(text) if text.isdigit() else text
+
+
+def human_sort(text: str):
+    """
+    Taken from http://nedbatchelder.com/blog/200712/human_sorting.html
+    """
+    return [atoi(c) for c in re.split(r"(\d+)", text)]
 
 
 def parse_amrfinder(path: str, amrfinder_uniq_tag: str) -> dict[str, str]:
@@ -66,8 +78,10 @@ def row_joiner_on_column_parser(
         out: dict[str, str] = {}
         for column, new_column in zip(columns, recode_into_columns):
             idx = header.index(column)
-            vals = join_multiple_rows_on.join([row[idx] for row in rows])
-            out[new_column] = vals
+            vals = [row[idx] for row in rows]
+            vals.sort(key=human_sort)
+            merged_vals = join_multiple_rows_on.join([val for val in vals])
+            out[new_column] = merged_vals
         return out
 
 
