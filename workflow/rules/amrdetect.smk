@@ -294,7 +294,7 @@ rule resfinder__download_db:
         "../envs/git.yaml"
     localrule: True
     log:
-        os.path.join(config["rgi_db_dir"], "logs", "download.log"),
+        os.path.join(config["resfinder"]["db_dir"], "logs", "download.log"),
     shell:
         "( git clone {params.resfinder_db_url} {output.resfinder_db}"
         " && git clone {params.pointfinder_db_url} {output.pointfinder_db}"
@@ -352,7 +352,7 @@ rule resfinder__kma_index:
     params:
         suffix=".comp.b",
     log:
-        os.path.join(config["rgi_db_dir"], "logs", "kma_index.log"),
+        os.path.join(config["resfinder"]["db_dir"], "logs", "kma_index.log"),
     conda:
         "../envs/resfinder.yaml"
     script:
