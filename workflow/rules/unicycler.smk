@@ -58,7 +58,7 @@ rule seqkit__cleanup_headers:
     output:
         fasta="results/assembly/{sample}/assembly_cleaned.fasta",
     params:
-        prefix=lambda wildcards: f"_{wildcards.sample}_contig_",
+        prefix=lambda wildcards: f"{wildcards.sample}_contig_",
     log:
         "logs/assembly/seqkit__cleanup_headers/{sample}.log",
     conda:
