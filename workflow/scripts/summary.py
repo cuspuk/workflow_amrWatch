@@ -5,7 +5,7 @@ import sys
 
 
 def atoi(text: str):
-    return int(text) if text.isdigit() else text
+    return int(text) if text.isdigit() else text.lower()
 
 
 def human_sort(text: str):
