@@ -260,7 +260,13 @@ def infer_assembly_fasta(wildcards) -> str:
 def infer_reads_for_assembly(wildcards) -> dict[str, str]:
     inputs = {}
     if sample_has_long_reads(wildcards.sample):
-        inputs["long"] = get_long_reads_for_sample_from_pep(wildcards.sample)
+        if config["assembly__unicycler"]["use_long_if_relevant"]:
+            inputs["long"] = get_long_reads_for_sample_from_pep(wildcards.sample)
+        else:
+            print(
+                f"Long reads are available for sample={wildcards.sample} but they are ignored for assembly, as config assembly__unicycler->use_long_if_relevant is False",
+                file=sys.stderr,
+            )
     inputs["paired"] = ["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"]
     return inputs
 

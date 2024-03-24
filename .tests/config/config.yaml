@@ -41,6 +41,7 @@ assembly__unicycler:
   linear_seqs: 0 # The expected number of linear sequences (default: 0).
   min_length_in_bp: 500000 # Threshold for minimum assembly length. This is a FAIL check - workflow does not proceed to the next stage.
   max_length_in_bp: 10000000 # Threshold for maximum assembly length. This is a FAIL check - workflow does not proceed to the next stage.
+  use_long_if_relevant: True # If True and long reads are provided from config/pep/samples.csv, they will be used. Set to False to ignore long reads.
 
 gtdb_hack: True
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/gtdbtk-2.3.2_20231116/" # Path with db/ subdir containing GTDB
