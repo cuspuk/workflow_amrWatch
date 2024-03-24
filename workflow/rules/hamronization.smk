@@ -97,18 +97,16 @@ rule rgi__version_db:
 
 rule resfinder__version_db:
     input:
-        db=os.path.join(config["resfinder"]["db_dir"], "{type}finder_db"),
+        db=os.path.join(config["resfinder"]["db_dir"], "{type}finder_db", "VERSION"),
     output:
         "results/.versions/{type}finder_db.txt",
-    params:
-        version=lambda wildcards, input: os.path.join(input.db, "VERSION"),
     localrule: True
     conda:
         "../envs/coreutils.yaml"
     log:
         "logs/versions/{type}finder_db.log",
     shell:
-        "cat {params.version} > {output} 2> {log}"
+        "cat {input.db} > {output} 2> {log}"
 
 
 rule hamronize__rgi:

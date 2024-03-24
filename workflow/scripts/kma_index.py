@@ -30,17 +30,17 @@ sys.stderr = open(snakemake.log[0], "w")
 for name in resfinder_names:
     print(f"Processing resfinder: {name}", file=sys.stderr)
     shell(
-        "kma_index -i {snakemake.input.resfinder_db}/{name}.fsa -o {snakemake.input.resfinder_db}/{name} >> {snakemake.log} 2>&1"
+        "kma_index -i {snakemake.params.resfinder_db_dir}/{name}.fsa -o {snakemake.params.resfinder_db_dir}/{name} >> {snakemake.log} 2>&1"
     )
 
 for name in disinfinder_names:
     print(f"Processing disinfinder: {name}", file=sys.stderr)
     shell(
-        "kma_index -i {snakemake.input.disinfinder_db}/{name}.fsa -o {snakemake.input.disinfinder_db}/{name} >> {snakemake.log} 2>&1"
+        "kma_index -i {snakemake.params.disinfinder_db_dir}/{name}.fsa -o {snakemake.params.disinfinder_db_dir}/{name} >> {snakemake.log} 2>&1"
     )
 
 for name in pointfinder_names:
     print(f"Processing pointfinder: {name}", file=sys.stderr)
     shell(
-        "kma_index -i {snakemake.input.pointfinder_db}/{name}/*.fsa -o {snakemake.input.pointfinder_db}/{name}/{name} >> {snakemake.log} 2>&1"
+        "kma_index -i {snakemake.params.pointfinder_db_dir}/{name}/*.fsa -o {snakemake.params.pointfinder_db_dir}/{name}/{name} >> {snakemake.log} 2>&1"
     )
