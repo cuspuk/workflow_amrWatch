@@ -171,6 +171,13 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
         outputs["seroseq"] = "results/amr_detect/{sample}/seqsero_summary.tsv"
         if "enterica" in taxa:
             outputs["crispol"] = "results/amr_detect/{sample}/crispol.tsv"
+
+    try:
+        matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
+        outputs["mlst"] = "results/amr_detect/{sample}/mlst.tsv"
+    except KeyError:
+        print(f"Could not find MLST scheme for {taxa=} for sample={wildcards.sample}", file=sys.stderr)
+
     return outputs
 
 
@@ -181,7 +188,6 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
         outputs = {
             "taxonomy": "results/taxonomy/{sample}/parsed_taxa.txt",
             "amrfinder": "results/amr_detect/{sample}/amrfinder.tsv",
-            "mlst": "results/amr_detect/{sample}/mlst.tsv",
             "abricate": "results/amr_detect/{sample}/abricate.tsv",
             "rgi": "results/amr_detect/{sample}/rgi_main.txt",
             "resfinder": "results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
