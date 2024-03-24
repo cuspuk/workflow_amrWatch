@@ -28,11 +28,9 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         "assembly_construction",
         "assembly_not_requested",
     ]
-    full_qc_columns = (
-        [f"{x}__result" for x in qc_columns]
-        + [f"{x}__value" for x in qc_columns]
-        + [f"{x}__comment" for x in qc_columns]
-    )
+    full_qc_columns: list[str] = []
+    for col in qc_columns:
+        full_qc_columns.extend([f"{col}{suffix}" for suffix in ["__result", "__value", "__comment"]])
 
     technical_columns = [
         "num_seqs",
