@@ -64,3 +64,21 @@ rule seqkit__stats:
         "logs/assembly/seqkit/{sample}.log",
     wrapper:
         "v3.4.1/bio/seqkit"
+
+
+rule seqkit__cleanup_headers:
+    input:
+        fasta="results/assembly/{sample}/assembly.fasta",
+    output:
+        fasta="results/assembly/{sample}/assembly_cleaned.fasta",
+    params:
+        prefix=lambda wildcards: f"_{wildcards.sample}_contig_",
+    log:
+        "logs/assembly/seqkit__cleanup_headers/{sample}.log",
+    conda:
+        "../envs/seqkit.yaml"
+    shell:
+        "(seqkit replace -p ^ -r {params.prefix} {input.fasta}"
+        " | seqkit replace -p ' ' -r '__'"
+        " | seqkit replace -p '=' -r '_'"
+        " > {output}) 2> {log}"
