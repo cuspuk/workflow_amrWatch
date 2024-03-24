@@ -16,7 +16,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
     analysis_results: list[dict[str, str]] = [load_tsv(tsv) for tsv in tsvs]
 
     base_columns = ["sample", "taxonomy", "mlst", "spa_type"]
-    technical_columns = [
+    qc_columns = [
         "assembly_length",
         "number_of_contigs",
         "number_of_dead_ends",
@@ -27,6 +27,14 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         "human_contamination",
         "assembly_construction",
         "assembly_not_requested",
+    ]
+    full_qc_columns = (
+        [f"{x}__result" for x in qc_columns]
+        + [f"{x}__value" for x in qc_columns]
+        + [f"{x}__comment" for x in qc_columns]
+    )
+
+    technical_columns = [
         "num_seqs",
         "sum_len",
     ]
@@ -76,6 +84,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
 
     common_header: list[str] = (
         base_columns
+        + full_qc_columns
         + technical_columns
         + salmonella_columns
         + kleborate_columns

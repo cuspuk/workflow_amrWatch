@@ -41,18 +41,17 @@ def column_based_parser(path: str, columns: list[str], recode_into_columns: list
         return {new_col: row[header.index(col)] for col, new_col in zip(columns, recode_into_columns)}
 
 
-def transpose_multi_columns_parser(path: str, transpose: tuple[str, str]):
+def transpose_multi_columns_parser(path: str, transpose: tuple[str, list[str]]):
     out: dict[str, str] = {}
     with open(path, "r") as f:
         header = f.readline().rstrip().split("\t")
         transposed_idx = header.index(transpose[0])
-        value_idx = header.index(transpose[1])
         rows = [row.rstrip().split("\t") for row in f.readlines()]
-        # if len(rows) == 1 and "assembly_not_requested" not in rows[0]:
-        #     out["running_from_assembly"] = "PASS"
-        #     return out
-        for row in rows:
-            out[row[transposed_idx]] = row[value_idx]
+
+        for key in transpose[1]:
+            key_idx = header.index(key)
+            for row in rows:
+                out[f"{row[transposed_idx]}__{key}"] = row[key_idx]
         return out
 
 
@@ -82,7 +81,9 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
         "seroseq": functools.partial(
             column_based_parser, columns=["Predicted antigenic profile", "Predicted serotype"]
         ),
-        "qc_checks": functools.partial(transpose_multi_columns_parser, transpose=("parameter", "result")),
+        "qc_checks": functools.partial(
+            transpose_multi_columns_parser, transpose=("parameter", ["result", "value", "comment"])
+        ),
         "kleborate": functools.partial(
             column_based_parser,
             columns=[
