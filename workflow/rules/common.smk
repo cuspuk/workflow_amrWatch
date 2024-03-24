@@ -21,16 +21,16 @@ def get_sample_names() -> list[str]:
 
 def sample_has_asssembly_as_input(sample: str) -> bool:
     try:
-        assembly = pep.sample_table.loc[sample][["fasta"]]
-        return True
+        assembly = pep.sample_table.loc[sample][["fasta"]].iloc[0]
+        return True if assembly else False
     except KeyError:
         return False
 
 
 def sample_has_long_reads(sample: str) -> bool:
     try:
-        long_reads = pep.sample_table.loc[sample][["long"]]
-        return True
+        long_reads = pep.sample_table.loc[sample][["long"]].iloc[0]
+        return True if long_reads else False
     except KeyError:
         return False
 
@@ -194,7 +194,7 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
 
 
 def infer_outputs_for_sample(wildcards) -> dict[str, str]:
-    if check_all_checks_success_for_sample(wildcards.sample):
+    if check_all_checks_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
 
         outputs = {
