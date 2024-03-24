@@ -1,2 +1,4 @@
-sample_name,fasta,fq1,fq2
-SAMPLE_NAME_1,fasta,PATH/TO/fq1,PATH/TO/fq2
+sample_name,fasta,fq1,fq2,long
+SAMPLE_NAME_1_short_only,,PATH/TO/fq1,PATH/TO/fq2,
+SAMPLE_NAME_2_hybrid,,PATH/TO/fq1,PATH/TO/fq2,PATH/TO/long
+SAMPLE_NAME_3_assembly,PATH/TO/fastq,,,

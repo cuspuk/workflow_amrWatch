@@ -27,6 +27,14 @@ def sample_has_asssembly_as_input(sample: str) -> bool:
         return False
 
 
+def sample_has_long_reads(sample: str) -> bool:
+    try:
+        long_reads = pep.sample_table.loc[sample][["long"]]
+        return True
+    except KeyError:
+        return False
+
+
 def validate_dynamic_config():
     if config["reads__trimming"]["adapter_removal"]["do"]:
         if not os.path.exists(config["reads__trimming"]["adapter_removal"]["adapters_fasta"]):
@@ -60,6 +68,10 @@ def get_first_fastq_for_sample_from_pep(sample: str, read_pair="fq1") -> str:
 
 def get_fasta_for_sample_from_pep(sample: str) -> str:
     return pep.sample_table.loc[sample][["fasta"]][0]
+
+
+def get_long_reads_for_sample_from_pep(sample: str) -> str:
+    return pep.sample_table.loc[sample][["long"]][0]
 
 
 with open(f"{workflow.basedir}/resources/gtdb_amrfinder.json", "r") as f:
@@ -243,6 +255,14 @@ def infer_assembly_fasta(wildcards) -> str:
         return get_fasta_for_sample_from_pep(wildcards.sample)
     else:
         return "results/assembly/{sample}/assembly_cleaned.fasta"
+
+
+def infer_reads_for_assembly(wildcards) -> dict[str, str]:
+    inputs = {}
+    if sample_has_long_reads(wildcards.sample):
+        inputs["long"] = get_long_reads_for_sample_from_pep(wildcards.sample)
+    inputs["paired"] = ["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"]
+    return inputs
 
 
 def infer_fastqs_for_trimming(wildcards) -> list[str]:

@@ -6,16 +6,19 @@ description: an entry in the sample sheet
 properties:
   sample_name:
     type: string
-    description: sample name/identifier
+    description: "sample name/identifier"
   fq1:
     type: string
-    description: path to read 1 in FASTQ format
+    description: "path to read 1 in FASTQ format"
   fq2:
     type: string
-    description: path to read 2 in FASTQ format
+    description: "path to read 2 in FASTQ format"
+  long:
+    type: string
+    description: "path to long read in FASTQ format. Optional."
   fasta:
     type: string
-    description: path to assembled contigs in FASTA format
+    description: "path to assembled contigs in FASTA format"
 
 # columns that the config/samples.csv file must have to pass schema validation
 required:
