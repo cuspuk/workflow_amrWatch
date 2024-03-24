@@ -367,9 +367,9 @@ rule resfinder__kma_index:
 
 rule resfinder__call:
     input:
-        resfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
-        pointfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
-        disinfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
+        resfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "VERSION"),
+        pointfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "VERSION"),
+        disinfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "VERSION"),
         inferred_input=infer_resfinder_input,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
         kma_resfinder=expand(
