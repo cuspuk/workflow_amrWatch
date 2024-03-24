@@ -73,7 +73,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         tuples = [
             (x.split(amrfinder_uniq_tag)[0], x.split(amrfinder_uniq_tag)[1])
             for x in result.keys()
-            if amrfinder_uniq_tag in x
+            if amrfinder_uniq_tag in x and "__result" not in x and "__value" not in x and "__comment" not in x
         ]
         amrfinder_tuples.extend(
             [amrfinder_tuple for amrfinder_tuple in tuples if amrfinder_tuple not in amrfinder_tuples]
