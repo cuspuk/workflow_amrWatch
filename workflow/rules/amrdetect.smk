@@ -283,9 +283,9 @@ rule rgi__call:
 
 rule resfinder__download_db:
     output:
-        resfinder_db_ver=directory(os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "VERSION")),
-        pointfinder_db_ver=directory(os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "VERSION")),
-        disinfinder_db_ver=directory(os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "VERSION")),
+        resfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "VERSION"),
+        pointfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "VERSION"),
+        disinfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "VERSION"),
     params:
         resfinder_db_url="https://bitbucket.org/genomicepidemiology/resfinder_db/",
         pointfinder_db_url="https://bitbucket.org/genomicepidemiology/pointfinder_db/",
@@ -307,9 +307,9 @@ rule resfinder__download_db:
 
 rule resfinder__kma_index:
     input:
-        resfinder_db_ver=directory(os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "VERSION")),
-        pointfinder_db_ver=directory(os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "VERSION")),
-        disinfinder_db_ver=directory(os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "VERSION")),
+        resfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "VERSION"),
+        pointfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "VERSION"),
+        disinfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "VERSION"),
     output:
         resfinder_out=[
             os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "{value}.comp.b").format(value=value)
