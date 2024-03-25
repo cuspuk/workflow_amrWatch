@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.15.0](https://github.com/xsitarcik/amrWatch/compare/v2.14.2...v2.15.0) (2024-03-25)
+
+
+### Features
+
+* added assembly__unicycler-&gt;use_long_if_relevant element in config to ignore long reads even if provided ([929cb78](https://github.com/xsitarcik/amrWatch/commit/929cb782733ab4b2eae87116b11fdc5daa5f6621))
+* added long column in samples.csv, which automatically runs unicycler with long reads ([cf429c9](https://github.com/xsitarcik/amrWatch/commit/cf429c942cdf1307d71c683175e593577d2ccf3a))
+
+
+### Bug Fixes
+
+* abricate values are sorted in summary by human sorting ([9227ffb](https://github.com/xsitarcik/amrWatch/commit/9227ffb018b5e5f68bb91a4d98a6bd1b0927da09))
+* abricate virulence hits sort is now case insensitive ([82b6b25](https://github.com/xsitarcik/amrWatch/commit/82b6b25ee4c35d614598a49d6e7f5d314dc03dc9))
+* assembly fasta headers cleaned, added prefix "_sample_contig_", replaced spaces with double underscores, and equal sign with single underscore ([c03a88f](https://github.com/xsitarcik/amrWatch/commit/c03a88f867172f6f56fd83a07b8b55e817e99f82))
+* assembly with cleaned headers is now used for subsequent steps instead of original fasta assembly ([d5b0847](https://github.com/xsitarcik/amrWatch/commit/d5b0847e8307657776c6c2680d33cb52cd38bbd4))
+* each qc_check is represented in summary by three columns {check}__value, {check}__result, {check}__comment ([aeca81b](https://github.com/xsitarcik/amrWatch/commit/aeca81b8dc3b43f3ff3af06343a73f3567515fad))
+* log paths changed for resfinder db ([1344a3a](https://github.com/xsitarcik/amrWatch/commit/1344a3aeb4e616bbd592cad1006851718b960170))
+* mlst is requested only for taxa with matched scheme ([4da5352](https://github.com/xsitarcik/amrWatch/commit/4da535231be4c1a006fa587665b6bc7d64cfc1ba))
+* removed leading underscore before sample name in fasta header ([0ddb2bb](https://github.com/xsitarcik/amrWatch/commit/0ddb2bb99759c5fce0cb05e2c14231a4af4537b1))
+* reordered qc checks to result, value and comment, for each column ([2813a10](https://github.com/xsitarcik/amrWatch/commit/2813a1079a9e3a877d18d21c25beba092c415b43))
+
 ## [2.14.2](https://github.com/xsitarcik/amrWatch/compare/v2.14.1...v2.14.2) (2024-03-17)
 
 
