@@ -21,8 +21,16 @@ def get_sample_names() -> list[str]:
 
 def sample_has_asssembly_as_input(sample: str) -> bool:
     try:
-        assembly = pep.sample_table.loc[sample][["fasta"]]
-        return True
+        assembly = pep.sample_table.loc[sample][["fasta"]].iloc[0]
+        return True if assembly else False
+    except KeyError:
+        return False
+
+
+def sample_has_long_reads(sample: str) -> bool:
+    try:
+        long_reads = pep.sample_table.loc[sample][["long"]].iloc[0]
+        return True if long_reads else False
     except KeyError:
         return False
 
@@ -60,6 +68,10 @@ def get_first_fastq_for_sample_from_pep(sample: str, read_pair="fq1") -> str:
 
 def get_fasta_for_sample_from_pep(sample: str) -> str:
     return pep.sample_table.loc[sample][["fasta"]][0]
+
+
+def get_long_reads_for_sample_from_pep(sample: str) -> str:
+    return pep.sample_table.loc[sample][["long"]][0]
 
 
 with open(f"{workflow.basedir}/resources/gtdb_amrfinder.json", "r") as f:
@@ -171,17 +183,23 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
         outputs["seroseq"] = "results/amr_detect/{sample}/seqsero_summary.tsv"
         if "enterica" in taxa:
             outputs["crispol"] = "results/amr_detect/{sample}/crispol.tsv"
+
+    try:
+        matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
+        outputs["mlst"] = "results/amr_detect/{sample}/mlst.tsv"
+    except KeyError:
+        print(f"Could not find MLST scheme for {taxa=} for sample={wildcards.sample}", file=sys.stderr)
+
     return outputs
 
 
 def infer_outputs_for_sample(wildcards) -> dict[str, str]:
-    if check_all_checks_success_for_sample(wildcards.sample):
+    if check_all_checks_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
         taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
 
         outputs = {
             "taxonomy": "results/taxonomy/{sample}/parsed_taxa.txt",
             "amrfinder": "results/amr_detect/{sample}/amrfinder.tsv",
-            "mlst": "results/amr_detect/{sample}/mlst.tsv",
             "abricate": "results/amr_detect/{sample}/abricate.tsv",
             "rgi": "results/amr_detect/{sample}/rgi_main.txt",
             "resfinder": "results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
@@ -236,7 +254,21 @@ def infer_assembly_fasta(wildcards) -> str:
     if sample_has_asssembly_as_input(wildcards.sample):
         return get_fasta_for_sample_from_pep(wildcards.sample)
     else:
-        return "results/assembly/{sample}/assembly.fasta"
+        return "results/assembly/{sample}/assembly_cleaned.fasta"
+
+
+def infer_reads_for_assembly(wildcards) -> dict[str, str]:
+    inputs = {}
+    if sample_has_long_reads(wildcards.sample):
+        if config["assembly__unicycler"]["use_long_if_relevant"]:
+            inputs["long"] = get_long_reads_for_sample_from_pep(wildcards.sample)
+        else:
+            print(
+                f"Long reads are available for sample={wildcards.sample} but they are ignored for assembly, as config assembly__unicycler->use_long_if_relevant is False",
+                file=sys.stderr,
+            )
+    inputs["paired"] = ["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"]
+    return inputs
 
 
 def infer_fastqs_for_trimming(wildcards) -> list[str]:

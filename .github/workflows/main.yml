@@ -24,7 +24,7 @@ jobs:
           swap-storage: true
 
       - name: Test workflow
-        uses: snakemake/snakemake-github-action@v1.25.1
+        uses: xsitarcik/snakemake-github-action@v1.25.1
         with:
           directory: .tests
           snakefile: workflow/Snakefile

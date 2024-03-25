@@ -1,6 +1,6 @@
 rule unicycler__assemble:
     input:
-        paired=["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"],
+        unpack(infer_reads_for_assembly),
         qc_check="results/checks/{sample}/pre_assembly_summary.tsv",  # NOTE just to say implicitly that this is a dependency
     output:
         contigs="results/assembly/{sample}/assembly.fasta",
@@ -52,9 +52,27 @@ rule bandage__info:
         "(mkdir -p {params.dir} && Bandage info {input} > {output}) 2> {log}"
 
 
-rule seqkit__stats:
+rule seqkit__cleanup_headers:
     input:
         fasta="results/assembly/{sample}/assembly.fasta",
+    output:
+        fasta="results/assembly/{sample}/assembly_cleaned.fasta",
+    params:
+        prefix=lambda wildcards: f"{wildcards.sample}_contig_",
+    log:
+        "logs/assembly/seqkit__cleanup_headers/{sample}.log",
+    conda:
+        "../envs/seqkit.yaml"
+    shell:
+        "(seqkit replace -p ^ -r {params.prefix} {input.fasta}"
+        " | seqkit replace -p ' ' -r '__'"
+        " | seqkit replace -p '=' -r '_'"
+        " > {output}) 2> {log}"
+
+
+rule seqkit__stats:
+    input:
+        fasta="results/assembly/{sample}/assembly_cleaned.fasta",
     output:
         stats="results/assembly/{sample}/seqkit_stats.tsv",
     params:

@@ -1,6 +1,6 @@
 rule bwa__build_index:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        "results/assembly/{sample}/assembly_cleaned.fasta",
     output:
         idx=temp(multiext("results/assembly/{sample}/bwa_index/bwa", ".amb", ".ann", ".bwt", ".pac", ".sa")),
     params:
@@ -125,9 +125,9 @@ rule qualimap__report:
 
 rule samtools__faidx:
     input:
-        "results/assembly/{sample}/assembly.fasta",
+        "results/assembly/{sample}/assembly_cleaned.fasta",
     output:
-        "results/assembly/{sample}/assembly.fasta.fai",
+        "results/assembly/{sample}/assembly_cleaned.fasta.fai",
     log:
         "logs/self_contamination/samtools_faidx/{sample}.log",
     threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
@@ -140,8 +140,8 @@ rule samtools__faidx:
 rule bcftools__mpileup:
     input:
         alignments="results/self_contamination/{sample}/markdup.bam",
-        ref="results/assembly/{sample}/assembly.fasta",
-        index="results/assembly/{sample}/assembly.fasta.fai",
+        ref="results/assembly/{sample}/assembly_cleaned.fasta",
+        index="results/assembly/{sample}/assembly_cleaned.fasta.fai",
     output:
         pileup=temp("results/self_contamination/{sample}/piled.bcf"),
     params:

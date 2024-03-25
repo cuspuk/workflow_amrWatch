@@ -283,30 +283,33 @@ rule rgi__call:
 
 rule resfinder__download_db:
     output:
-        resfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "resfinder_db")),
-        pointfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "pointfinder_db")),
-        disinfinder_db=directory(os.path.join(config["resfinder"]["db_dir"], "disinfinder_db")),
+        resfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "VERSION"),
+        pointfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "VERSION"),
+        disinfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "VERSION"),
     params:
         resfinder_db_url="https://bitbucket.org/genomicepidemiology/resfinder_db/",
         pointfinder_db_url="https://bitbucket.org/genomicepidemiology/pointfinder_db/",
         disinfinder_db_url="https://bitbucket.org/genomicepidemiology/disinfinder_db/",
+        resfinder_db_dir=lambda wildcards, output: os.path.dirname(output.resfinder_db_ver),
+        pointfinder_db_dir=lambda wildcards, output: os.path.dirname(output.pointfinder_db_ver),
+        disinfinder_db_dir=lambda wildcards, output: os.path.dirname(output.disinfinder_db_ver),
     conda:
         "../envs/git.yaml"
     localrule: True
     log:
-        os.path.join(config["rgi_db_dir"], "logs", "download.log"),
+        os.path.join(config["resfinder"]["db_dir"], "logs", "download.log"),
     shell:
-        "( git clone {params.resfinder_db_url} {output.resfinder_db}"
-        " && git clone {params.pointfinder_db_url} {output.pointfinder_db}"
-        " && git clone {params.disinfinder_db_url} {output.disinfinder_db}"
+        "( git clone {params.resfinder_db_url} {params.resfinder_db_dir}"
+        " && git clone {params.pointfinder_db_url} {params.pointfinder_db_dir}"
+        " && git clone {params.disinfinder_db_url} {params.disinfinder_db_dir}"
         " ) > {log} 2>&1"
 
 
 rule resfinder__kma_index:
     input:
-        resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
-        pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
-        disinfinder_db=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
+        resfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "VERSION"),
+        pointfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "VERSION"),
+        disinfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "VERSION"),
     output:
         resfinder_out=[
             os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "{value}.comp.b").format(value=value)
@@ -351,8 +354,11 @@ rule resfinder__kma_index:
         disinfinder_out=[os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "disinfectants.comp.b")],
     params:
         suffix=".comp.b",
+        resfinder_db_dir=lambda wildcards, input: os.path.dirname(input.resfinder_db_ver),
+        pointfinder_db_dir=lambda wildcards, input: os.path.dirname(input.pointfinder_db_ver),
+        disinfinder_db_dir=lambda wildcards, input: os.path.dirname(input.disinfinder_db_ver),
     log:
-        os.path.join(config["rgi_db_dir"], "logs", "kma_index.log"),
+        os.path.join(config["resfinder"]["db_dir"], "logs", "kma_index.log"),
     conda:
         "../envs/resfinder.yaml"
     script:
@@ -361,9 +367,9 @@ rule resfinder__kma_index:
 
 rule resfinder__call:
     input:
-        resfinder_db=os.path.join(config["resfinder"]["db_dir"], "resfinder_db"),
-        pointfinder_db=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db"),
-        disinfinder_db=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db"),
+        resfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "resfinder_db", "VERSION"),
+        pointfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "pointfinder_db", "VERSION"),
+        disinfinder_db_ver=os.path.join(config["resfinder"]["db_dir"], "disinfinder_db", "VERSION"),
         inferred_input=infer_resfinder_input,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
         kma_resfinder=expand(
@@ -392,6 +398,9 @@ rule resfinder__call:
         tsv="results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
         pointfinder="results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
     params:
+        resfinder_db_dir=lambda wildcards, input: os.path.dirname(input.resfinder_db_ver),
+        pointfinder_db_dir=lambda wildcards, input: os.path.dirname(input.pointfinder_db_ver),
+        disinfinder_db_dir=lambda wildcards, input: os.path.dirname(input.disinfinder_db_ver),
         species=get_taxonomy_for_resfinder,
         outdir=lambda wildcards, output: os.path.dirname(output.tsv),
         input_arg=lambda wildcards, input: "--inputfasta" if isinstance(input.inferred_input, str) else "--inputfastq",
@@ -404,9 +413,9 @@ rule resfinder__call:
     shell:
         "(python -m resfinder {params.input_arg} {input.inferred_input} --ignore_missing_species"
         " --min_cov {params.min_cov} --threshold {params.threshold} -s {params.species:q}"
-        " --disinfectant --db_path_disinf {input.disinfinder_db}"
-        " --point --db_path_point {input.pointfinder_db}"
-        " --acquired --db_path_res {input.resfinder_db}"
+        " --disinfectant --db_path_disinf {params.disinfinder_db_dir}"
+        " --point --db_path_point {params.pointfinder_db_dir}"
+        " --acquired --db_path_res {params.resfinder_db_dir}"
         " -o {params.outdir} && touch {output.pointfinder}) > {log} 2>&1"
 
 

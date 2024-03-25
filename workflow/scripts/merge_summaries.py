@@ -16,7 +16,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
     analysis_results: list[dict[str, str]] = [load_tsv(tsv) for tsv in tsvs]
 
     base_columns = ["sample", "taxonomy", "mlst", "spa_type"]
-    technical_columns = [
+    qc_columns = [
         "assembly_length",
         "number_of_contigs",
         "number_of_dead_ends",
@@ -27,6 +27,12 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         "human_contamination",
         "assembly_construction",
         "assembly_not_requested",
+    ]
+    full_qc_columns: list[str] = []
+    for col in qc_columns:
+        full_qc_columns.extend([f"{col}{suffix}" for suffix in ["__result", "__value", "__comment"]])
+
+    technical_columns = [
         "num_seqs",
         "sum_len",
     ]
@@ -65,7 +71,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         tuples = [
             (x.split(amrfinder_uniq_tag)[0], x.split(amrfinder_uniq_tag)[1])
             for x in result.keys()
-            if amrfinder_uniq_tag in x
+            if amrfinder_uniq_tag in x and "__result" not in x and "__value" not in x and "__comment" not in x
         ]
         amrfinder_tuples.extend(
             [amrfinder_tuple for amrfinder_tuple in tuples if amrfinder_tuple not in amrfinder_tuples]
@@ -76,6 +82,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
 
     common_header: list[str] = (
         base_columns
+        + full_qc_columns
         + technical_columns
         + salmonella_columns
         + kleborate_columns
