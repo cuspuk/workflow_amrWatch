@@ -6,7 +6,7 @@ rule amrfinder__download_db:
     conda:
         "../envs/amrfinder.yaml"
     log:
-        os.path.join(os.path.dirname(config["amrfinder_db_dir"]), "logs", "download"),
+        os.path.join(os.path.dirname(config["amrfinder_db_dir"]), "logs", "download.log"),
     shell:
         "(mkdir -p {params.db_parent} && amrfinder_update -d {params.db_parent}) > {log} 2>&1"
 
@@ -57,7 +57,7 @@ rule abricate_download_db:
     conda:
         "../envs/abricate.yaml"
     log:
-        os.path.join(os.path.dirname(config["amrfinder_db_dir"]), "logs", "download"),
+        os.path.join(config["abricate"]["db_dir"], "logs", "download.log"),
     shell:
         "abricate-get_db --db={params.db_name} --dbdir={params.db_dir} > {log} 2>&1"
 
@@ -105,7 +105,7 @@ rule spatyper__download_db:
     conda:
         "../envs/spatyper.yaml"
     log:
-        os.path.join(os.path.join(config["spatyper_db_dir"], "logs", "download.log")),
+        os.path.join(config["spatyper_db_dir"], "logs", "download.log"),
     script:
         "../scripts/spatyper_db_download.py"
 

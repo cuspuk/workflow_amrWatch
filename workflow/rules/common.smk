@@ -188,13 +188,13 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
         matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
         outputs["mlst"] = "results/amr_detect/{sample}/mlst.tsv"
     except KeyError:
-        print(f"Could not find MLST scheme for {taxa=} for sample={wildcards.sample}", file=sys.stderr)
+        pass
 
     return outputs
 
 
 def infer_outputs_for_sample(wildcards) -> dict[str, str]:
-    if check_all_checks_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
+    if check_all_checks_success_for_sample(wildcards.sample):
         taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
 
         outputs = {
@@ -263,9 +263,8 @@ def infer_reads_for_assembly(wildcards) -> dict[str, str]:
         if config["assembly__unicycler"]["use_long_if_relevant"]:
             inputs["long"] = get_long_reads_for_sample_from_pep(wildcards.sample)
         else:
-            print(
+            logger.warning(
                 f"Long reads are available for sample={wildcards.sample} but they are ignored for assembly, as config assembly__unicycler->use_long_if_relevant is False",
-                file=sys.stderr,
             )
     inputs["paired"] = ["results/reads/trimmed/{sample}_R1.fastq.gz", "results/reads/trimmed/{sample}_R2.fastq.gz"]
     return inputs
@@ -300,7 +299,7 @@ def get_organism_for_amrfinder(wildcards):
         matched_organism = get_key_for_value_from_db(taxa, AMRFINDER_MAP)
         return f"--organism {matched_organism}"
     except KeyError:
-        print(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map", file=sys.stderr)
+        logger.warning(f"Could not find organism {taxa} for sample {wildcards.sample} in amrfinder map")
         return ""
 
 
@@ -310,7 +309,7 @@ def get_taxonomy_for_mlst(wildcards):
         matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
         return f"--scheme {matched_organism}"
     except KeyError:
-        print(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map", file=sys.stderr)
+        logger.warning(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
         return ""
 
 
@@ -328,7 +327,7 @@ def infer_relevant_checks(wildcards):
     if not check_preassembly_QC_for_sample(wildcards.sample):
         return checks
 
-    if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
+    if check_assembly_construction_success_for_sample(wildcards.sample):
         checks += [
             "results/checks/{sample}/assembly_quality.tsv",
             "results/checks/{sample}/coverage_check.tsv",

@@ -11,12 +11,8 @@ include: "rules/check_pre_assembly.smk"
 include: "rules/selfcontamination_check.smk"
 include: "rules/hamronization.smk"
 include: "rules/summary.smk"
-
-
-if not config["gtdb_hack"]:
-
-    include: "rules/gtdb.smk"
-    include: "rules/amrdetect.smk"
+include: "rules/gtdb.smk"
+include: "rules/amrdetect.smk"
 
 
 rule all:
@@ -27,5 +23,5 @@ rule all:
 
 onsuccess:
     if os.path.exists("localDB"):
-        print("Cleaning up loaded RGI database...", file=sys.stderr)
+        logger.info("Cleaning up loaded RGI database...")
         shell("rm -rf localDB")
