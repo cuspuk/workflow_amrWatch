@@ -188,7 +188,7 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
         matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
         outputs["mlst"] = "results/amr_detect/{sample}/mlst.tsv"
     except KeyError:
-        logger.warning(f"Could not find MLST scheme for {taxa=} for sample={wildcards.sample}")
+        logger.warning(f"Skipping calling MLST for sample={wildcards.sample} as scheme could not be found for {taxa=}")
 
     return outputs
 
