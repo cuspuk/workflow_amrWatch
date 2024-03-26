@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.15.1](https://github.com/xsitarcik/amrWatch/compare/v2.15.0...v2.15.1) (2024-03-26)
+
+
+### Bug Fixes
+
+* fixed logging for mlst skipping ([4e06cb8](https://github.com/xsitarcik/amrWatch/commit/4e06cb8e3a20b0afbe44b79c16cd8ee0622a0b43))
+* reworked main workflow logs to use main snakemake logger ([23e2663](https://github.com/xsitarcik/amrWatch/commit/23e2663b0a16aa84ca51f2d771057ddb93c2f365))
+
+
+### Performance Improvements
+
+* fixed some logging statements ([4c9ee1c](https://github.com/xsitarcik/amrWatch/commit/4c9ee1c9c1ee14001f790dcc6784510ae4049358))
+
 ## [2.15.0](https://github.com/xsitarcik/amrWatch/compare/v2.14.2...v2.15.0) (2024-03-25)
 
 
