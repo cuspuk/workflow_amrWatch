@@ -11,12 +11,8 @@ include: "rules/check_pre_assembly.smk"
 include: "rules/selfcontamination_check.smk"
 include: "rules/hamronization.smk"
 include: "rules/summary.smk"
-
-
-if not config["gtdb_hack"]:
-
-    include: "rules/gtdb.smk"
-    include: "rules/amrdetect.smk"
+include: "rules/gtdb.smk"
+include: "rules/amrdetect.smk"
 
 
 rule all:

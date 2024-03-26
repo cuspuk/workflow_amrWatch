@@ -194,7 +194,7 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
 
 
 def infer_outputs_for_sample(wildcards) -> dict[str, str]:
-    if check_all_checks_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
+    if check_all_checks_success_for_sample(wildcards.sample):
         taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
 
         outputs = {
@@ -327,7 +327,7 @@ def infer_relevant_checks(wildcards):
     if not check_preassembly_QC_for_sample(wildcards.sample):
         return checks
 
-    if check_assembly_construction_success_for_sample(wildcards.sample) and not config["gtdb_hack"]:
+    if check_assembly_construction_success_for_sample(wildcards.sample):
         checks += [
             "results/checks/{sample}/assembly_quality.tsv",
             "results/checks/{sample}/coverage_check.tsv",

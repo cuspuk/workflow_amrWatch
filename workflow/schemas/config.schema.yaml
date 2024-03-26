@@ -17,9 +17,6 @@ definitions:
         description: "Number of maximum threads to use in jobs."
         default: 1
         Minimum: 1
-      gtdb_hack:
-        type: boolean
-        default: false
       amrfinder_db_dir:
         type: string
         description: "Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version."
