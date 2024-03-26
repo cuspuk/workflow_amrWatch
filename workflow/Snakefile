@@ -27,5 +27,5 @@ rule all:
 
 onsuccess:
     if os.path.exists("localDB"):
-        print("Cleaning up loaded RGI database...", file=sys.stderr)
+        logger.info("Cleaning up loaded RGI database...")
         shell("rm -rf localDB")
