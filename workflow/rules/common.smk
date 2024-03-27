@@ -256,7 +256,7 @@ def infer_results_to_summarize_for_sample(wildcards):
 def get_all_clonal_complex_profiles():
     profiles = []
     for profile in list(config["clonal_complex"]["mapping_to_gtdbtk_names"].keys()):
-        profiles.append(os.path.join(config["clonal_complex"]["db_dir"], f"{profile}.csv"))
+        profiles.append(os.path.join(config["clonal_complex"]["db_dir"], f"{profile}.tsv"))
     return profiles
 
 
@@ -336,7 +336,7 @@ def find_cc_profile_for_taxonomy(taxa: str):
 def infer_profile_for_clonal_complex(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
     profile = find_cc_profile_for_taxonomy(taxa)
-    return os.path.join(config["clonal_complex"]["db_dir"], f"{profile}.csv")
+    return os.path.join(config["clonal_complex"]["db_dir"], f"{profile}.tsv")
 
 
 def get_taxonomy_for_resfinder(wildcards):

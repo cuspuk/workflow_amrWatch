@@ -99,6 +99,7 @@ definitions:
       - rgi_db_dir
       - max_threads
       - max_mem_mb
+      - clonal_complex
     title: AmrWatchWorkflow
   ReadsTrimming:
     type: object
