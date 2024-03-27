@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.15.2](https://github.com/xsitarcik/amrWatch/compare/v2.15.1...v2.15.2) (2024-03-27)
+
+
+### Bug Fixes
+
+* fixed spatyper in summary, added sccmec output into summary ([ad5a039](https://github.com/xsitarcik/amrWatch/commit/ad5a039520be699f35f42f6f05a1de757e43c3c5))
+* sccmec added merged column with only true types ([9618725](https://github.com/xsitarcik/amrWatch/commit/96187255488755635d0f04dca236be7e0dc0702d))
+* sccmec also in merged summary ([e1ef7af](https://github.com/xsitarcik/amrWatch/commit/e1ef7af711fb535d4fab4dbe3181ef783077fe15))
+
 ## [2.15.1](https://github.com/xsitarcik/amrWatch/compare/v2.15.0...v2.15.1) (2024-03-26)
 
 
