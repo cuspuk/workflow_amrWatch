@@ -12,7 +12,7 @@ def get_clonal_complex(mlst_value: str, profile_tsv_file: str) -> dict[str, str]
     with open(profile_tsv_file, "r") as f:
         header = f.readline().rstrip().split("\t")
         st_index = header.index("ST")
-        rows = [row.rstrip("\n").split("\t") for row in f.readlines()]
+        rows = [row.rstrip().split("\t") for row in f.readlines()]
     for row in rows:
         if row[st_index] == mlst_value:
             column_values: dict[str, str] = {}
