@@ -12,9 +12,15 @@ def get_clonal_complex(mlst_value: str, profile_tsv_file: str) -> tuple[list[str
     with open(profile_tsv_file, "r") as f:
         header = f.readline().rstrip().split("\t")
         st_index = header.index("ST")
-        rows = [row.rstrip().split("\t") for row in f.readlines()]
+        rows = [row.rstrip("\n").split("\t") for row in f.readlines()]
     for row in rows:
         if row[st_index] == mlst_value:
+            formatted_row: list[str] = []
+            for value in row:
+                if value == "":
+                    formatted_row.append("-")
+                else:
+                    formatted_row.append(value)
             return header, row
     return (["ST", "clonal_complex"], [mlst_value, "ST_not_found"])
 
