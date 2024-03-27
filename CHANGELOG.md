@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.16.0](https://github.com/xsitarcik/amrWatch/compare/v2.15.2...v2.16.0) (2024-03-27)
+
+
+### Features
+
+* added clonal complex ([232aab0](https://github.com/xsitarcik/amrWatch/commit/232aab07c332c080f090b0e1dea04fc0205ee980))
+
+
+### Bug Fixes
+
+* clonal complex set to dash if found but empty ([5d35833](https://github.com/xsitarcik/amrWatch/commit/5d35833c73347b48079ccb163c91757b8cc1dc67))
+* clonal complex set to dash if not found in profile ([1a82d49](https://github.com/xsitarcik/amrWatch/commit/1a82d49b1024184bdeb5647121fc8bf76294b5f3))
+* schema requires ccc ([9b2da8d](https://github.com/xsitarcik/amrWatch/commit/9b2da8d1243b19943e2f04310b8dd7303c90637b))
+
 ## [2.15.2](https://github.com/xsitarcik/amrWatch/compare/v2.15.1...v2.15.2) (2024-03-27)
 
 
