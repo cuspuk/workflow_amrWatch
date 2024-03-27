@@ -66,7 +66,10 @@ def sccmec_parser(
         header = f.readline().rstrip().split("\t")
         row = f.readline().rstrip().split("\t")
     outs = {new_col: row[header.index(col)] for col, new_col in zip(columns, recode_into_columns)}
-    outs[merged_column] = ", ".join([row[header.index(col)] for col in header if col not in ignore_columns])
+
+    outs[merged_column] = ", ".join(
+        [col for col in header if col not in ignore_columns and row[header.index(col)] == "True"]
+    )
     return outs
 
 
