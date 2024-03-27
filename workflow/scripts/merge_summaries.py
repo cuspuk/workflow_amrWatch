@@ -15,7 +15,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
 
     analysis_results: list[dict[str, str]] = [load_tsv(tsv) for tsv in tsvs]
 
-    base_columns = ["sample", "taxonomy", "mlst", "spa_type"]
+    base_columns = ["sample", "taxonomy", "mlst", "spa_type", "SCCmec_type", "SCCmecA_presence"]
     qc_columns = [
         "assembly_length",
         "number_of_contigs",
