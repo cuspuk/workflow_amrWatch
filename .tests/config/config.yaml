@@ -71,6 +71,14 @@ coverage_check:
   warn_threshold: 50 # Soft threshold for mean coverage. Lower coverage than this results in WARN row.
   fail_threshold: 20 # Hard threshold for mean coverage. Lower coverage than this results in FAIL row.
 
+clonal_complex:
+  db_dir: "resources/others/mlst_profiles_cc/2024-03-27/" # Path to the MLST database. Must be provided and contain blast and pubmlst data.
+  # Profiles are downloaded from the https://pubmlst.org/data/ database, and stored in the above-mentioned path
+  # Ensure, that each profile is a .tsv format having at least these columns: "ST" and "clonal_complex" in the header.
+  mapping_to_gtdbtk_names: # Here define mapping from MLST names to GTDBTK names using regex. If not provided, clonal_complex is NOT produced at all.
+    efaecium: "Enterococcus.* faecium.*"
+    saureus: "Staphylococcus.* aureus.*"
+
 ### RESOURCES #############################
 
 max_threads: 2

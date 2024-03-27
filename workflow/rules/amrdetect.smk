@@ -450,3 +450,34 @@ rule seqsero2__call:
         " && echo -e {params.header:q} > {output.tsv}"
         " && cat {params.out_dir}/SeqSero_result.tsv >> {output.tsv}"
         " ) > {log} 2>&1"
+
+
+rule clonal_complex_profiles_download:
+    output:
+        tsv=os.path.join(config["clonal_complex"]["db_dir"], "{ncbi_name}.tsv"),
+    params:
+        url=lambda wildcards: f"https://rest.pubmlst.org/db/pubmlst_{wildcards.ncbi_name}_seqdef/schemes/1/profiles_csv",
+        out_dir=lambda wildcards, output: os.path.dirname(output.tsv),
+    log:
+        os.path.join(config["clonal_complex"]["db_dir"], "logs", "{ncbi_name}.log"),
+    conda:
+        "../envs/curl.yaml"
+    shell:
+        "(mkdir -p {params.out_dir} && curl -s -o {output.tsv} {params.url}) > {log} 2>&1"
+
+
+rule mlst_clonal_complex:
+    input:
+        mlst="results/amr_detect/{sample}/mlst.tsv",
+        profile_tsv=infer_profile_for_clonal_complex,
+    output:
+        "results/amr_detect/{sample}/clonal_complex.tsv",
+    params:
+        mlst_index=2,
+    conda:
+        "../envs/python.yaml"
+    localrule: True
+    log:
+        "logs/amr_detect/mlst_clonal_complex/{sample}.log",
+    script:
+        "../scripts/mlst_to_clonal_complex.py"
