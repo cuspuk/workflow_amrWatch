@@ -8,21 +8,21 @@ def get_mlst(mlst_file: str, mlst_index: int) -> str:
         return row[mlst_index]
 
 
-def get_clonal_complex(mlst_value: str, profile_tsv_file: str) -> tuple[list[str], list[str]]:
+def get_clonal_complex(mlst_value: str, profile_tsv_file: str) -> dict[str, str]:
     with open(profile_tsv_file, "r") as f:
         header = f.readline().rstrip().split("\t")
         st_index = header.index("ST")
         rows = [row.rstrip("\n").split("\t") for row in f.readlines()]
     for row in rows:
         if row[st_index] == mlst_value:
-            formatted_row: list[str] = []
-            for value in row:
-                if value == "":
-                    formatted_row.append("-")
-                else:
-                    formatted_row.append(value)
-            return header, row
-    return (["ST", "clonal_complex"], [mlst_value, "ST_not_found"])
+            column_values: dict[str, str] = {}
+            for column in header:
+                col_idx = header.index(column)
+                value = row[col_idx] if col_idx < len(row) else "-"
+                column_values[column] = value
+
+            return column_values
+    return {"ST": mlst_value, "clonal_complex": "-"}
 
 
 def get_and_output(mlst_file: str, mlst_index: int, profile_tsv_file: str, output: str):
