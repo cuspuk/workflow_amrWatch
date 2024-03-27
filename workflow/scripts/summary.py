@@ -53,6 +53,23 @@ def column_based_parser(path: str, columns: list[str], recode_into_columns: list
         return {new_col: row[header.index(col)] for col, new_col in zip(columns, recode_into_columns)}
 
 
+def sccmec_parser(
+    path: str,
+    columns: list[str],
+    merged_column: str,
+    ignore_columns: list[str],
+    recode_into_columns: list[str] | None = None,
+):
+    if not recode_into_columns:
+        recode_into_columns = columns
+    with open(path, "r") as f:
+        header = f.readline().rstrip().split("\t")
+        row = f.readline().rstrip().split("\t")
+    outs = {new_col: row[header.index(col)] for col, new_col in zip(columns, recode_into_columns)}
+    outs[merged_column] = ", ".join([row[header.index(col)] for col in header if col not in ignore_columns])
+    return outs
+
+
 def transpose_multi_columns_parser(path: str, transpose: tuple[str, list[str]]):
     out: dict[str, str] = {}
     with open(path, "r") as f:
@@ -90,7 +107,14 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
     mapping_functions = {
         "taxonomy": functools.partial(index_based_parser, indexes=[0], recode_into_columns=["taxonomy"]),
         "mlst": functools.partial(index_based_parser, indexes=[2], recode_into_columns=["mlst"]),
-        "spatyper": functools.partial(column_based_parser, columns=["Type"], recode_into_columns=["spa_type"]),
+        "spa_typer": functools.partial(column_based_parser, columns=["Type"], recode_into_columns=["spa_type"]),
+        "SCCmec": functools.partial(
+            sccmec_parser,
+            columns=["meca"],
+            recode_into_columns=["SCCmecA_presence"],
+            merged_column="SCCmec_type",
+            ignore_columns=["sample", "meca"],
+        ),
         "sistr": functools.partial(column_based_parser, columns=["h1", "h2", "o_antigen", "serogroup", "serovar"]),
         "seroseq": functools.partial(
             column_based_parser, columns=["Predicted antigenic profile", "Predicted serotype"]

@@ -227,7 +227,8 @@ def infer_results_to_summarize_for_sample(wildcards):
     reports = [
         "taxonomy",
         "mlst",
-        "spatyper",
+        "spa_typer",
+        "SCCmec",
         "sistr",
         "seroseq",
         "kleborate",
