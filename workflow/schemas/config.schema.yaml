@@ -68,6 +68,9 @@ definitions:
       self_contamination:
         type: object
         "$ref": "#/definitions/SelfContamination"
+      clonal_complex:
+        type: object
+        "$ref": "#/definitions/ClonalComplex"
       assembly__unicycler:
         type: object
         "$ref": "#/definitions/AssemblyUnicycler"
@@ -96,6 +99,7 @@ definitions:
       - rgi_db_dir
       - max_threads
       - max_mem_mb
+      - clonal_complex
     title: AmrWatchWorkflow
   ReadsTrimming:
     type: object
@@ -245,6 +249,20 @@ definitions:
       - polymorph_rate
       - max_ambiguous_rows
       - check_level
+  ClonalComplex:
+    additionalProperties: false
+    title: SelfContamination
+    properties:
+      db_dir:
+        type: string
+        description: "Directory where profiles are stored. Profiles are downloaded from the https://pubmlst.org/data/ database"
+        pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
+      mapping_to_gtdbtk_names:
+        type: object
+        description: "Here define mapping from MLST names to GTDBTK names. If not provided, clonal_complex is not produced."
+    required:
+      - db_dir
+      - mapping_to_gtdbtk_names
   CoverageCheck:
     additionalProperties: false
     title: CoverageCheck

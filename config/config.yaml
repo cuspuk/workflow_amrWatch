@@ -86,6 +86,13 @@ resfinder:
   input_to_use: "reads" # Allowed: ["assembly", "reads"]. If "assembly", resfinder is run on assembly. If "reads", resfinder is run on reads (of last processed step).
   # with "reads" option, assembly will still be produced first, for QC purposes, and then resfinder will be run on reads.
 
+clonal_complex:
+  db_dir: "/data/genome/others/mlst_profiles_cc/2024-03-27/" # Directory where profiles are stored. Profiles are downloaded from the https://pubmlst.org/data/ database
+  # Ensure, that each profile is a .tsv format having at least these columns: "ST" and "clonal_complex" in the header.
+  mapping_to_gtdbtk_names: # Here define mapping from MLST names to GTDBTK names. If not provided, clonal_complex is not produced.
+    efaecium: "Enterococcus.* faecium.*"
+    saureus: "Staphylococcus.* aureus.*"
+
 ### RESOURCES #############################
 
 max_threads: 16

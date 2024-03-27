@@ -110,6 +110,7 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
     mapping_functions = {
         "taxonomy": functools.partial(index_based_parser, indexes=[0], recode_into_columns=["taxonomy"]),
         "mlst": functools.partial(index_based_parser, indexes=[2], recode_into_columns=["mlst"]),
+        "clonal_complex": functools.partial(column_based_parser, columns=["clonal_complex"]),
         "spa_typer": functools.partial(column_based_parser, columns=["Type"], recode_into_columns=["spa_type"]),
         "SCCmec": functools.partial(
             sccmec_parser,

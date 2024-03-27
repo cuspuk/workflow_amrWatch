@@ -187,6 +187,10 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
     try:
         matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
         outputs["mlst"] = "results/amr_detect/{sample}/mlst.tsv"
+        if find_cc_profile_for_taxonomy(taxa):
+            outputs["clonal_complex"] = "results/amr_detect/{sample}/clonal_complex.tsv"
+        else:
+            logger.warning(f"Skipping clonal complex profiling for {taxa=} and {sample=} as no profile found")
     except KeyError:
         pass
 
@@ -227,6 +231,7 @@ def infer_results_to_summarize_for_sample(wildcards):
     reports = [
         "taxonomy",
         "mlst",
+        "clonal_complex",
         "spa_typer",
         "SCCmec",
         "sistr",
@@ -246,6 +251,13 @@ def infer_results_to_summarize_for_sample(wildcards):
         if report in dct:
             out_dict[report] = dct[report]
     return out_dict
+
+
+def get_all_clonal_complex_profiles():
+    profiles = []
+    for profile in list(config["clonal_complex"]["mapping_to_gtdbtk_names"].keys()):
+        profiles.append(os.path.join(config["clonal_complex"]["db_dir"], f"{profile}.tsv"))
+    return profiles
 
 
 ### Wildcard handling #################################################################################################
@@ -312,6 +324,19 @@ def get_taxonomy_for_mlst(wildcards):
     except KeyError:
         logger.warning(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
         return ""
+
+
+def find_cc_profile_for_taxonomy(taxa: str):
+    for profile, organism_regex in config["clonal_complex"]["mapping_to_gtdbtk_names"].items():
+        if re.match(organism_regex, taxa):
+            return profile
+    return None
+
+
+def infer_profile_for_clonal_complex(wildcards):
+    taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
+    profile = find_cc_profile_for_taxonomy(taxa)
+    return os.path.join(config["clonal_complex"]["db_dir"], f"{profile}.tsv")
 
 
 def get_taxonomy_for_resfinder(wildcards):
