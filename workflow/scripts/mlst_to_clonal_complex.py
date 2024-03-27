@@ -27,7 +27,9 @@ def get_clonal_complex(mlst_value: str, profile_tsv_file: str) -> dict[str, str]
 
 def get_and_output(mlst_file: str, mlst_index: int, profile_tsv_file: str, output: str):
     mlst_value = get_mlst(mlst_file, mlst_index)
-    header, row = get_clonal_complex(mlst_value, profile_tsv_file)
+    column_values = get_clonal_complex(mlst_value, profile_tsv_file)
+    header = list(column_values.keys())
+    row = list(column_values.values())
 
     os.makedirs(os.path.dirname(output), exist_ok=True)
     with open(output, "w") as f:
