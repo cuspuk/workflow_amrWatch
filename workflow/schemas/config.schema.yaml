@@ -50,6 +50,10 @@ definitions:
         type: integer
         description: "Minimum number of basepairs for assembly. FAIL check - If the assembly is shorter, the workflow does not proceed to the next stage."
         default: 0
+      run_hamronization:
+        type: boolean
+        description: "If true, the workflow will run the harmonization step."
+        default: false
       reads__trimming:
         type: object
         "$ref": "#/definitions/ReadsTrimming"

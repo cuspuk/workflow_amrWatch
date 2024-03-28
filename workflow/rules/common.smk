@@ -140,11 +140,13 @@ def infer_amr_detection_results_for_harmonize(wildcards):
 
 
 def request_hamronize_or_nothing(wildcards):
+    if not config["run_hamronization"]:
+        return "results/hamronization/hamronization_skipped.txt"
     passed_samples = get_sample_names_passing_all_checks()
     if len(passed_samples) > 1:
         return expand("results/hamronization/summary.{ext}", ext=["tsv", "html"])
     else:
-        return "results/hamronization/not_enough_samples_passed.txt"
+        return "results/hamronization/hamronization_skipped.txt"
 
 
 def get_outputs():

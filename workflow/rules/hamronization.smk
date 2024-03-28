@@ -242,7 +242,7 @@ rule request_hamronize_summary:
 
 rule log_skipping_hamornize_summary:
     output:
-        "results/hamronization/not_enough_samples_passed.txt",
+        "results/hamronization/hamronization_skipped.txt",
     localrule: True
     conda:
         "../envs/coreutils.yaml"
