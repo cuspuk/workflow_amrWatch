@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.16.1](https://github.com/xsitarcik/amrWatch/compare/v2.16.0...v2.16.1) (2024-03-28)
+
+
+### Bug Fixes
+
+* added flag for controlling hamronization running ([62749aa](https://github.com/xsitarcik/amrWatch/commit/62749aad07f181a3e5367b6c7e7b6d88f803a95c))
+* hamronization flag excludes even running per sample ([edf4e40](https://github.com/xsitarcik/amrWatch/commit/edf4e40f39e4b498dfc4eeb7a4a5ce7d715cb453))
+
 ## [2.16.0](https://github.com/xsitarcik/amrWatch/compare/v2.15.2...v2.16.0) (2024-03-27)
 
 
