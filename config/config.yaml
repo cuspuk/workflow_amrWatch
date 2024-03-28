@@ -93,6 +93,8 @@ clonal_complex:
     efaecium: "Enterococcus.* faecium.*"
     saureus: "Staphylococcus.* aureus.*"
 
+run_hamronization: false # If true, hamronization is run. If false, hamronization is skipped.
+
 ### RESOURCES #############################
 
 max_threads: 16

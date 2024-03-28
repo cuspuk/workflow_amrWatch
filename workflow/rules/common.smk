@@ -140,11 +140,13 @@ def infer_amr_detection_results_for_harmonize(wildcards):
 
 
 def request_hamronize_or_nothing(wildcards):
+    if not config["run_hamronization"]:
+        return "results/hamronization/hamronization_skipped.txt"
     passed_samples = get_sample_names_passing_all_checks()
     if len(passed_samples) > 1:
         return expand("results/hamronization/summary.{ext}", ext=["tsv", "html"])
     else:
-        return "results/hamronization/not_enough_samples_passed.txt"
+        return "results/hamronization/hamronization_skipped.txt"
 
 
 def get_outputs():
@@ -208,12 +210,15 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
             "rgi": "results/amr_detect/{sample}/rgi_main.txt",
             "resfinder": "results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
             "pointfinder": "results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
-            "hamronization": "results/hamronization/summary/{sample}.tsv",
             "plasmids": "results/plasmids/{sample}/mob_typer.txt",
             "qc_checks": "results/checks/{sample}/qc_summary.tsv",
         }
+        if config["run_hamronization"]:
+            outputs["hamronization"] = "results/hamronization/summary/{sample}.tsv"
+
         if not sample_has_asssembly_as_input(wildcards.sample):
             outputs["seqkit"] = "results/assembly/{sample}/seqkit_stats.tsv"
+
         taxa_outputs = get_taxonomy_dependant_outputs(wildcards.sample, taxa)
         return outputs | taxa_outputs
     else:
