@@ -213,7 +213,7 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
             "plasmids": "results/plasmids/{sample}/mob_typer.txt",
             "qc_checks": "results/checks/{sample}/qc_summary.tsv",
         }
-        if not config["run_hamronization"]:
+        if config["run_hamronization"]:
             outputs["hamronization"] = "results/hamronization/summary/{sample}.tsv"
 
         if not sample_has_asssembly_as_input(wildcards.sample):
