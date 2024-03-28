@@ -210,12 +210,15 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
             "rgi": "results/amr_detect/{sample}/rgi_main.txt",
             "resfinder": "results/amr_detect/{sample}/resfinder/ResFinder_results_tab.txt",
             "pointfinder": "results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
-            "hamronization": "results/hamronization/summary/{sample}.tsv",
             "plasmids": "results/plasmids/{sample}/mob_typer.txt",
             "qc_checks": "results/checks/{sample}/qc_summary.tsv",
         }
+        if not config["run_hamronization"]:
+            outputs["hamronization"] = "results/hamronization/summary/{sample}.tsv"
+
         if not sample_has_asssembly_as_input(wildcards.sample):
             outputs["seqkit"] = "results/assembly/{sample}/seqkit_stats.tsv"
+
         taxa_outputs = get_taxonomy_dependant_outputs(wildcards.sample, taxa)
         return outputs | taxa_outputs
     else:
