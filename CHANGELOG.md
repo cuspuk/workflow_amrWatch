@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.16.2](https://github.com/xsitarcik/amrWatch/compare/v2.16.1...v2.16.2) (2024-04-11)
+
+
+### Bug Fixes
+
+* failed preassembly check fixed to not request assembly ([4f5d57d](https://github.com/xsitarcik/amrWatch/commit/4f5d57d3dc5f433589293a8e07a57675507d8c36))
+
 ## [2.16.1](https://github.com/xsitarcik/amrWatch/compare/v2.16.0...v2.16.1) (2024-03-28)
 
 
