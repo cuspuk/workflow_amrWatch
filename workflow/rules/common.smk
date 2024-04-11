@@ -353,13 +353,14 @@ def infer_relevant_checks(wildcards):
     if sample_has_asssembly_as_input(wildcards.sample):
         return ["results/checks/{sample}/check_skipping.tsv"]
 
-    checks = ["results/checks/{sample}/pre_assembly_summary.tsv", "results/checks/{sample}/assembly_constructed.tsv"]
+    checks = ["results/checks/{sample}/pre_assembly_summary.tsv"]
 
     if not check_preassembly_QC_for_sample(wildcards.sample):
         return checks
 
     if check_assembly_construction_success_for_sample(wildcards.sample):
         checks += [
+            "results/checks/{sample}/assembly_constructed.tsv",
             "results/checks/{sample}/assembly_quality.tsv",
             "results/checks/{sample}/coverage_check.tsv",
             "results/checks/{sample}/self_contamination_check.tsv",
