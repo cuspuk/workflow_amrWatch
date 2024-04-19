@@ -13,6 +13,7 @@ include: "rules/hamronization.smk"
 include: "rules/summary.smk"
 include: "rules/gtdb.smk"
 include: "rules/amrdetect.smk"
+include: "rules/insilico.smk"
 
 
 rule all:

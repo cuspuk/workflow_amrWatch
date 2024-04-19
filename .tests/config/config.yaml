@@ -79,6 +79,17 @@ clonal_complex:
     efaecium: "Enterococcus.* faecium.*"
     saureus: "Staphylococcus.* aureus.*"
 
+in_silico_PCR:
+  do: true # If true, in silico PCR is run. If false, in silico PCR is skipped.
+  primers: # Array of amplicons to search for. Each amplicon is defined by a name and two primers.
+    - "stx1a,CCTTTCCAGGTACAACAGCGGTT,GGAAACTCATCAGATGCCATTCTGG"
+    - "stx1c,CCTTTCCTGGTACAACTGCGGTT,CAAGTGTTGTACGAAATCCCCTCTGA"
+    - "stx2a-R2,GCGATACTGRGBACTGTGGCC,CCGKCAACCTTCACTGTAAATGTG"
+    - "stx2b-R3,GCGATACTGRGBACTGTGGCC,GGCCACCTTCACTGTGAATGTG"
+    - "stx2b-F1,AAATATGAAGAAGATATTTGTAGCGGC,CAGCAAATCCTGAACCTGACG"
+  max_mismatches: null # null or INT - max mismatch when matching primers, no degenerate bases allowed. Set to null to ignore this setting.
+  output_amplicon: True # Bool - if True, amplicon sequences are outputted as the last column in BED.
+
 ### RESOURCES #############################
 
 max_threads: 2

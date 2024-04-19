@@ -82,6 +82,9 @@ definitions:
         type: object
         "$ref": "#/definitions/Resources"
         default: {}
+      in_silico_PCR:
+        type: object
+        "$ref": "#/definitions/InSilicoPCR"
       threads:
         type: object
         "$ref": "#/definitions/Threads"
@@ -104,6 +107,7 @@ definitions:
       - max_threads
       - max_mem_mb
       - clonal_complex
+      - in_silico_PCR
     title: AmrWatchWorkflow
   ReadsTrimming:
     type: object
@@ -437,6 +441,33 @@ definitions:
       - min_length_in_bp
       - max_length_in_bp
       - use_long_if_relevant
+  InSilicoPCR:
+    additionalProperties: false
+    title: InSilicoPCR
+    properties:
+      do:
+        type: boolean
+        default: false
+        description: "If true, in silico PCR is run. If false, in silico PCR is skipped."
+      primers:
+        type: array
+        items:
+          type: string
+        description: "Array of amplicons to search for. Each amplicon is defined by a name and two primers."
+        pattern: ".*,.+,.*"
+      output_amplicon:
+        type: boolean
+        description: "Bool - if True, amplicon sequences are outputted as the last column in BED."
+        default: true
+      max_mismatches:
+        type: [integer, "null"]
+        default: null
+        description: "null or INT - max mismatch when matching primers, no degenerate bases allowed. Set to null to ignore this setting."
+    required:
+      - do
+      - primers
+      - output_amplicon
+      - max_mismatches
   Resources:
     additionalProperties: true
     reads__trimming_mem_mb:

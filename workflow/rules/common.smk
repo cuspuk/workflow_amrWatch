@@ -155,6 +155,10 @@ def get_outputs():
         "final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names),
         "summary": "results/summary/summary.tsv",
     }
+
+    if config["in_silico_PCR"]["do"]:
+        outputs["in_silico_PCR"] = expand("results/in_silico_PCR/{sample}.bed", sample=sample_names)
+
     if len(sample_names) > 1:
         outputs["hamronization"] = "results/hamronization/hamronization_requested.txt"
 
