@@ -27,7 +27,7 @@ rule in_silico_PCR:
             else ""
         ),
     conda:
-        "../envs/seqkit.yaml"
+        "../envs/seqkit_older.yaml"
     log:
         "logs/custom/in_silico_PCR/{sample}.log",
     shell:
