@@ -21,9 +21,14 @@ rule in_silico_PCR:
         "results/in_silico_PCR/{sample}.bed",
     params:
         bed="--bed" if config["in_silico_PCR"]["output_amplicon"] else "",
+        mismatches=(
+            f'-m {config["in_silico_PCR"]["max_mismatches"]}'
+            if config["in_silico_PCR"].get("max_mismatches", None) is not None
+            else ""
+        ),
     conda:
         "../envs/seqkit.yaml"
     log:
         "logs/custom/in_silico_PCR/{sample}.log",
     shell:
-        "(cat {input.fasta} | seqkit amplicon -m 1 -p {input.primers} {params.bed} > {output}) 2> {log}"
+        "(cat {input.fasta} | seqkit amplicon {params.mismatches} -p {input.primers} {params.bed} > {output}) 2> {log}"

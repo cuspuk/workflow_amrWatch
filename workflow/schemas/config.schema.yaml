@@ -459,10 +459,15 @@ definitions:
         type: boolean
         description: "Bool - if True, amplicon sequences are outputted as the last column in BED."
         default: true
+      max_mismatches:
+        type: [integer, "null"]
+        default: null
+        description: "null or INT - max mismatch when matching primers, no degenerate bases allowed. Set to null to ignore this setting."
     required:
       - do
       - primers
       - output_amplicon
+      - max_mismatches
   Resources:
     additionalProperties: true
     reads__trimming_mem_mb:
