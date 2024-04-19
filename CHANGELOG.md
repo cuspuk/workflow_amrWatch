@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.17.0](https://github.com/xsitarcik/amrWatch/compare/v2.16.2...v2.17.0) (2024-04-19)
+
+
+### Features
+
+* added insilico PCR ([d31dbe7](https://github.com/xsitarcik/amrWatch/commit/d31dbe79d306e8a1eb347e41b4e2c5763664cc98))
+
+
+### Bug Fixes
+
+* added max_mismatch parameter for insilico ([eb46309](https://github.com/xsitarcik/amrWatch/commit/eb4630981718530c26af7646cfd983f5a210d342))
+* downgrade seqkit for amplicon due to bug ([dde81fb](https://github.com/xsitarcik/amrWatch/commit/dde81fb2c406283e34344da230f22a53395eff74))
+
 ## [2.16.2](https://github.com/xsitarcik/amrWatch/compare/v2.16.1...v2.16.2) (2024-04-11)
 
 
