@@ -492,6 +492,7 @@ rule pneumokity_download:
         dir=lambda wildcards, output: os.path.dirname(output.src),
     conda:
         "../envs/curl_with_unzip.yaml"
+    localrule: True
     log:
         os.path.join(config["pneumokity_source_dir"], "logs", "download.log"),
     script:

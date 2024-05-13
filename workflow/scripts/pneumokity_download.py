@@ -15,6 +15,6 @@ with TemporaryDirectory() as tempdir:
         "(mkdir -p {tmp_unzipped} &&"
         " curl -SL {snakemake.params.repo} -o {tmp_zip} &&"
         " unzip {tmp_zip} -d {tmp_unzipped} &&"
-        " mv {tmp_unzipped}/{snakemake.params.name_after_unzip}/* {snakemake.params.db_dir}"
+        " mv {tmp_unzipped}/{snakemake.params.name_after_unzip}/* {snakemake.params.dir}"
         " ) {log}"
     )
