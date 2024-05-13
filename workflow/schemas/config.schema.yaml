@@ -41,6 +41,10 @@ definitions:
         type: string
         description: "Path to the MLST database. Must be provided and contain blast and pubmlst data."
         pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
+      pneumokity_source_dir:
+        type: string
+        description: "Path to the pneumokit cloned source repository."
+        pattern: '.*/\d{4}-\d{2}-\d{2}\/?$'
       max_mem_mb:
         type: integer
         description: "Maximum memory in megabytes to allocate for any job."

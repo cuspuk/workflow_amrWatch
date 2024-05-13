@@ -1,2 +1,5 @@
 fn_clean_exts:
   - ".kreport2"
+
+kraken:
+  top_n: 10

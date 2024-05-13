@@ -90,6 +90,8 @@ in_silico_PCR:
   max_mismatches: null # null or INT - max mismatch when matching primers, no degenerate bases allowed. Set to null to ignore this setting.
   output_amplicon: True # Bool - if True, amplicon sequences are outputted as the last column in BED.
 
+pneumokity_source_dir: "resources/pneumokity/2024-03-27" # Path to the pneumokit cloned source repository.
+
 ### RESOURCES #############################
 
 max_threads: 2

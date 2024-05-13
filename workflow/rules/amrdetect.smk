@@ -481,3 +481,33 @@ rule mlst_clonal_complex:
         "logs/amr_detect/mlst_clonal_complex/{sample}.log",
     script:
         "../scripts/mlst_to_clonal_complex.py"
+
+
+rule pneumokity_download:
+    output:
+        src=os.path.join(config["pneumokity_source_dir"], "pneumokity.py"),
+    params:
+        repo="https://github.com/CarmenSheppard/PneumoKITy/archive/refs/tags/v1.0.zip",
+        name_after_unzip="PneumoKITy-1.0",
+        dir=lambda wildcards, output: os.path.dirname(output.src),
+    conda:
+        "../envs/curl_with_unzip.yaml"
+    localrule: True
+    log:
+        os.path.join(config["pneumokity_source_dir"], "logs", "download.log"),
+    script:
+        "../scripts/pneumokity_download.py"
+
+
+rule pneumokity_call:
+    input:
+        fasta=infer_assembly_fasta,
+        src=os.path.join(config["pneumokity_source_dir"], "pneumokity.py"),
+    output:
+        "results/amr_detect/{sample}/pneumokity.tsv",
+    conda:
+        "../envs/pneumokity.yaml"
+    log:
+        "logs/amr_detect/pneumokity/{sample}.log",
+    shell:
+        "python3 {input.src} pure -a {input.fasta} -t {threads} > {output} 2>{log}"
