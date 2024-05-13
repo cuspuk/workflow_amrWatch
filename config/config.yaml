@@ -93,6 +93,8 @@ clonal_complex:
     efaecium: "Enterococcus.* faecium.*"
     saureus: "Staphylococcus.* aureus.*"
 
+pneumokity_source_dir: "/data/genome/others/pneumokity/2024-03-27" # Path to the pneumokit cloned source repository.
+
 run_hamronization: false # If true, hamronization is run. If false, hamronization is skipped.
 
 in_silico_PCR:

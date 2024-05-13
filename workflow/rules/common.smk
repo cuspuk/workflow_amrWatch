@@ -189,7 +189,8 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
         outputs["seroseq"] = "results/amr_detect/{sample}/seqsero_summary.tsv"
         if "enterica" in taxa:
             outputs["crispol"] = "results/amr_detect/{sample}/crispol.tsv"
-
+    elif taxa.startswith("Pneumococcus"):
+        outputs["pneumokity"] = "results/amr_detect/{sample}/pneumokity.tsv"
     try:
         matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
         outputs["mlst"] = "results/amr_detect/{sample}/mlst.tsv"
