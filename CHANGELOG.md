@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.18.0](https://github.com/xsitarcik/amrWatch/compare/v2.17.0...v2.18.0) (2024-05-13)
+
+
+### Features
+
+* added pneumokity for Pneumococcus ([ca91929](https://github.com/xsitarcik/amrWatch/commit/ca91929ac76b64ebe0f02c6f66bf4bd455d5952f))
+
+
+### Bug Fixes
+
+* pneumokity for Streptococcus pneumoniae ([f16f158](https://github.com/xsitarcik/amrWatch/commit/f16f1585a836bdbbf6bc2cb5ee6be243bdd26ef0))
+
 ## [2.17.0](https://github.com/xsitarcik/amrWatch/compare/v2.16.2...v2.17.0) (2024-04-19)
 
 
