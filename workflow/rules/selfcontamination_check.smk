@@ -120,7 +120,7 @@ rule qualimap__report:
     log:
         "logs/qualimap/mapping_quality_report/{sample}.log",
     wrapper:
-        "https://github.com/xsitarcik/wrappers/raw/v1.12.12/wrappers/qualimap/bamqc"
+        "https://github.com/cuspuk/workflow_wrappers/raw/v1.12.12/wrappers/qualimap/bamqc"
 
 
 rule samtools__faidx:

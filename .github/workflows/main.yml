@@ -24,7 +24,7 @@ jobs:
           swap-storage: true
 
       - name: Test workflow
-        uses: xsitarcik/snakemake-github-action@v1.25.1
+        uses: cuspuk/workflow_snakemake_action@v1.25.1
         with:
           directory: .tests
           snakefile: workflow/Snakefile
@@ -33,7 +33,7 @@ jobs:
           show-disk-usage-on-error: true
 
       # - name: Test report
-      #   uses: snakemake/snakemake-github-action@v1.25.1
+      #   uses: cuspuk/workflow_snakemake_action@v1.25.1
       #   with:
       #     directory: .tests
       #     snakefile: workflow/Snakefile
