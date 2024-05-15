@@ -36,7 +36,7 @@ rule fastqc__report:
     log:
         "logs/fastqc/{step}/{sample}_{pair}.log",
     wrapper:
-        "https://github.com/xsitarcik/wrappers/raw/v1.12.12/wrappers/fastqc/quality"
+        "https://github.com/cuspuk/workflow_wrappers/raw/v1.12.12/wrappers/fastqc/quality"
 
 
 rule kraken__download_db:
