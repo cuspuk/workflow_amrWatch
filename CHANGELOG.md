@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.18.1](https://github.com/cuspuk/workflow_amrWatch/compare/v2.18.0...v2.18.1) (2024-05-15)
+
+
+### Bug Fixes
+
+* changes after transfer repo ([8a85f79](https://github.com/cuspuk/workflow_amrWatch/commit/8a85f79469baf35fb40d9111b4f19656f5e0acfe))
+
 ## [2.18.0](https://github.com/xsitarcik/amrWatch/compare/v2.17.0...v2.18.0) (2024-05-13)
 
 
