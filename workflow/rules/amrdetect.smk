@@ -504,10 +504,12 @@ rule pneumokity_call:
         fasta=infer_assembly_fasta,
         src=os.path.join(config["pneumokity_source_dir"], "pneumokity.py"),
     output:
-        "results/amr_detect/{sample}/pneumokity.tsv",
+        csv="results/amr_detect/{sample}/pneumo_capsular_typing/{sample}_result_data.csv"
+    params:
+        outdir=lambda wildcards,output: os.path.dirname(os.path.dirname(output.csv))
     conda:
         "../envs/pneumokity.yaml"
     log:
         "logs/amr_detect/pneumokity/{sample}.log",
     shell:
-        "python3 {input.src} pure -a {input.fasta} -t {threads} > {output} 2>{log}"
+        "python3 {input.src} pure -a {input.fasta} -t {threads} -o {params.outdir} -s {wildcards.sample} > {log} 2>&1"
