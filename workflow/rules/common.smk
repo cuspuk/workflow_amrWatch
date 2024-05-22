@@ -39,7 +39,7 @@ def validate_dynamic_config():
     if config["reads__trimming"]["adapter_removal"]["do"]:
         if not os.path.exists(config["reads__trimming"]["adapter_removal"]["adapters_fasta"]):
             adapter_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
-            raise ValueError(f"Adapter removal is enabled, but the {adapter_file=} does not exist")
+            raise ValueError(f"Adapter removal is enabled, but the {adapter_file =} does not exist")
 
     if config["resfinder"]["input_to_use"] == "reads":
         samples_with_assembly_as_input = [
@@ -190,14 +190,14 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
         if "enterica" in taxa:
             outputs["crispol"] = "results/amr_detect/{sample}/crispol.tsv"
     elif taxa.startswith("Streptococcus") and "pneumoniae" in taxa:
-        outputs["pneumokity"] = "results/amr_detect/{sample}/pneumokity.tsv"
+        outputs["pneumokity"] = "results/amr_detect/{sample}/pneumo_capsular_typing/{sample}_result_data.csv"
     try:
         matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
         outputs["mlst"] = "results/amr_detect/{sample}/mlst.tsv"
         if find_cc_profile_for_taxonomy(taxa):
             outputs["clonal_complex"] = "results/amr_detect/{sample}/clonal_complex.tsv"
         else:
-            logger.warning(f"Skipping clonal complex profiling for {taxa=} and {sample=} as no profile found")
+            logger.warning(f"Skipping clonal complex profiling for {taxa =} and {sample =} as no profile found")
     except KeyError:
         pass
 
@@ -210,6 +210,7 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
 
         outputs = {
             "taxonomy": "results/taxonomy/{sample}/parsed_taxa.txt",
+            "ncbi_taxonomy_id": "results/taxonomy/{sample}/ncbi_taxa.tsv",
             "amrfinder": "results/amr_detect/{sample}/amrfinder.tsv",
             "abricate": "results/amr_detect/{sample}/abricate.tsv",
             "rgi": "results/amr_detect/{sample}/rgi_main.txt",
@@ -240,6 +241,7 @@ def infer_results_to_summarize_for_sample(wildcards):
     dct = infer_outputs_for_sample(wildcards)
     reports = [
         "taxonomy",
+        "ncbi_taxonomy_id",
         "mlst",
         "clonal_complex",
         "spa_typer",
@@ -252,6 +254,8 @@ def infer_results_to_summarize_for_sample(wildcards):
         "abricate",
         "seqkit",
         "qc_checks",
+        "pneumokity",
+        "etoki_ebeis",
     ]
     if sample_has_asssembly_as_input(wildcards.sample):
         reports.remove("seqkit")

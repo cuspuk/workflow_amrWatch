@@ -44,13 +44,25 @@ def index_based_parser(path: str, indexes: list[int], recode_into_columns: list[
         return {col: row[idx] for col, idx in zip(recode_into_columns, indexes)}
 
 
-def column_based_parser(path: str, columns: list[str], recode_into_columns: list[str] | None = None):
+def column_based_parser(path: str, columns: list[str], recode_into_columns: list[str] | None = None, delim: str = "\t"):
     if not recode_into_columns:
         recode_into_columns = columns
     with open(path, "r") as f:
-        header = f.readline().rstrip().split("\t")
-        row = f.readline().rstrip().split("\t")
+        header = f.readline().rstrip().split(delim)
+        row = f.readline().rstrip().split(delim)
         return {new_col: row[header.index(col)] for col, new_col in zip(columns, recode_into_columns)}
+
+
+def etoki_ebeis_parser(path: str, columns: list[str], recode_into_columns: list[str] | None = None):
+    if not recode_into_columns:
+        recode_into_columns = columns
+
+    import json
+
+    with open(path) as f:
+        data = json.load(f)
+
+    return {new_col: data[column_name] for column_name, new_col in zip(columns, recode_into_columns)}
 
 
 def sccmec_parser(
@@ -109,6 +121,9 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
 
     mapping_functions = {
         "taxonomy": functools.partial(index_based_parser, indexes=[0], recode_into_columns=["taxonomy"]),
+        "ncbi_taxonomy_id": functools.partial(
+            index_based_parser, indexes=[0], recode_into_columns=["ncbi_taxonomy_id"]
+        ),
         "mlst": functools.partial(index_based_parser, indexes=[2], recode_into_columns=["mlst"]),
         "clonal_complex": functools.partial(column_based_parser, columns=["clonal_complex"]),
         "spa_typer": functools.partial(column_based_parser, columns=["Type"], recode_into_columns=["spa_type"]),
@@ -122,6 +137,14 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
         "sistr": functools.partial(column_based_parser, columns=["h1", "h2", "o_antigen", "serogroup", "serovar"]),
         "seroseq": functools.partial(
             column_based_parser, columns=["Predicted antigenic profile", "Predicted serotype"]
+        ),
+        "etoki_ebeis": functools.partial(
+            etoki_ebeis_parser,
+            columns=["O", "H"],
+            recode_into_columns=["escherichia_o_antigen", "escherichia_h_antigen"],
+        ),
+        "pneumokity": functools.partial(
+            column_based_parser, columns=["predicted_serotype"], recode_into_columns=["pneumo_capsular_type"], delim=","
         ),
         "qc_checks": functools.partial(
             transpose_multi_columns_parser, transpose=("parameter", ["result", "value", "comment"])
