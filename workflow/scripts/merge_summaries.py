@@ -55,6 +55,11 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         "Predicted antigenic profile",
         "Predicted serotype",
     ]
+    other_serotypes_columns = [
+        "escherichia_o_antigen",
+        "escherichia_h_antigen",
+        "pneumo_capsular_type",
+    ]
     kleborate_columns = [
         "virulence_score",
         "resistance_score",
@@ -95,6 +100,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         + full_qc_columns
         + technical_columns
         + salmonella_columns
+        + other_serotypes_columns
         + kleborate_columns
         + plasmids_columns
         + amrfinder_columns
