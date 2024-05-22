@@ -20,6 +20,7 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         "taxonomy",
         "ncbi_taxonomy_id",
         "mlst",
+        "serotype",
         "clonal_complex",
         "spa_type",
         "SCCmec_type",

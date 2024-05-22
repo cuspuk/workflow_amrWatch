@@ -117,6 +117,20 @@ def row_joiner_on_column_parser(
         return out
 
 
+def aggregate_serotypes(serotypes: dict[str, str]) -> str | None:
+
+    if serotypes.get("Predicted serotype", None):
+        return serotypes["Predicted serotype"]
+
+    if serotypes.get("pneumo_capsular_type", None):
+        return serotypes["pneumo_capsular_type"]
+
+    if "escherichia_o_antigen" in serotypes and "escherichia_h_antigen" in serotypes:
+        combined = f"O={serotypes['escherichia_o_antigen']},H={serotypes['escherichia_h_antigen']}"
+        return combined
+    return None
+
+
 def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_name: str, amrfinder_uniq_tag: str):
 
     mapping_functions = {
@@ -186,6 +200,9 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
     header_value_dict: dict[str, str] = {"sample": sample_name}
     for result_type, result_path in results.items():
         header_value_dict = header_value_dict | mapping_functions[result_type](result_path)
+
+    if value := aggregate_serotypes(header_value_dict):
+        header_value_dict["serotype"] = value
 
     header = out_delimiter.join(header_value_dict.keys())
     values = out_delimiter.join(header_value_dict.values())
