@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.18.2](https://github.com/cuspuk/workflow_amrWatch/compare/v2.18.1...v2.18.2) (2024-05-22)
+
+
+### Bug Fixes
+
+* added escherichia_o_antigen, escherichia_h_antigen and pneumo_capsular_type into summary ([76a0cde](https://github.com/cuspuk/workflow_amrWatch/commit/76a0cdeeb31814a63476e0a56960953bfe20e2f7))
+* added ncbi_taxonomy_id into summary ([376d7d5](https://github.com/cuspuk/workflow_amrWatch/commit/376d7d543bdd0375b04a77cdc1c5bad7e0d860c3))
+* added serotype column filled by either seqsero, ebeis or pneumokity ([5e6063f](https://github.com/cuspuk/workflow_amrWatch/commit/5e6063f2ad44c0e5f9d85b6e80bf7ce7e24ce6f8))
+* ecoli and pneumokity serotype columns are added after salmonella columns ([96b2efc](https://github.com/cuspuk/workflow_amrWatch/commit/96b2efc4a8df6913f394f62fec399a715737442c))
+* handled json string in csv ([cbbbff1](https://github.com/cuspuk/workflow_amrWatch/commit/cbbbff128728d1025328ea4f48af5f6cbe2fbb2a))
+* pneumokitty outputs fixed to produce a new dir in amr_detect folder ([fb28967](https://github.com/cuspuk/workflow_amrWatch/commit/fb28967cfb0f31e8f0a57d65bad098ce057d6848))
+* pneumokity download handles already existing dir ([5dbd3fd](https://github.com/cuspuk/workflow_amrWatch/commit/5dbd3fdf0d0796fd65736f39e232348c17f558ca))
+
+
+### Performance Improvements
+
+* bumped pneumokity down to python3.8 ([4d6cc31](https://github.com/cuspuk/workflow_amrWatch/commit/4d6cc31ce42609ebb82439c6dad22fc424bc6408))
+
 ## [2.18.1](https://github.com/cuspuk/workflow_amrWatch/compare/v2.18.0...v2.18.1) (2024-05-15)
 
 
