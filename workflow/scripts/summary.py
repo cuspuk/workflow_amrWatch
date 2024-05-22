@@ -1,3 +1,4 @@
+import csv
 import functools
 import os
 import re
@@ -48,8 +49,9 @@ def column_based_parser(path: str, columns: list[str], recode_into_columns: list
     if not recode_into_columns:
         recode_into_columns = columns
     with open(path, "r") as f:
-        header = f.readline().rstrip().split(delim)
-        row = f.readline().rstrip().split(delim)
+        csvreader = csv.reader(f, delimiter=delim, quotechar='"')
+        header = next(csvreader)
+        row = next(csvreader)
         return {new_col: row[header.index(col)] for col, new_col in zip(columns, recode_into_columns)}
 
 
@@ -136,7 +138,7 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
     mapping_functions = {
         "taxonomy": functools.partial(index_based_parser, indexes=[0], recode_into_columns=["taxonomy"]),
         "ncbi_taxonomy_id": functools.partial(
-            index_based_parser, indexes=[0], recode_into_columns=["ncbi_taxonomy_id"]
+            column_based_parser, columns=["Majority vote NCBI classification"], recode_into_columns=["ncbi_taxonomy_id"]
         ),
         "mlst": functools.partial(index_based_parser, indexes=[2], recode_into_columns=["mlst"]),
         "clonal_complex": functools.partial(column_based_parser, columns=["clonal_complex"]),
