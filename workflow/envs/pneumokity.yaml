@@ -3,7 +3,7 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - python=3.11
+  - python=3.8
   - numpy=1.22.0
   - pandas=1.0.3
   - sqlite=3.45.3
