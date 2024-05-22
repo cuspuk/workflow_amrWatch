@@ -1,10 +1,13 @@
 import os
+import shutil
 from tempfile import TemporaryDirectory
 
 from snakemake.shell import shell
 
-if not os.path.exists(snakemake.params.dir):
-    os.makedirs(snakemake.params.dir, exist_ok=True)
+if os.path.exists(snakemake.params.dir):
+    shutil.rmtree(snakemake.params.dir)
+
+os.makedirs(snakemake.params.dir, exist_ok=True)
 
 log = snakemake.log_fmt_shell(stdout=True, stderr=True)
 
