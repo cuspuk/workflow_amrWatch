@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.19.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.18.2...v2.19.0) (2024-06-20)
+
+
+### Features
+
+* added amrfinder only output summary ([98a7e22](https://github.com/cuspuk/workflow_amrWatch/commit/98a7e22d75b2609938010f2a880ade1ce570c1b8))
+
 ## [2.18.2](https://github.com/cuspuk/workflow_amrWatch/compare/v2.18.1...v2.18.2) (2024-05-22)
 
 
