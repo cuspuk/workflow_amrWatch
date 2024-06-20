@@ -11,7 +11,14 @@ def load_tsv(tsv_path: str) -> dict[str, str]:
         return dict(zip(header, row))
 
 
-def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, amrfinder_uniq_tag: str):
+def run(
+    tsvs: list[str],
+    output_file: str,
+    out_delimiter: str,
+    nan_value: str,
+    amrfinder_uniq_tag: str,
+    amrfinder_output_file: str,
+):
 
     analysis_results: list[dict[str, str]] = [load_tsv(tsv) for tsv in tsvs]
 
@@ -86,7 +93,11 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         tuples = [
             (x.split(amrfinder_uniq_tag)[0], x.split(amrfinder_uniq_tag)[1])
             for x in result.keys()
-            if amrfinder_uniq_tag in x and "__result" not in x and "__value" not in x and "__comment" not in x
+            if amrfinder_uniq_tag in x
+            and "__result" not in x
+            and "__value" not in x
+            and "__comment" not in x
+            and not any(char.islower() for char in x)
         ]
         amrfinder_tuples.extend(
             [amrfinder_tuple for amrfinder_tuple in tuples if amrfinder_tuple not in amrfinder_tuples]
@@ -128,6 +139,12 @@ def run(tsvs: list[str], output_file: str, out_delimiter: str, nan_value: str, a
         for row in merged_results:
             f.write(out_delimiter.join(list(row.values())) + "\n")
 
+    # store only amrfinder columns
+    with open(amrfinder_output_file, "w") as f:
+        f.write(out_delimiter.join(amrfinder_columns) + "\n")
+        for row in merged_results:
+            f.write(out_delimiter.join([row[column] for column in amrfinder_columns]) + "\n")
+
 
 if __name__ == "__main__":
     sys.stderr = open(snakemake.log[0], "w")
@@ -138,4 +155,5 @@ if __name__ == "__main__":
         out_delimiter=snakemake.params.delimiter,
         amrfinder_uniq_tag=snakemake.params.amrfinder_uniq_tag,
         nan_value=snakemake.params.nan_value,
+        amrfinder_output_file=snakemake.output.amrfinder_file,
     )

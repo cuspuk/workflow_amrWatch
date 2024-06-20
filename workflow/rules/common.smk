@@ -154,6 +154,7 @@ def get_outputs():
     outputs = {
         "final_results": expand("results/checks/{sample}/.final_results_requested.tsv", sample=sample_names),
         "summary": "results/summary/summary.tsv",
+        "amrfinder_summary": "results/summary/amrfinder_output.tsv",
     }
 
     if config["in_silico_PCR"]["do"]:
