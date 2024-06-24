@@ -1,28 +1,32 @@
 reads__trimming: # Required only if "trimming" in main "flow" element. See https://cutadapt.readthedocs.io/en/stable/guide.html#read-processing-stages
-  shorten_to_length: 500 # OPT shorten to this length.
-  max_n_bases: 3 # OPT Discard reads with more than the specified number of bases. The fifth step.
-  max_expected_errors: 3 # OPT - discard reads with more expected errors than this.
-  min_length_r1: 35 # OPT, minimum R1 read length. The fourth step.
-  min_length_r2: 35 # OPT, minimum R2 read length. The fourth step.
-  # cut_from_start_r1: 0 # OPT, removes a specified number of bases from the beginning of the read.
-  # cut_from_start_r2: 0 # OPT, removes a specified number of bases from the beginning of the read.
-  # cut_from_end_r1: 0 # OPT, removes a specified number of bases from the end of the read.
-  # cut_from_end_r2: 0 # OPT, removes a specified number of bases from the end of the read.
-  quality_cutoff_from_5_end_r1: 20 # OPT cutoff on 5' end of R1 read. The second step.
-  quality_cutoff_from_3_end_r1: 20 # OPT cutoff on 3' end of R1 read. The second step.
-  quality_cutoff_from_5_end_r2: 20 # OPT cutoff on 5' end of R2 read. The second step.
-  quality_cutoff_from_3_end_r2: 20 # OPT cutoff on 3' end of R2 read. The second step.
-  nextseq_trimming_mode: False # Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq).
+  cut_from_start_r1: null # null/int: Removes a specified number of bases from the beginning of the R1 read.
+  cut_from_start_r2: null # null/int: Removes a specified number of bases from the beginning of the R2 read.
+  cut_from_end_r1: null # null/int: Removes a specified number of bases from the end of the R1 read.
+  cut_from_end_r2: null # null/int: Removes a specified number of bases from the end of the R2 read.
+  quality_cutoff_from_3_end_r1: 20 # int(20): Removes lower quality bases from the 3' end of the R1 read.
+  quality_cutoff_from_5_end_r1: 20 # int(20): Removes lower quality bases from the 5' end of the R1 read.
+  quality_cutoff_from_3_end_r2: 20 # int(20): Removes lower quality bases from the 3' end of the R2 read.
+  quality_cutoff_from_5_end_r2: 20 # int(20): Removes lower quality bases from the 5' end of the R2 read.
+  nextseq_trimming_mode: false # bool(false): Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq).
+  do_adapter_removal: true # bool(false): Whether to do adapter removal or not.
+  adapter_removal: # Relevant only if do_adapter_removal is set to true.
+    action: "trim" # enum(trim): Defines an action to perform with the found adapter. Allowed: 'retain','trim','mask','none','lowercase'.
+    overlap: 3 # int(3): Minimum number of bases required to overlap with the adapter.
+    error_rate: 0.1 # float(0.1): Error tolerance used when searching for adapter.
+    times: 1 # int(1): How many times to repeat adapter removal.
+    keep_trimmed_only: false # bool(false): Discard reads with no adapters found.
+    adapters_anywhere_file: "test_data/adapters.fa" # null/str: Fasta file path with adapters to be matched 'anywhere'.
+    adapters_3_end_file: null # null/str: Fasta file path with adapters to be matched at 3'end.
+    adapters_5_end_file: null # null/str: Fasta file path with adapters to be matched at 5'end.
 
-  adapter_removal:
-    do: true # If true, all below options are required. Else, they are ignored/can be deleted.
-    action: "trim" # Defines an action to perform with the found adapter.
-    overlap: 3 # Minimum number of bases required to overlap with the adapter (default: 3).
-    read_location: "anywhere" # Uses adapters defined in adapters_fasta. Searches for adapters anywhere. Possible values: 'regular', 'front' and "anywhere" (default: "anywhere").
-    error_rate: 0.1 # Error tolerance used when searching for adapter (default: 0.1).
-    adapters_fasta: "test_data/adapters.fa" # Adapters fasta used for adapter trimming (no default - must be set if used).
-    times: 1 # How many times to do adapter removal (default: 1).
-    keep_trimmed_only: false # Discard reads with no adapters found (default: false).
+  shorten_to_length: 500 # null/int: Shorten each read to the specified length. Corresponds to the cutadapt length parameter.
+  trim_N_bases_on_ends: true # bool(false): Set to true to trim 'N' bases on ends.
+  min_length_r1: 10 # null/int: Discards R1 reads shorter than this. Recommended to set at least to 1, to discard empty reads.
+  min_length_r2: 10 # null/int: Discards R2 reads shorter than this. Recommended to set at least to 1, to discard empty reads.
+  max_length_r1: null # null/int: Discards R1 reads longer than this value.
+  max_length_r2: null # null/int: Discards R2 reads longer than this value.
+  max_n_bases: 3 # null/int: Removes reads with more 'N' bases than the specified number.
+  max_expected_errors: 3 # null/int: Discard reads whose expected number of errors exceeds this value.
 
 foreign_contamination:
   kraken_dir: "path_to_kraken/k2_viral_20230314" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.

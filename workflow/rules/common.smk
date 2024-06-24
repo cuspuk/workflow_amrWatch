@@ -36,11 +36,6 @@ def sample_has_long_reads(sample: str) -> bool:
 
 
 def validate_dynamic_config():
-    if config["reads__trimming"]["adapter_removal"]["do"]:
-        if not os.path.exists(config["reads__trimming"]["adapter_removal"]["adapters_fasta"]):
-            adapter_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
-            raise ValueError(f"Adapter removal is enabled, but the {adapter_file =} does not exist")
-
     if config["resfinder"]["input_to_use"] == "reads":
         samples_with_assembly_as_input = [
             sample for sample in get_sample_names() if sample_has_asssembly_as_input(sample)
@@ -389,88 +384,97 @@ def get_unicycler_params():
     return extra
 
 
-def parse_adapter_removal_params():
-    args_lst = []
-    adapters_file = config["reads__trimming"]["adapter_removal"]["adapters_fasta"]
-    read_location = config["reads__trimming"]["adapter_removal"]["read_location"]
-
-    if read_location == "front":
-        paired_arg = "-G"
-    elif read_location == "anywhere":
-        paired_arg = "-B"
-    elif read_location == "adapter":
-        paired_arg = "-A"
-
-    args_lst.append(f"--{read_location} file:{adapters_file} {paired_arg} file:{adapters_file}")
-
-    if config["reads__trimming"]["adapter_removal"]["keep_trimmed_only"]:
+def parse_adapter_removal_params(adapter_config):
+    args_lst = [
+        f"--action {adapter_config['action']}",
+        f"--overlap {adapter_config['overlap']}",
+        f"--times {adapter_config['times']}",
+        f"--error-rate {adapter_config['error_rate']}",
+    ]
+    if adapter_config["keep_trimmed_only"]:
         args_lst.append("--discard-untrimmed")
 
-    args_lst.append(f"--action {config['reads__trimming']['adapter_removal']['action']}")
-    args_lst.append(f"--overlap {config['reads__trimming']['adapter_removal']['overlap']}")
-    args_lst.append(f"--times {config['reads__trimming']['adapter_removal']['times']}")
-    args_lst.append(f"--error-rate {config['reads__trimming']['adapter_removal']['error_rate']}")
+    if path := adapter_config["adapters_anywhere_file"]:
+        if not os.path.exists(path):
+            raise ValueError(
+                f"Adapter removal is enabled, but the adapter file specified in the adapters_anywhere_file element = {path} does not exist."
+            )
+        args_lst.append(f"--anywhere file:{path} -B file:{path}")
+
+    if end3_file := adapter_config["adapters_3_end_file"]:
+        if not os.path.exists(end3_file):
+            raise ValueError(
+                f"Adapter removal is enabled, but the adapter file specified in the adapters_3_end_file element = {end3_file} does not exist."
+            )
+        args_lst.append(f"--adapter file:{path} -A file:{path}")
+
+    if end5_file := adapter_config["adapters_5_end_file"]:
+        if not os.path.exists(end5_file):
+            raise ValueError(
+                f"Adapter removal is enabled, but the adapter file specified in the adapters_5_end_file element = {end5_file} does not exist."
+            )
+        args_lst.append(f"--front file:{path} -G file:{path}")
+
     return args_lst
 
 
-def get_cutadapt_extra() -> list[str]:
+def get_cutadapt_extra(cutadapt_config) -> list[str]:
     args_lst = []
 
-    if value := config["reads__trimming"].get("shorten_to_length", None):
+    if (value := cutadapt_config["shorten_to_length"]) is not None:
         args_lst.append(f"--length {value}")
-    if value := config["reads__trimming"].get("cut_from_start_r1", None):
+    if (value := cutadapt_config["cut_from_start_r1"]) is not None:
         args_lst.append(f"--cut {value}")
-    if value := config["reads__trimming"].get("cut_from_start_r2", None):
+    if (value := cutadapt_config["cut_from_start_r2"]) is not None:
         args_lst.append(f"-U {value}")
-    if value := config["reads__trimming"].get("cut_from_end_r1", None):
+    if (value := cutadapt_config["cut_from_end_r1"]) is not None:
         args_lst.append(f"--cut -{value}")
-    if value := config["reads__trimming"].get("cut_from_end_r2", None):
+    if (value := cutadapt_config["cut_from_end_r2"]) is not None:
         args_lst.append(f"-U -{value}")
 
-    if value := config["reads__trimming"].get("max_n_bases", None):
+    if (value := cutadapt_config["max_n_bases"]) is not None:
         args_lst.append(f"--max-n {value}")
-    if value := config["reads__trimming"].get("max_expected_errors", None):
+    if (value := cutadapt_config["max_expected_errors"]) is not None:
         args_lst.append(f"--max-expected-errors {value}")
-    if config["reads__trimming"].get("trim_N_bases_on_ends", None):
+    if value := cutadapt_config["trim_N_bases_on_ends"]:
         args_lst.append(f"--trim-n")
-    if config["reads__trimming"].get("nextseq_trimming_mode", None):
-        value = config["reads__trimming"].get("quality_cutoff_from_3_end_r1", None)
-        if value is None:
-            raise ValueError("If nextseq_trimming_mode is set, quality_cutoff_from_3_end_r1 must be set as well")
+    if cutadapt_config["nextseq_trimming_mode"]:
+        value = config["reads__trimming"]["quality_cutoff_from_3_end_r1"]
         args_lst.append(f"--nextseq-trim={value}")
 
-    if config["reads__trimming"]["adapter_removal"]["do"]:
-        args_lst += parse_adapter_removal_params()
+    if cutadapt_config["do_adapter_removal"]:
+        args_lst += parse_adapter_removal_params(cutadapt_config["adapter_removal"])
 
     return args_lst
 
 
 def parse_paired_cutadapt_param(pe_config, param1, param2, arg_name) -> str:
-    if param1 in pe_config:
-        if param2 in pe_config:
+    if pe_config.get(param1, None) is not None:
+        if pe_config.get(param2, None) is not None:
             return f"{arg_name} {pe_config[param1]}:{pe_config[param2]}"
         else:
             return f"{arg_name} {pe_config[param1]}:"
-    elif param2 in pe_config:
+    elif pe_config.get(param2, None) is not None:
         return f"{arg_name} :{pe_config[param2]}"
     return ""
 
 
-def parse_cutadapt_comma_param(config, param1, param2, arg_name) -> str:
-    if param1 in config:
-        if param2 in config:
-            return f"{arg_name} {config[param2]},{config[param1]}"
+def parse_cutadapt_comma_param(cutadapt_config, param1, param2, arg_name) -> str:
+    if cutadapt_config.get(param1) is not None:
+        if cutadapt_config.get(param2) is not None:
+            return f"{arg_name} {cutadapt_config[param2]},{cutadapt_config[param1]}"
         else:
-            return f"{arg_name} {config[param1]}"
-    elif param2 in config:
-        return f"{arg_name} {config[param2]},0"
+            return f"{arg_name} {cutadapt_config[param1]}"
+    elif cutadapt_config.get(param2) is not None:
+        return f"{arg_name} {cutadapt_config[param2]},0"
     return ""
 
 
 def get_cutadapt_extra_pe() -> str:
-    args_lst = get_cutadapt_extra()
-
     cutadapt_config = config["reads__trimming"]
+
+    args_lst = get_cutadapt_extra(cutadapt_config)
+
     if parsed_arg := parse_paired_cutadapt_param(cutadapt_config, "max_length_r1", "max_length_r2", "--maximum-length"):
         args_lst.append(parsed_arg)
     if parsed_arg := parse_paired_cutadapt_param(cutadapt_config, "min_length_r1", "min_length_r2", "--minimum-length"):

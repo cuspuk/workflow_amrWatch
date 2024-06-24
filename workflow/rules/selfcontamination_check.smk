@@ -8,7 +8,7 @@ rule bwa__build_index:
     log:
         "logs/self_contamination/bwa_index/{sample}.log",
     wrapper:
-        "v3.4.1/bio/bwa/index"
+        "v3.12.1/bio/bwa/index"
 
 
 rule bwa__map_to_assembly:
@@ -28,7 +28,7 @@ rule bwa__map_to_assembly:
     resources:
         mem_mb=get_mem_mb_for_mapping,
     wrapper:
-        "v3.4.1/bio/bwa/mem"
+        "v3.12.1/bio/bwa/mem"
 
 
 rule samtools__filter_unmapped:
@@ -45,7 +45,7 @@ rule samtools__filter_unmapped:
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
-        "v3.4.1/bio/samtools/view"
+        "v3.12.1/bio/samtools/view"
 
 
 rule samtools__fixmate:
@@ -61,7 +61,7 @@ rule samtools__fixmate:
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
-        "v3.4.1/bio/samtools/fixmate/"
+        "v3.12.1/bio/samtools/fixmate/"
 
 
 rule samtools__sort_after_fixmate:
@@ -75,7 +75,7 @@ rule samtools__sort_after_fixmate:
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
-        "v3.4.1/bio/samtools/sort"
+        "v3.12.1/bio/samtools/sort"
 
 
 rule samtools__markdup:
@@ -105,7 +105,7 @@ rule samtools__index:
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
-        "v3.4.1/bio/samtools/index"
+        "v3.12.1/bio/samtools/index"
 
 
 rule qualimap__report:
@@ -120,7 +120,7 @@ rule qualimap__report:
     log:
         "logs/qualimap/mapping_quality_report/{sample}.log",
     wrapper:
-        "https://github.com/cuspuk/workflow_wrappers/raw/v1.12.12/wrappers/qualimap/bamqc"
+        "https://github.com/cuspuk/workflow_wrappers/raw/v1.14.0/wrappers/qualimap/bamqc"
 
 
 rule samtools__faidx:
@@ -134,7 +134,7 @@ rule samtools__faidx:
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
-        "v3.4.1/bio/samtools/faidx"
+        "v3.12.1/bio/samtools/faidx"
 
 
 rule bcftools__mpileup:
@@ -153,7 +153,7 @@ rule bcftools__mpileup:
     log:
         "logs/self_contamination/bcftools_mpileup/{sample}.log",
     wrapper:
-        "v3.4.1/bio/bcftools/mpileup"
+        "v3.12.1/bio/bcftools/mpileup"
 
 
 rule bcftools__variants:
@@ -171,7 +171,7 @@ rule bcftools__variants:
     log:
         "logs/self_contamination/bcftools_call/{sample}.log",
     wrapper:
-        "v3.4.1/bio/bcftools/call"
+        "v3.12.1/bio/bcftools/call"
 
 
 rule bcftools__norm:
@@ -188,7 +188,7 @@ rule bcftools__norm:
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
-        "v3.4.1/bio/bcftools/norm"
+        "v3.12.1/bio/bcftools/norm"
 
 
 rule bcftools__filter:
@@ -205,4 +205,4 @@ rule bcftools__filter:
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
     wrapper:
-        "v3.4.1/bio/bcftools/filter"
+        "v3.12.1/bio/bcftools/filter"

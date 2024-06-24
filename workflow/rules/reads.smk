@@ -13,7 +13,7 @@ rule cutadapt__trim:
     log:
         "logs/cutadapt/trim_reads_pe/{sample}.log",
     wrapper:
-        "v3.4.1/bio/cutadapt/pe"
+        "v3.12.1/bio/cutadapt/pe"
 
 
 rule fastqc__report:
@@ -36,7 +36,7 @@ rule fastqc__report:
     log:
         "logs/fastqc/{step}/{sample}_{pair}.log",
     wrapper:
-        "https://github.com/cuspuk/workflow_wrappers/raw/v1.12.12/wrappers/fastqc/quality"
+        "https://github.com/cuspuk/workflow_wrappers/raw/v1.14.0/wrappers/fastqc/quality"
 
 
 rule kraken__download_db:
@@ -119,4 +119,4 @@ rule multiqc__report:
     log:
         "logs/multiqc/all.log",
     wrapper:
-        "v3.4.1/bio/multiqc"
+        "v3.12.1/bio/multiqc"

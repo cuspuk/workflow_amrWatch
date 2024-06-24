@@ -3,4 +3,4 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - resfinder=4.4.2
+  - resfinder=4.5.0

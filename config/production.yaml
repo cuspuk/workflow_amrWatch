@@ -1,4 +1,4 @@
-reads__trimming: # Relevant only if reads->trimming is set to cutadapt.
+reads__trimming:
   cut_from_start_r1: 1 # null/int: Removes a specified number of bases from the beginning of the R1 read.
   cut_from_start_r2: 1 # null/int: Removes a specified number of bases from the beginning of the R2 read.
   cut_from_end_r1: 1 # null/int: Removes a specified number of bases from the end of the R1 read.
@@ -15,9 +15,9 @@ reads__trimming: # Relevant only if reads->trimming is set to cutadapt.
     error_rate: 0.1 # float(0.1): Error tolerance used when searching for adapter.
     times: 1 # int(1): How many times to repeat adapter removal.
     keep_trimmed_only: false # bool(false): Discard reads with no adapters found.
-    adapters_anywhere_file: "/data/genome/others/adapters/nextera.fa" # null/str: Fasta file path with adapters to be matched 'anywhere'.
-    adapters_3_end_file: TO_BE_DEFINED # null/str: Fasta file path with adapters to be matched at 3'end.
-    adapters_5_end_file: TO_BE_DEFINED # null/str: Fasta file path with adapters to be matched at 5'end.
+    adapters_anywhere_file: ${adapters_fasta} # null/str: Fasta file path with adapters to be matched 'anywhere'.
+    adapters_3_end_file: null # null/str: Fasta file path with adapters to be matched at 3'end.
+    adapters_5_end_file: null # null/str: Fasta file path with adapters to be matched at 5'end.
 
   shorten_to_length: 500 # null/int: Shorten each read to the specified length. Corresponds to the cutadapt length parameter.
   trim_N_bases_on_ends: true # bool(false): Set to true to trim 'N' bases on ends.
@@ -29,7 +29,7 @@ reads__trimming: # Relevant only if reads->trimming is set to cutadapt.
   max_expected_errors: 3 # null/int: Discard reads whose expected number of errors exceeds this value.
 
 foreign_contamination:
-  kraken_dir: "/data/genome/metagenome/kraken/k2_pluspf_20240605" # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
+  kraken_dir: ${kraken_dir} # Directory containing kraken DB files. If does not exist, will be downloaded using the dirname.
   save_memory: true # If true, kraken limits RAM memory usage but sacrifices speed.
   read_length: 100 # Distribution will be used from this read length (default: 50).
   classification_level: "G" # The taxa level at which bracken reestimation happens. Allowed: "K", "P", "C", "O", "F", "G" (default: "G").
@@ -58,37 +58,37 @@ coverage_check:
   warn_threshold: 50 # Soft threshold for mean coverage. This is only a WARNING check.
   fail_threshold: 20 # Hard threshold for mean coverage. This is a FAIL check - workflow does not proceed to the next stage.
 
-gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/release220/" # Path with GTDB. Must be provided. Download from https://ecogenomics.github.io/GTDBTk/installing/index.html.
+gtdb_dirpath: ${gtdb_dirpath} # Path with db/ subdir containing GTDB
 
 abricate:
-  db_dir: "/data/genome/others/abricate_db/2024-06-03/vfdb/" # Path to abricate DB. If does not exist, will be downloaded.
+  db_dir: ${abricate_database_dir} # Path to abricate DB. If does not exist, will be downloaded.
   # Must end on valid abricate db_tag - Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"].
   min_identity: 80 # Minimum identity of the query sequence to the database sequence (default: 75).
   min_coverage: 75 # Minimum coverage of the query sequence by the database sequence (default: 0).
 
-amrfinder_db_dir: "/data/genome/others/amrfinder_db/2024-05-02.2" # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
+amrfinder_db_dir: ${amrfinder_db_dir} # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
 # Valid DB version must be provided. See https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus/database/latest/
-spatyper_db_dir: "/data/genome/others/spatyper_db/2024-06-03" # Path to spatyper database directory. If it does not exist, the latest version will be downloaded. The last path element must be timestamp.
-SCCmec_db_dir: "/data/genome/others/SCCmec_db/2024-06-03" # Path to SCCmec database directory. If it does not exist, the latest version will be downloaded from https://github.com/staphopia/staphopia-sccmec.
-ncbi_plasmid_db_dir: "/data/genome/others/ncbi_plasmid_db/2024-06-03" # Path to NCBI plasmid database directory for Mob-suite. If it does not exist, it will be downloaded and initialized using mob_init using the latest version.
-rgi_db_dir: "/data/genome/others/rgi_db/2024-06-03/" # Path to the RGI amr database. If it does not exist, the latest version will be downloaded.
-mlst_db_dir: "/data/genome/others/mlst_db/2024-06-21/" # Path to the MLST database. MUST be provided and contain blast and pubmlst data.
+spatyper_db_dir: ${spatyper_db_dir} # Path to spatyper database directory. If it does not exist, the latest version will be downloaded. The last path element must be timestamp.
+SCCmec_db_dir: ${sccmec_db_dir} # Path to SCCmec database directory. If it does not exist, the latest version will be downloaded from https://github.com/staphopia/staphopia-sccmec.
+ncbi_plasmid_db_dir: ${ncbi_plasmid_db_dir} # Path to NCBI plasmid database directory for Mob-suite. If it does not exist, it will be downloaded and initialized using mob_init using the latest version.
+rgi_db_dir: ${rgi_db_dir} # Path to the RGI amr database. If it does not exist, the latest version will be downloaded.
+mlst_db_dir: ${mlst_db_dir} # Path to the MLST database. Must be provided and contain blast and pubmlst data.
 
 resfinder:
-  db_dir: "/data/genome/others/resfinder_db/2024-06-03" # Path to resfinder database directory. If it does not exist, will be downloaded.
+  db_dir: ${resfinder_db_dir} # Path to resfinder database directory. If it does not exist, will be downloaded.
   min_coverage: 0.6 # Minimum (breadth-of) coverage of ResFinder within the range 0-1 (default: 0.6).
   threshold: 0.8 # Threshold for identity of ResFinder within the range 0-1 (default: 0.8).
   input_to_use: "reads" # Allowed: ["assembly", "reads"]. If "assembly", resfinder is run on assembly. If "reads", resfinder is run on reads (of last processed step).
   # with "reads" option, assembly will still be produced first, for QC purposes, and then resfinder will be run on reads.
 
 clonal_complex:
-  db_dir: "/data/genome/others/mlst_profiles_cc/2024-06-03/" # Directory where profiles are stored. Profiles are downloaded from the https://pubmlst.org/data/ database
+  db_dir: ${clonal_complex_db_dir} # Directory where profiles are stored. Profiles are downloaded from the https://pubmlst.org/data/ database
   # Ensure, that each profile is a .tsv format having at least these columns: "ST" and "clonal_complex" in the header.
   mapping_to_gtdbtk_names: # Here define mapping from MLST names to GTDBTK names. If not provided, clonal_complex is not produced.
     efaecium: "Enterococcus.* faecium.*"
     saureus: "Staphylococcus.* aureus.*"
 
-pneumokity_source_dir: "/data/genome/others/pneumokity/2024-06-03" # Path to the pneumokit cloned source repository. Will be downloaded if does not exist.
+pneumokity_source_dir: ${pneumokity_source_dir} # Path to the pneumokit cloned source repository.
 
 run_hamronization: false # If true, hamronization is run. If false, hamronization is skipped.
 
@@ -101,7 +101,7 @@ in_silico_PCR:
     - "stx2b-R3,GCGATACTGRGBACTGTGGCC,GGCCACCTTCACTGTGAATGTG"
     - "stx2b-F1,AAATATGAAGAAGATATTTGTAGCGGC,CAGCAAATCCTGAACCTGACG"
   max_mismatches: null # null or INT - max mismatch when matching primers, no degenerate bases allowed. Set to null to ignore this setting.
-  output_amplicon: true # Bool - if True, amplicon sequences are outputted as the last column in BED.
+  output_amplicon: True # Bool - if True, amplicon sequences are outputted as the last column in BED.
 
 ### RESOURCES #############################
 
