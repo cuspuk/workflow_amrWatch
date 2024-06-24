@@ -1,7 +1,7 @@
 rule gtdbtk__classify:
     input:
         assembly=infer_assembly_fasta,
-        gtdb=os.path.join(config["gtdb_dirpath"], "db"),
+        gtdb=os.path.join(config["gtdb_dirpath"]),
         qc_assembly="results/checks/{sample}/qc_summary.tsv",  # NOTE just to say explicitly that this is a dependency
     output:
         gtdb_tsv="results/taxonomy/{sample}/classify/gtdbtk.bac120.summary.tsv",
