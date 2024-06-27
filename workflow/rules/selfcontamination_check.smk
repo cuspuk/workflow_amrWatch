@@ -82,7 +82,7 @@ rule samtools__markdup:
     input:
         "results/self_contamination/{sample}/sorted.bam",
     output:
-        temp("results/self_contamination/{sample}/markdup.bam"),
+        "results/self_contamination/{sample}/markdup.bam",
     log:
         "logs/self_contamination/samtools_markdup/{sample}.log",
     conda:
@@ -98,7 +98,7 @@ rule samtools__index:
     input:
         "results/self_contamination/{sample}/markdup.bam",
     output:
-        temp("results/self_contamination/{sample}/markdup.bam.bai"),
+        "results/self_contamination/{sample}/markdup.bam.bai",
     log:
         "logs/self_contamination/samtools_index/{sample}.log",
     threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
