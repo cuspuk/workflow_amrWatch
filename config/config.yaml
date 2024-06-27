@@ -16,8 +16,8 @@ reads__trimming: # Relevant only if reads->trimming is set to cutadapt.
     times: 1 # int(1): How many times to repeat adapter removal.
     keep_trimmed_only: false # bool(false): Discard reads with no adapters found.
     adapters_anywhere_file: "/data/genome/others/adapters/nextera.fa" # null/str: Fasta file path with adapters to be matched 'anywhere'.
-    adapters_3_end_file: TO_BE_DEFINED # null/str: Fasta file path with adapters to be matched at 3'end.
-    adapters_5_end_file: TO_BE_DEFINED # null/str: Fasta file path with adapters to be matched at 5'end.
+    adapters_3_end_file: null # null/str: Fasta file path with adapters to be matched at 3'end.
+    adapters_5_end_file: null # null/str: Fasta file path with adapters to be matched at 5'end.
 
   shorten_to_length: 500 # null/int: Shorten each read to the specified length. Corresponds to the cutadapt length parameter.
   trim_N_bases_on_ends: true # bool(false): Set to true to trim 'N' bases on ends.
