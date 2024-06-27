@@ -77,7 +77,7 @@ rule seqkit__stats:
         stats="results/assembly/{sample}/seqkit_stats.tsv",
     params:
         command="stats",
-        extra="--tabular --basename",
+        extra="--all --tabular --basename",
     log:
         "logs/assembly/seqkit/{sample}.log",
     wrapper:
