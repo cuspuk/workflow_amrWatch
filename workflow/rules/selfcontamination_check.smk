@@ -22,8 +22,8 @@ rule bwa__map_to_assembly:
     params:
         extra=r"-R '@RG\tID:{sample}\tSM:{sample}'",
         sort="samtools",
-        sort_order="queryname",
-        sort_extra="",
+        # sort_order="queryname",
+        # sort_extra="",
     threads: min(config["threads"]["mapping"], config["max_threads"])
     resources:
         mem_mb=get_mem_mb_for_mapping,
