@@ -142,7 +142,6 @@ rule samtools__stats:
 rule picard__insert_size:
     input:
         bam="results/self_contamination/{sample}/markdup.bam",
-        bai="results/self_contamination/{sample}/markdup.bam.bai",
     output:
         txt="results/self_contamination/{sample}/markdup_isize.txt",
         pdf="results/self_contamination/{sample}/markdup_isize.pdf",
