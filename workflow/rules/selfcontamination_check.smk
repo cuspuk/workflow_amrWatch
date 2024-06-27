@@ -96,11 +96,11 @@ rule samtools__markdup:
 
 rule samtools__index:
     input:
-        "results/self_contamination/{sample}/markdup.bam",
+        "results/self_contamination/{sample}/{step}.bam",
     output:
-        "results/self_contamination/{sample}/markdup.bam.bai",
+        "results/self_contamination/{sample}/{step}.bam.bai",
     log:
-        "logs/self_contamination/samtools_index/{sample}.log",
+        "logs/self_contamination/samtools_index/{sample}_{step}.log",
     threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
@@ -111,7 +111,7 @@ rule samtools__index:
 rule qualimap__report:
     input:
         bam="results/self_contamination/{sample}/markdup.bam",
-        bai="results/self_contamination/{sample}/markdup.bam.bai",
+        bai="results/self_contamination/{sample}/makrdup.bam.bai",
     output:
         report_dir=directory("results/self_contamination/{sample}/markdup/bamqc"),
     resources:
@@ -121,6 +121,39 @@ rule qualimap__report:
         "logs/qualimap/mapping_quality_report/{sample}.log",
     wrapper:
         "https://github.com/cuspuk/workflow_wrappers/raw/v1.14.0/wrappers/qualimap/bamqc"
+
+
+rule samtools__stats:
+    input:
+        bam="results/self_contamination/{sample}/{step}.bam",
+        bai="results/self_contamination/{sample}/{step}.bam.bai",
+    output:
+        "results/self_contamination/{sample}/{step}_stats.txt",
+    params:
+        extra="",
+    wildcard_constraints:
+        step="markdup|mapped",
+    log:
+        "logs/samtools_stats/{sample}_{step}.log",
+    wrapper:
+        "v3.12.1/bio/samtools/stats"
+
+
+rule picard__insert_size:
+    input:
+        bam="results/self_contamination/{sample}/markdup.bam",
+        bai="results/self_contamination/{sample}/markdup.bam.bai",
+    output:
+        txt="results/self_contamination/{sample}/markdup_isize.txt",
+        pdf="results/self_contamination/{sample}/markdup_isize.pdf",
+    log:
+        "logs/picard/insert_size/{sample}.log",
+    params:
+        extra="--VALIDATION_STRINGENCY LENIENT --METRIC_ACCUMULATION_LEVEL null --METRIC_ACCUMULATION_LEVEL SAMPLE",
+    resources:
+        mem_mb=get_mem_mb_for_mapping_postprocess,
+    wrapper:
+        "v3.12.1/bio/picard/collectinsertsizemetrics"
 
 
 rule samtools__faidx:
