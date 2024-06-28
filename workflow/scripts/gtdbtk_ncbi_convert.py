@@ -360,7 +360,7 @@ class GtdbNcbiTranslate(object):
         """Get NCBI majority vote classification for each user genome."""
 
         with open(output_file, "w") as fout:
-            fout.write("Genome ID\tGTDB classification\tMajority vote NCBI classification\n")
+            fout.write("Genome ID\tGTDB classification\tNCBI tax\tMajority vote NCBI classification\n")
 
             data = [
                 (gtdbtk_ar_assignments, [ar_sp_tree], None),
