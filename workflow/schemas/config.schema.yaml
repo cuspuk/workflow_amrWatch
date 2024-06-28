@@ -117,75 +117,140 @@ definitions:
     type: object
     additionalProperties: false
     properties:
+      cut_from_start_r1:
+        type: [integer, "null"]
+        description: "Removes a specified number of bases from the beginning of the R1 read."
+        minimum: 0
+        default: null
+      cut_from_start_r2:
+        type: [integer, "null"]
+        description: "Removes a specified number of bases from the beginning of the R2 read."
+        minimum: 0
+        default: null
+      cut_from_end_r1:
+        type: [integer, "null"]
+        description: "Removes a specified number of bases from the end of the R1 read."
+        minimum: 0
+        default: null
+      cut_from_end_r2:
+        type: [integer, "null"]
+        default: null
+        description: "Removes a specified number of bases from the end of the R2 read."
+        minimum: 0
+      quality_cutoff_from_3_end_r1:
+        type: integer
+        description: "Removes lower quality bases from the 3' end of the R1 read."
+        default: 20
+        minimum: 0
+      quality_cutoff_from_5_end_r1:
+        type: integer
+        description: "Removes lower quality bases from the 5' end of the R1 read."
+        default: 20
+        minimum: 0
+      quality_cutoff_from_3_end_r2:
+        type: integer
+        description: "Removes lower quality bases from the 3' end of the R2 read."
+        default: 20
+        minimum: 0
+      quality_cutoff_from_5_end_r2:
+        type: integer
+        description: "Removes lower quality bases from the 5' end of the R2 read."
+        default: 20
+        minimum: 0
+      nextseq_trimming_mode:
+        type: boolean
+        default: false
+        description: "Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq)."
+      do_adapter_removal:
+        type: boolean
+        default: false
+        description: "Whether to do adapter removal or not."
       adapter_removal:
         type: object
         "$ref": "#/definitions/AdapterRemoval"
-        default: {}
+        description: "Relevant only if do_adapter_removal is set to true."
       shorten_to_length:
-        type: integer
-        description: "Optional. Shorten each read to the specified length. Corresponds to the cutadapt length parameter."
-      cut_from_start_r2:
-        type: integer
-        description: "Optional. Removes a specified number of bases from the beginning of the read."
-      cut_from_end_r1:
-        type: integer
-        description: "Optional. Removes a specified number of bases from the end of the read."
-      cut_from_start_r1:
-        type: integer
-        description: "Optional. Removes a specified number of bases from the beginning of the read."
-      cut_from_end_r2:
-        type: integer
-        description: "Optional. Removes a specified number of bases from the end of the read."
-      max_n_bases:
-        type: integer
-        description: "Optional. Removes reads with more N bases than the specified number."
-      max_expected_errors:
-        type: integer
-        description: "Optional. Discard reads whose expected number of errors exceeds this value."
-      max_length_r1:
-        type: integer
-        description: "Optional. Discards R1 reads longer than this."
+        type: [integer, "null"]
+        description: "Shorten each read to the specified length. Corresponds to the cutadapt length parameter."
+        minimum: 0
+        default: null
       trim_N_bases_on_ends:
         type: boolean
-        description: "Optional. Set to true to trim N bases on ends."
-      max_length_r2:
-        type: integer
-        description: "Optional. Discards R2 reads longer than this."
+        default: false
+        description: "Set to true to trim 'N' bases on ends."
       min_length_r1:
-        type: integer
-        description: "Optional. Discards R1 reads shorter than this. Recommended to set at least to 1, to discard empty reads."
+        type: [integer, "null"]
+        description: "Discards R1 reads shorter than this. Recommended to set at least to 1, to discard empty reads."
+        minimum: 0
+        default: null
+        examples: [45]
       min_length_r2:
-        type: integer
-        description: "Optional. Discards R2 reads shorter than this. Recommended to set at least to 1, to discard empty reads."
-      quality_cutoff_from_3_end_r1:
-        type: integer
-        description: "Optional. Removes lower quality bases from the 3' end of the R1 read."
-      quality_cutoff_from_5_end_r1:
-        type: integer
-        description: "Optional. Removes lower quality bases from the 5' end of the R1 read."
-      quality_cutoff_from_3_end_r2:
-        type: integer
-        description: "Optional. Removes lower quality bases from the 3' end of the R2 read."
-      quality_cutoff_from_5_end_r2:
-        type: integer
-        description: "Optional. Removes lower quality bases from the 5' end of the R2 read."
-      nextseq_trimming_mode:
-        type: boolean
-        description: "Optional. Modify quality-trimming algorithm to expect two-color chemistry data (NextSeq)."
+        type: [integer, "null"]
+        description: "Discards R2 reads shorter than this. Recommended to set at least to 1, to discard empty reads."
+        minimum: 0
+        default: null
+        examples: [45]
+      max_length_r1:
+        type: [integer, "null"]
+        description: "Discards R1 reads longer than this value."
+        minimum: 0
+        default: null
+      max_length_r2:
+        type: [integer, "null"]
+        description: "Discards R2 reads longer than this value."
+        minimum: 0
+        default: null
+      max_n_bases:
+        type: [integer, "null"]
+        description: "Removes reads with more 'N' bases than the specified number."
+        minimum: 0
+        default: null
+      max_expected_errors:
+        type: [integer, "null"]
+        description: "Discard reads whose expected number of errors exceeds this value."
+        minimum: 0
+        default: null
     required:
-      - adapter_removal
+      - quality_cutoff_from_3_end_r1
+      - quality_cutoff_from_5_end_r1
+      - quality_cutoff_from_3_end_r2
+      - quality_cutoff_from_5_end_r2
+      - nextseq_trimming_mode
+      - do_adapter_removal
+      - cut_from_start_r1
+      - cut_from_start_r2
+      - cut_from_end_r1
+      - cut_from_end_r2
+      - shorten_to_length
+      - trim_N_bases_on_ends
+      - min_length_r1
+      - min_length_r2
+      - max_length_r1
+      - max_length_r2
+      - max_n_bases
+      - max_expected_errors
     title: ReadsTrimming
+    if:
+      properties:
+        do_adapter_removal:
+          const: true
+    then:
+      required:
+        - adapter_removal
   AdapterRemoval:
     type: object
     additionalProperties: false
     properties:
-      do:
-        type: boolean
-        default: false
-        description: "Whether to do adapter removal or not."
-      adapters_fasta:
+      action:
         type: string
-        description: "Adapters fasta used for adapter trimming."
+        enum:
+          - "retain"
+          - "trim"
+          - "mask"
+          - "none"
+          - "lowercase"
+        default: "trim"
+        description: "Defines an action to perform with the found adapter."
       overlap:
         type: integer
         default: 3
@@ -199,43 +264,27 @@ definitions:
         type: integer
         default: 1
         description: "How many times to repeat adapter removal."
-      action:
-        type: string
-        enum:
-          - "retain"
-          - "trim"
-          - "mask"
-          - "none"
-          - "lowercase"
-        default: "trim"
-        description: "Defines an action to perform with the found adapter."
       keep_trimmed_only:
         type: boolean
         default: false
         description: "Discard reads with no adapters found."
-      read_location:
-        type: string
-        enum:
-          - "anywhere"
-          - "regular"
-          - "front"
-        default: "anywhere"
-        description: "Path to the adapter file. Search for adapters anywhere in the read."
+      adapters_anywhere_file:
+        type: [string, "null"]
+        description: "Fasta file path with adapters to be matched 'anywhere'."
+      adapters_3_end_file:
+        type: [string, "null"]
+        description: "Fasta file path with adapters to be matched at 3'end."
+      adapters_5_end_file:
+        type: [string, "null"]
+        description: "Fasta file path with adapters to be matched at 5'end."
     required:
-      - do
-    if:
-      properties:
-        do:
-          const: true
-    then:
-      required:
-        - adapters_fasta
-        - overlap
-        - error_rate
-        - times
-        - action
-        - keep_trimmed_only
-        - read_location
+      - overlap
+      - error_rate
+      - times
+      - action
+      - adapters_anywhere_file
+      - adapters_3_end_file
+      - adapters_5_end_file
     title: AdapterRemoval
   SelfContamination:
     additionalProperties: false

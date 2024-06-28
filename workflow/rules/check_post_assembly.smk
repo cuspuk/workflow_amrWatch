@@ -54,7 +54,10 @@ rule check_assembly_quality:
 
 rule check_self_contamination:
     input:
-        "results/self_contamination/{sample}/filtered.vcf",
+        vcf="results/self_contamination/{sample}/filtered.vcf",
+        txt="results/self_contamination/{sample}/markdup_isize.txt", # NOTE just to request
+        stats_orig="results/self_contamination/{sample}/mapped_stats.txt", # NOTE just to request
+        stats_dup="results/self_contamination/{sample}/markdup_stats.txt", # NOTE just to request
     output:
         temp("results/checks/{sample}/self_contamination_check.tsv"),
     params:

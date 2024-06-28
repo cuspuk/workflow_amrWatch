@@ -193,7 +193,7 @@ rule mob_suite__download_db:
     params:
         db_dir=lambda wildcards, output: os.path.dirname(output.db),
     conda:
-        "../envs/frozen/mob_suite.yaml"
+        "../envs/mob_suite.yaml"
     log:
         "logs/plasmids/download_db.log",
     shell:
@@ -209,7 +209,7 @@ rule mob_suite__typer:
     params:
         db_dir=lambda wildcards, input: os.path.dirname(input.db),
     conda:
-        "../envs/frozen/mob_suite.yaml"
+        "../envs/mob_suite.yaml"
     log:
         "logs/plasmids/{sample}/mob_typer.log",
     shell:
@@ -504,9 +504,9 @@ rule pneumokity_call:
         fasta=infer_assembly_fasta,
         src=os.path.join(config["pneumokity_source_dir"], "pneumokity.py"),
     output:
-        csv="results/amr_detect/{sample}/pneumo_capsular_typing/{sample}_result_data.csv"
+        csv="results/amr_detect/{sample}/pneumo_capsular_typing/{sample}_result_data.csv",
     params:
-        outdir=lambda wildcards,output: os.path.dirname(os.path.dirname(output.csv))
+        outdir=lambda wildcards, output: os.path.dirname(os.path.dirname(output.csv)),
     conda:
         "../envs/pneumokity.yaml"
     log:

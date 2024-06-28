@@ -4,4 +4,4 @@ channels:
   - conda-forge
   - r
 dependencies:
-  - sistr_cmd=1.1.1
+  - sistr_cmd=1.1.2

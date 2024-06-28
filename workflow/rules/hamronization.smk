@@ -230,7 +230,7 @@ rule request_hamronize_summary:
     output:
         "results/hamronization/hamronization_requested.txt",
     params:
-        value=lambda wildcards, input: "REQUESTED" if len(input) > 0 else "NOT_REQUESTED",
+        value=lambda wildcards, input: "REQUESTED" if len(input) > 1 else "NOT_REQUESTED",
     localrule: True
     conda:
         "../envs/coreutils.yaml"

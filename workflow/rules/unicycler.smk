@@ -13,7 +13,7 @@ rule unicycler__assemble:
     log:
         "logs/assembly/unicycler/{sample}.log",
     wrapper:
-        "v3.4.1/bio/unicycler"
+        "v3.12.1/bio/unicycler"
 
 
 rule bandage__visualize:
@@ -77,8 +77,8 @@ rule seqkit__stats:
         stats="results/assembly/{sample}/seqkit_stats.tsv",
     params:
         command="stats",
-        extra="--tabular --basename",
+        extra="--all --tabular --basename",
     log:
         "logs/assembly/seqkit/{sample}.log",
     wrapper:
-        "v3.4.1/bio/seqkit"
+        "v3.12.1/bio/seqkit"

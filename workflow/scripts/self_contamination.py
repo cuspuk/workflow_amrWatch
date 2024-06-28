@@ -66,5 +66,5 @@ def evaluate_self_contamination(vcf_file: str, output_path: str, max_rows: float
 if __name__ == "__main__":
     sys.stderr = open(snakemake.log[0], "w")
     evaluate_self_contamination(
-        snakemake.input[0], snakemake.output[0], snakemake.params.max_rows, snakemake.params.check_level
+        snakemake.input.vcf, snakemake.output[0], snakemake.params.max_rows, snakemake.params.check_level
     )
