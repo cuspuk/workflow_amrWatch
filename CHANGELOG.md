@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.20.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.19.0...v2.20.0) (2024-06-28)
+
+
+### Features
+
+* added bam stats using samtools and picard insert ([4debace](https://github.com/cuspuk/workflow_amrWatch/commit/4debace319fe66ae3bfd03fc4058852ddd1de026))
+* added new mapping for new mlst db version ([71168fc](https://github.com/cuspuk/workflow_amrWatch/commit/71168fc3ac45faabb9f0e7ae612c7d0e08fd7967))
+* assembly statistics using seqkit all ([a37ba5e](https://github.com/cuspuk/workflow_amrWatch/commit/a37ba5eafae85e8190c55e1e685ee27be4c1f0ed))
+* bumped modules and gtdbtk ([7680fc9](https://github.com/cuspuk/workflow_amrWatch/commit/7680fc918aae99be5fb39a374ac1c4d4ca6e02aa))
+
+
+### Bug Fixes
+
+* final bam and bai kept ([d8c6b77](https://github.com/cuspuk/workflow_amrWatch/commit/d8c6b7784d02c1b7e437d3881db4d9c7f2199797))
+
 ## [2.19.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.18.2...v2.19.0) (2024-06-20)
 
 
