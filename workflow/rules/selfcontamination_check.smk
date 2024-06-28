@@ -111,7 +111,7 @@ rule samtools__index:
 rule qualimap__report:
     input:
         bam="results/self_contamination/{sample}/markdup.bam",
-        bai="results/self_contamination/{sample}/markmdup.bam.bai",
+        bai="results/self_contamination/{sample}/markdup.bam.bai",
     output:
         report_dir=directory("results/self_contamination/{sample}/markdup/bamqc"),
     resources:
