@@ -96,11 +96,11 @@ rule samtools__markdup:
 
 rule samtools__index:
     input:
-        "results/self_contamination/{sample}/{step}.bam",
+        "results/self_contamination/{sample}/markdup.bam",
     output:
-        "results/self_contamination/{sample}/{step}.bam.bai",
+        "results/self_contamination/{sample}/markdup.bam.bai",
     log:
-        "logs/self_contamination/samtools_index/{sample}_{step}.log",
+        "logs/self_contamination/samtools_index/{sample}.log",
     threads: min(config["threads"]["mapping_postprocess"], config["max_threads"])
     resources:
         mem_mb=get_mem_mb_for_mapping_postprocess,
@@ -126,7 +126,6 @@ rule qualimap__report:
 rule samtools__stats:
     input:
         bam="results/self_contamination/{sample}/{step}.bam",
-        bai="results/self_contamination/{sample}/{step}.bam.bai",
     output:
         "results/self_contamination/{sample}/{step}_stats.txt",
     params:
