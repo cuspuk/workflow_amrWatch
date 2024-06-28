@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.1](https://github.com/cuspuk/workflow_amrWatch/compare/v2.20.0...v2.20.1) (2024-06-28)
+
+
+### Bug Fixes
+
+* ncbi taxid parsing ([5527eb1](https://github.com/cuspuk/workflow_amrWatch/commit/5527eb104dd52fe02fecd85b611a7225a0e949da))
+
 ## [2.20.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.19.0...v2.20.0) (2024-06-28)
 
 
