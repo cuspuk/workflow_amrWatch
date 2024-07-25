@@ -101,20 +101,17 @@ class AssemblyQuality:
 
 def parse_assembly_metrics(bandage_output_file: str):
     dead_ends = None
-    basepairs = None
     with open(bandage_output_file, "r") as f:
         lines = f.readlines()
         for line in lines:
             if line.startswith("Dead ends:"):
                 dead_ends = int(line.strip().split()[-1])
-            elif line.startswith("Total length (bp):"):
-                basepairs = int(line.strip().split()[-1])
-    if dead_ends is None or basepairs is None:
+    if dead_ends is None:
         raise ValueError(f"Could not parse assembly quality from {bandage_output_file=}")
-    return dead_ends, basepairs
+    return dead_ends
 
 
-def parse_seqkit_stats(seqkit_stats_file: str):
+def parse_seqkit_stats(seqkit_stats_file: str) -> tuple[int, int]:
     with open(seqkit_stats_file, "r") as f:
         lines = f.readlines()
         header = lines[0].strip().split("\t")
@@ -122,16 +119,21 @@ def parse_seqkit_stats(seqkit_stats_file: str):
             num_seqs_index = header.index("num_seqs")
         except ValueError:
             raise ValueError(f"Could not find num_seqs in {seqkit_stats_file=}")
+        try:
+            sum_len_index = header.index("sum_len")
+        except ValueError:
+            raise ValueError(f"Could not find sum_len in {seqkit_stats_file=}")
+
         row = lines[1].strip().split("\t")
-        return int(row[num_seqs_index])
+        return int(row[num_seqs_index]), int(row[sum_len_index])
 
 
 def get_assembly_quality_decision(
     bandage_output_file: str,
     seqkit_stats_file: str,
 ):
-    dead_ends, basepairs = parse_assembly_metrics(bandage_output_file)
-    contigs = parse_seqkit_stats(seqkit_stats_file)
+    dead_ends = parse_assembly_metrics(bandage_output_file)
+    contigs, basepairs = parse_seqkit_stats(seqkit_stats_file)
     return AssemblyQuality(dead_ends, basepairs, contigs)
 
 
