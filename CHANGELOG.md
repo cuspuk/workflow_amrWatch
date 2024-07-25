@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.20.2](https://github.com/cuspuk/workflow_amrWatch/compare/v2.20.1...v2.20.2) (2024-07-25)
+
+
+### Bug Fixes
+
+* number of basepairs in check now calculated from seqkit stats ([82b8377](https://github.com/cuspuk/workflow_amrWatch/commit/82b837709718fd9cc87ebc306728eeaeafb82a12))
+
 ## [2.20.1](https://github.com/cuspuk/workflow_amrWatch/compare/v2.20.0...v2.20.1) (2024-06-28)
 
 
