@@ -59,6 +59,9 @@ coverage_check:
   fail_threshold: 20 # Hard threshold for mean coverage. This is a FAIL check - workflow does not proceed to the next stage.
 
 gtdb_dirpath: ${gtdb_dirpath} # Path with db/ subdir containing GTDB
+gtdb_ncbi_id_custom_mapping:
+  Citrobacter freundii: 546
+  Streptococcus sp013277475: 2582635
 
 abricate:
   db_dir: ${abricate_database_dir} # Path to abricate DB. If does not exist, will be downloaded.

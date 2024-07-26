@@ -39,10 +39,12 @@ rule gtdbtk__convert_to_ncbi:
     input:
         metadata=os.path.join(config["gtdb_dirpath"], "bac120_metadata.tsv"),
         gtdb_tsv="results/taxonomy/{sample}/classify/gtdbtk.bac120.summary.tsv",
+        parsed_taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
         "results/taxonomy/{sample}/ncbi_taxa.tsv",
     params:
         gtdb_parent_dir=lambda wildcards, input: os.path.dirname(os.path.dirname(input.gtdb_tsv)),
+        custom_dict=config.get("gtdb_ncbi_id_custom_mapping", {}),
     conda:
         "../envs/gtdbtk.yaml"
     log:
@@ -54,7 +56,6 @@ rule gtdbtk__convert_to_ncbi:
 checkpoint checkpoint_parse_taxa_gtdbtk:
     input:
         gtdb_tsv="results/taxonomy/{sample}/classify/gtdbtk.bac120.summary.tsv",
-        ncbi_taxa="results/taxonomy/{sample}/ncbi_taxa.tsv",  # not a required dependency. Specified to simplify gathering of results.
     output:
         "results/taxonomy/{sample}/parsed_taxa.txt",
     conda:

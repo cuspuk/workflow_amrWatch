@@ -31,6 +31,7 @@ __maintainer__ = "Donovan Parks"
 __email__ = "donovan.parks@gmail.com"
 __status__ = "Development"
 
+import csv
 import gzip
 import os
 import sys
@@ -186,7 +187,7 @@ class GtdbNcbiTranslate(object):
 
                 gtdb_taxonomy_index = header.index("gtdb_taxonomy")
                 ncbi_taxonomy_index = header.index("ncbi_taxonomy")
-                ncbi_name_index = header.index("ncbi_organism_name")
+                ncbi_longname_index = header.index("ncbi_taxonomy_unfiltered")
                 ncbi_taxid_index = header.index("ncbi_species_taxid")
                 gtdb_genome_rep_index = header.index("gtdb_genome_representative")
 
@@ -199,11 +200,16 @@ class GtdbNcbiTranslate(object):
                     gid = tokens[0]
                     ncbi_taxonomy = tokens[ncbi_taxonomy_index]
                     ncbi_name = tokens[ncbi_taxonomy_index]
+                    ncbi_longname = tokens[ncbi_longname_index]
                     ncbi_taxid = tokens[ncbi_taxid_index]
 
                     if ncbi_taxonomy and ncbi_taxonomy != "none":
                         ncbi_taxa[gid] = [t.strip() for t in ncbi_taxonomy.split(";")]
-                        ncbi_name_to_taxid[ncbi_name] = ncbi_taxid
+                        if ncbi_name not in ncbi_name_to_taxid:
+                            ncbi_name_to_taxid[ncbi_name] = {}
+                        if ncbi_taxid not in ncbi_name_to_taxid[ncbi_name]:
+                            ncbi_name_to_taxid[ncbi_name][ncbi_taxid] = {"count": 0, "unfiltered": ncbi_longname}
+                        ncbi_name_to_taxid[ncbi_name][ncbi_taxid]["count"] += 1
 
                         for idx, taxon in enumerate(ncbi_taxa[gid]):
                             ncbi_lineages[taxon] = ncbi_taxa[gid][0 : idx + 1]
@@ -356,6 +362,8 @@ class GtdbNcbiTranslate(object):
         gtdb_sp_to_rid,
         ncbi_name_to_taxid,
         output_file,
+        custom_dict,
+        parsed_taxa,
     ):
         """Get NCBI majority vote classification for each user genome."""
 
@@ -404,7 +412,18 @@ class GtdbNcbiTranslate(object):
                             gtdb_taxa, ncbi_rep_ids, ncbi_sp_classification, ncbi_lineages
                         )
 
-                        tid = ncbi_name_to_taxid[ncbi_mv]
+                        if parsed_taxa in custom_dict:
+                            tid = custom_dict[parsed_taxa]
+                            print("Using custom dict", file=sys.stderr)
+                        else:
+                            tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv]
+                            print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                            if len(tids_dict) == 1:
+                                tid = list(tids_dict.keys())[0]
+                            else:
+                                print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
+                                tid = None
+
                         fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv, tid))
 
                 # get NCBI majority vote classification for
@@ -448,8 +467,18 @@ class GtdbNcbiTranslate(object):
                             gtdb_taxa, ncbi_rep_ids, ncbi_sp_classification, ncbi_lineages
                         )
 
-                        # ncbi_name_to_taxid = # TODO
-                        tid = ncbi_name_to_taxid[ncbi_mv]
+                        if parsed_taxa in custom_dict:
+                            tid = custom_dict[parsed_taxa]
+                            print("Using custom dict", file=sys.stderr)
+                        else:
+                            tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv]
+                            print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                            if len(tids_dict) == 1:
+                                tid = list(tids_dict.keys())[0]
+                            else:
+                                print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
+                                tid = None
+
                         fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv, tid))
 
                 # get NCBI majority vote classification for genomes
@@ -465,10 +494,32 @@ class GtdbNcbiTranslate(object):
                         ncbi_mv = ncbi_sp_classification[gtdb_sp_rid]
 
                     # ncbi_name_to_taxid = # TODO
-                    tid = ncbi_name_to_taxid[";".join(ncbi_mv)]
+                    ncbi_mv_full = ";".join(ncbi_mv)
+
+                    if parsed_taxa in custom_dict:
+                        tid = custom_dict[parsed_taxa]
+                        print("Using custom dict", file=sys.stderr)
+                    else:
+                        tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv_full]
+                        print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                        if len(tids_dict) == 1:
+                            tid = list(tids_dict.keys())[0]
+                        else:
+                            print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
+                            tid = None
+
                     fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ";".join(ncbi_mv), tid))
 
-    def run(self, gtdbtk_output_dir, ar53_metadata_file, bac120_metadata_file, gtdbtk_prefix, output_file):
+    def run(
+        self,
+        gtdbtk_output_dir,
+        ar53_metadata_file,
+        bac120_metadata_file,
+        gtdbtk_prefix,
+        output_file,
+        custom_dict,
+        parsed_taxa,
+    ):
         """Translate GTDB to NCBI classification via majority vote."""
 
         # create output file directory if required
@@ -527,6 +578,8 @@ class GtdbNcbiTranslate(object):
             gtdb_sp_to_rid,
             ncbi_name_to_taxid,
             output_file,
+            custom_dict,
+            parsed_taxa,
         )
 
 
@@ -534,13 +587,22 @@ if __name__ == "__main__":
     sys.stderr = open(snakemake.log[0], "w")
 
     bac120_metadata_file = snakemake.input.metadata
+    parsed_taxa_f = snakemake.input.parsed_taxa
+    custom_dict = snakemake.params.custom_dict
+
+    print("Starting GTDB to NCBI majority vote translation.", file=sys.stderr)
+    print(f"Received custom_dict={custom_dict}", file=sys.stderr)
+
+    with open(parsed_taxa_f, "r") as f:
+        parsed_taxa = f.readline().strip()
+
     output_file = snakemake.output[0]
     gtdbtk_output_dir = snakemake.params.gtdb_parent_dir
     gtdbtk_prefix = "gtdbtk"
 
     try:
         p = GtdbNcbiTranslate()
-        p.run(gtdbtk_output_dir, None, bac120_metadata_file, gtdbtk_prefix, output_file)
+        p.run(gtdbtk_output_dir, None, bac120_metadata_file, gtdbtk_prefix, output_file, custom_dict, parsed_taxa)
         print("Done.", file=sys.stderr)
     except SystemExit:
         print("Controlled exit resulting from early termination.", file=sys.stderr)

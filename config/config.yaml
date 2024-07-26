@@ -59,6 +59,9 @@ coverage_check:
   fail_threshold: 20 # Hard threshold for mean coverage. This is a FAIL check - workflow does not proceed to the next stage.
 
 gtdb_dirpath: "/data/genome/taxonomy/gtdb-tk/release220/" # Path with GTDB. Must be provided. Download from https://ecogenomics.github.io/GTDBTk/installing/index.html.
+gtdb_ncbi_id_custom_mapping: # Here you can provide custom mapping from GTDB cleaned species name to NCBI taxonomy ID. Else a script is used, and if it is ambiguous, that "None" is reported.
+  Citrobacter freundii: 546
+  Streptococcus sp013277475: 2582635
 
 abricate:
   db_dir: "/data/genome/others/abricate_db/2024-06-03/vfdb/" # Path to abricate DB. If does not exist, will be downloaded.
