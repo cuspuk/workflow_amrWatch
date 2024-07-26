@@ -12,6 +12,8 @@ definitions:
       gtdb_dirpath:
         type: string
         description: "Path to the PEP file containing the info how to load the data."
+      gtdb_ncbi_id_custom_mapping:
+        type: object
       max_threads:
         type: integer
         description: "Number of maximum threads to use in jobs."

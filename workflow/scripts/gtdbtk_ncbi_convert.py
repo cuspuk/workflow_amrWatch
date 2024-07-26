@@ -362,6 +362,8 @@ class GtdbNcbiTranslate(object):
         gtdb_sp_to_rid,
         ncbi_name_to_taxid,
         output_file,
+        custom_dict,
+        parsed_taxa,
     ):
         """Get NCBI majority vote classification for each user genome."""
 
@@ -410,13 +412,17 @@ class GtdbNcbiTranslate(object):
                             gtdb_taxa, ncbi_rep_ids, ncbi_sp_classification, ncbi_lineages
                         )
 
-                        tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv]
-                        print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
-                        if len(tids_dict) == 1:
-                            tid = list(tids_dict.keys())[0]
+                        if parsed_taxa in custom_dict:
+                            tid = custom_dict[parsed_taxa]
+                            print("Using custom dict", file=sys.stderr)
                         else:
-                            print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
-                            tid = None
+                            tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv]
+                            print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                            if len(tids_dict) == 1:
+                                tid = list(tids_dict.keys())[0]
+                            else:
+                                print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
+                                tid = None
 
                         fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv, tid))
 
@@ -461,13 +467,17 @@ class GtdbNcbiTranslate(object):
                             gtdb_taxa, ncbi_rep_ids, ncbi_sp_classification, ncbi_lineages
                         )
 
-                        tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv]
-                        print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
-                        if len(tids_dict) == 1:
-                            tid = list(tids_dict.keys())[0]
+                        if parsed_taxa in custom_dict:
+                            tid = custom_dict[parsed_taxa]
+                            print("Using custom dict", file=sys.stderr)
                         else:
-                            print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
-                            tid = None
+                            tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv]
+                            print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                            if len(tids_dict) == 1:
+                                tid = list(tids_dict.keys())[0]
+                            else:
+                                print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
+                                tid = None
 
                         fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv, tid))
 
@@ -485,17 +495,31 @@ class GtdbNcbiTranslate(object):
 
                     # ncbi_name_to_taxid = # TODO
                     ncbi_mv_full = ";".join(ncbi_mv)
-                    tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv_full]
-                    print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
-                    if len(tids_dict) == 1:
-                        tid = list(tids_dict.keys())[0]
+
+                    if parsed_taxa in custom_dict:
+                        tid = custom_dict[parsed_taxa]
+                        print("Using custom dict", file=sys.stderr)
                     else:
-                        print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
-                        tid = None
+                        tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv_full]
+                        print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                        if len(tids_dict) == 1:
+                            tid = list(tids_dict.keys())[0]
+                        else:
+                            print(f"Multiple taxons found={tids_dict}. Returning None", file=sys.stderr)
+                            tid = None
 
                     fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ";".join(ncbi_mv), tid))
 
-    def run(self, gtdbtk_output_dir, ar53_metadata_file, bac120_metadata_file, gtdbtk_prefix, output_file):
+    def run(
+        self,
+        gtdbtk_output_dir,
+        ar53_metadata_file,
+        bac120_metadata_file,
+        gtdbtk_prefix,
+        output_file,
+        custom_dict,
+        parsed_taxa,
+    ):
         """Translate GTDB to NCBI classification via majority vote."""
 
         # create output file directory if required
@@ -554,6 +578,8 @@ class GtdbNcbiTranslate(object):
             gtdb_sp_to_rid,
             ncbi_name_to_taxid,
             output_file,
+            custom_dict,
+            parsed_taxa,
         )
 
 
@@ -561,13 +587,22 @@ if __name__ == "__main__":
     sys.stderr = open(snakemake.log[0], "w")
 
     bac120_metadata_file = snakemake.input.metadata
+    parsed_taxa_f = snakemake.input.parsed_taxa
+    custom_dict = snakemake.params.custom_dict
+
+    print("Starting GTDB to NCBI majority vote translation.", file=sys.stderr)
+    print(f"Received custom_dict={custom_dict}", file=sys.stderr)
+
+    with open(parsed_taxa_f, "r") as f:
+        parsed_taxa = f.readline().strip()
+
     output_file = snakemake.output[0]
     gtdbtk_output_dir = snakemake.params.gtdb_parent_dir
     gtdbtk_prefix = "gtdbtk"
 
     try:
         p = GtdbNcbiTranslate()
-        p.run(gtdbtk_output_dir, None, bac120_metadata_file, gtdbtk_prefix, output_file)
+        p.run(gtdbtk_output_dir, None, bac120_metadata_file, gtdbtk_prefix, output_file, custom_dict, parsed_taxa)
         print("Done.", file=sys.stderr)
     except SystemExit:
         print("Controlled exit resulting from early termination.", file=sys.stderr)
