@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.20.3](https://github.com/cuspuk/workflow_amrWatch/compare/v2.20.2...v2.20.3) (2024-07-26)
+
+
+### Bug Fixes
+
+* added custom mapping to ncbi ID to the config ([27b034d](https://github.com/cuspuk/workflow_amrWatch/commit/27b034d5dd062f596fb9d7c2d516f52fa40fc9b6))
+* reworked ncbi id conversion to produce null if ambiguous ([69bcd5b](https://github.com/cuspuk/workflow_amrWatch/commit/69bcd5b1e238477a21711e74c606af49340d3b06))
+
 ## [2.20.2](https://github.com/cuspuk/workflow_amrWatch/compare/v2.20.1...v2.20.2) (2024-07-25)
 
 
