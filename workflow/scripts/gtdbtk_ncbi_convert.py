@@ -31,6 +31,7 @@ __maintainer__ = "Donovan Parks"
 __email__ = "donovan.parks@gmail.com"
 __status__ = "Development"
 
+import csv
 import gzip
 import os
 import sys
@@ -186,7 +187,7 @@ class GtdbNcbiTranslate(object):
 
                 gtdb_taxonomy_index = header.index("gtdb_taxonomy")
                 ncbi_taxonomy_index = header.index("ncbi_taxonomy")
-                ncbi_name_index = header.index("ncbi_organism_name")
+                ncbi_longname_index = header.index("ncbi_taxonomy_unfiltered")
                 ncbi_taxid_index = header.index("ncbi_species_taxid")
                 gtdb_genome_rep_index = header.index("gtdb_genome_representative")
 
@@ -199,11 +200,16 @@ class GtdbNcbiTranslate(object):
                     gid = tokens[0]
                     ncbi_taxonomy = tokens[ncbi_taxonomy_index]
                     ncbi_name = tokens[ncbi_taxonomy_index]
+                    ncbi_longname = tokens[ncbi_longname_index]
                     ncbi_taxid = tokens[ncbi_taxid_index]
 
                     if ncbi_taxonomy and ncbi_taxonomy != "none":
                         ncbi_taxa[gid] = [t.strip() for t in ncbi_taxonomy.split(";")]
-                        ncbi_name_to_taxid[ncbi_name] = ncbi_taxid
+                        if ncbi_name not in ncbi_name_to_taxid:
+                            ncbi_name_to_taxid[ncbi_name] = {}
+                        if ncbi_taxid not in ncbi_name_to_taxid[ncbi_name]:
+                            ncbi_name_to_taxid[ncbi_name][ncbi_taxid] = {"count": 0, "unfiltered": ncbi_longname}
+                        ncbi_name_to_taxid[ncbi_name][ncbi_taxid]["count"] += 1
 
                         for idx, taxon in enumerate(ncbi_taxa[gid]):
                             ncbi_lineages[taxon] = ncbi_taxa[gid][0 : idx + 1]
@@ -404,7 +410,14 @@ class GtdbNcbiTranslate(object):
                             gtdb_taxa, ncbi_rep_ids, ncbi_sp_classification, ncbi_lineages
                         )
 
-                        tid = ncbi_name_to_taxid[ncbi_mv]
+                        tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv]
+                        print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                        if len(tids_dict) == 1:
+                            tid = list(tids_dict.keys())[0]
+                        else:
+                            print("Multiple taxons found. Returning None", file=sys.stderr)
+                            tid = None
+
                         fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv, tid))
 
                 # get NCBI majority vote classification for
@@ -448,8 +461,14 @@ class GtdbNcbiTranslate(object):
                             gtdb_taxa, ncbi_rep_ids, ncbi_sp_classification, ncbi_lineages
                         )
 
-                        # ncbi_name_to_taxid = # TODO
-                        tid = ncbi_name_to_taxid[ncbi_mv]
+                        tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv]
+                        print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                        if len(tids_dict) == 1:
+                            tid = list(tids_dict.keys())[0]
+                        else:
+                            print("Multiple taxons found. Returning None", file=sys.stderr)
+                            tid = None
+
                         fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ncbi_mv, tid))
 
                 # get NCBI majority vote classification for genomes
@@ -465,7 +484,15 @@ class GtdbNcbiTranslate(object):
                         ncbi_mv = ncbi_sp_classification[gtdb_sp_rid]
 
                     # ncbi_name_to_taxid = # TODO
-                    tid = ncbi_name_to_taxid[";".join(ncbi_mv)]
+                    ncbi_mv_full = ";".join(ncbi_mv)
+                    tids_dict: dict[str, int] = ncbi_name_to_taxid[ncbi_mv_full]
+                    print("Histogram of found associated taxons", tids_dict, file=sys.stderr)
+                    if len(tids_dict) == 1:
+                        tid = list(tids_dict.keys())[0]
+                    else:
+                        print("Multiple taxons found. Returning None", file=sys.stderr)
+                        tid = None
+
                     fout.write("{}\t{}\t{}\t{}\n".format(gid, ";".join(gtdb_taxa), ";".join(ncbi_mv), tid))
 
     def run(self, gtdbtk_output_dir, ar53_metadata_file, bac120_metadata_file, gtdbtk_prefix, output_file):
@@ -530,36 +557,70 @@ class GtdbNcbiTranslate(object):
         )
 
 
+def get_taxonomy_dir(sample: str):
+    sample_dir = os.path.join("/data/gecon/production/analyses/antimicrobial_resistance", sample)
+
+    version = os.listdir(sample_dir)[0]
+    version_dir = os.path.join(sample_dir, version)
+    analysis = os.listdir(version_dir)[0]
+
+    dir_to_copy = os.path.join(version_dir, analysis, "v1", "results", "taxonomy", sample)
+
+    return dir_to_copy
+
+
 if __name__ == "__main__":
-    sys.stderr = open(snakemake.log[0], "w")
 
-    bac120_metadata_file = snakemake.input.metadata
-    output_file = snakemake.output[0]
-    gtdbtk_output_dir = snakemake.params.gtdb_parent_dir
-    gtdbtk_prefix = "gtdbtk"
+    bac120_metadata_file = "/data/genome/taxonomy/gtdb-tk/release220/bac120_metadata.tsv"
 
-    try:
-        p = GtdbNcbiTranslate()
-        p.run(gtdbtk_output_dir, None, bac120_metadata_file, gtdbtk_prefix, output_file)
-        print("Done.", file=sys.stderr)
-    except SystemExit:
-        print("Controlled exit resulting from early termination.", file=sys.stderr)
-        sys.exit(1)
-    except KeyboardInterrupt:
-        print("Controlled exit resulting from interrupt signal.", file=sys.stderr)
-        sys.exit(1)
-    except GTDBTkExit as e:
-        if len(str(e)) > 0:
-            print("{}".format(e), file=sys.stderr)
-        print("Controlled exit resulting from an unrecoverable error or warning.", file=sys.stderr)
-        sys.exit(1)
-    except Exception as e:
-        msg = "Uncontrolled exit resulting from an unexpected error.\n\n"
-        msg += "=" * 80 + "\n"
-        msg += "EXCEPTION: {}\n".format(type(e).__name__)
-        msg += "  MESSAGE: {}\n".format(e)
-        msg += "_" * 80 + "\n\n"
-        msg += traceback.format_exc()
-        msg += "=" * 80
-        print(msg, file=sys.stderr)
-        sys.exit(1)
+    test_data_dir = "test_data"
+
+    if not os.path.isdir(test_data_dir):
+        os.makedirs(test_data_dir)
+
+    for sample in os.listdir("/data/gecon/production/analyses/antimicrobial_resistance"):
+        if not sample.startswith("uvzsr-PT"):
+            continue
+        taxonomy_dir = get_taxonomy_dir(sample)
+
+        if not os.path.exists(os.path.join(test_data_dir, sample, "classify")):
+            print(f"Copying {taxonomy_dir} to {test_data_dir}", file=sys.stderr)
+            os.system(f"cp -r {taxonomy_dir} {test_data_dir}")
+
+        output_file = os.path.join(test_data_dir, sample, "ncbi_taxa2.tsv")
+        gtdb_tsv = os.path.join(test_data_dir, sample, "classify", "gtdbtk.bac120.summary.tsv")
+        if not os.path.exists(gtdb_tsv):
+            print(f"OK - Skipping {sample} as GTDB file not found", file=sys.stdout)
+            continue
+
+        gtdbtk_output_dir = os.path.dirname(os.path.dirname(gtdb_tsv))
+
+        if not os.path.exists(output_file):
+            gtdbtk_prefix = "gtdbtk"
+            p = GtdbNcbiTranslate()
+            p.run(gtdbtk_output_dir, None, bac120_metadata_file, gtdbtk_prefix, output_file)
+
+        old_output_file = os.path.join(test_data_dir, sample, "ncbi_taxa.tsv")
+        with open(old_output_file, "r") as f1:
+            with open(output_file, "r") as f2:
+                f1_header = f1.readline()
+                f2_header = f2.readline()
+                f1_header = f1_header.strip().split("\t")
+                f2_header = f2_header.strip().split("\t")
+
+                csvreader1 = csv.reader(f1, delimiter="\t", quotechar='"')
+                csvreader2 = csv.reader(f2, delimiter="\t", quotechar='"')
+                idx1 = f1_header.index("Majority vote NCBI classification")
+                idx2 = f2_header.index("Majority vote NCBI classification")
+
+                val1 = next(csvreader1)[idx1]
+                val2 = next(csvreader2)[idx2]
+
+                if val1 != val2:
+                    print(f"ERR - Files differ for {sample}", file=sys.stdout)
+                    print(f"ERR - {val1} != {val2}", file=sys.stdout)
+                    break
+                else:
+                    print(f"OK - Files match for {sample}", file=sys.stdout)
+
+        # compare the two files
