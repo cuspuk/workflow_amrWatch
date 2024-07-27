@@ -68,12 +68,12 @@ def merge_similar_genera(genera_list: list[GenusFraction], similars: list[list[s
 
 def get_genera_check_decision(bracken_file: str, threshold_fraction: float, similars: list[list[str]]) -> QCRow:
     genera_list = get_abundant_genera_list(bracken_file, threshold_fraction)
-    genera_log = ",".join([f"{g['genus']}:{g['fraction']:.3f}" for g in genera_list])
+    genera_log = ",".join([f"{g['genus']}:{g['fraction']}" for g in genera_list])
     if (genera_count := len(genera_list)) > 1:
         print("Found multiple genera with fraction > threshold", genera_list, file=sys.stderr)
 
         merged_genera_list = merge_similar_genera(genera_list, similars)
-        merged_genera_log = ",".join([f"{g['genus']}:{g['fraction']:.3f}" for g in merged_genera_list])
+        merged_genera_log = ",".join([f"{g['genus']}:{g['fraction']}" for g in merged_genera_list])
         if (merged_genera_count := len(merged_genera_list)) == 1:
             return QCRow(
                 QCResult.PASS,
