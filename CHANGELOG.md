@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.20.3...v2.21.0) (2024-07-27)
+
+
+### Features
+
+* expanded foreign contamination check to first merge similar groups ([9ae6fae](https://github.com/cuspuk/workflow_amrWatch/commit/9ae6fae5830d2b66d12f424546496c8c8aec40ff))
+
 ## [2.20.3](https://github.com/cuspuk/workflow_amrWatch/compare/v2.20.2...v2.20.3) (2024-07-26)
 
 
