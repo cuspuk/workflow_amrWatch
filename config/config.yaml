@@ -36,6 +36,9 @@ foreign_contamination:
   bracken_threshold: 10 # Minimum number of reads assigned to the taxa level to receive additional reads from higher taxa levels during bracken abundance estimation (default: 10).
   abundance_check_fraction: 0.1 # Declare taxon as abundant if fraction is higher than this value. Specify values from 0-1 (default: 0.01). This is a FAIL check - workflow does not proceed to the next stage.
   max_human_fraction: 0.5 # Maximum fraction of human reads in the sample as given by bracken. FAIL check - If higher, the workflow does not proceed to the next stage.
+  similar_genus_groups: # List of lists of strings. Groups of genera that should be taken as one for the purpose of contamination check.
+    - ["Escherichia", "Shigella"]
+    # Ex.: ["genus1","genus2", "genus3" ...]
 
 min_basepairs_for_assembly: 2000000 # Minimum number of basepairs for assembly. FAIL check - If the assembly is shorter, the workflow does not proceed to the next stage.
 

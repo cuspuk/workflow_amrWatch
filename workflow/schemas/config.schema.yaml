@@ -440,6 +440,13 @@ definitions:
         default: 0.5
         minimum: 0
         maximum: 1
+      similar_genus_groups:
+        type: array
+        descriptions: "List of lists of strings, representing which genera share similarities for the purpose of contamination check."
+        items:
+          type: array
+          items:
+            type: string
     required:
       - kraken_dir
       - max_human_fraction
