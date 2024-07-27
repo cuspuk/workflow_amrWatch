@@ -5,6 +5,7 @@ rule check_foreign_contamination:
         temp("results/checks/{sample}/foreign_contamination.tsv"),
     params:
         fraction_threshold=config["foreign_contamination"]["abundance_check_fraction"],
+        similars=config["foreign_contamination"].get("similar_genus_groups", []),
     log:
         "logs/checks/foreign_contamination/{sample}.log",
     localrule: True
