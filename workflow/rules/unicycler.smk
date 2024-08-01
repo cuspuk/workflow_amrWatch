@@ -82,3 +82,18 @@ rule seqkit__stats:
         "logs/assembly/seqkit/{sample}.log",
     wrapper:
         "v3.12.1/bio/seqkit"
+
+
+rule gzip__assembly:
+    input:
+        "results/assembly/{sample}/assembly.fasta",
+    output:
+        "results/assembly/{sample}/assembly.fasta.gz",
+    localrule: True
+    log:
+        "logs/assembly/gzip/{sample}.log",
+    conda:
+        "../envs/gzip.yaml"
+    localrule: True
+    shell:
+        "gzip -c {input} > {output} 2> {log}"

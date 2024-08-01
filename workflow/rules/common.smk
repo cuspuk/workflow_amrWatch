@@ -230,7 +230,9 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
 
 
 def infer_outputs_for_sample_as_list(wildcards):
-    return list(infer_outputs_for_sample(wildcards).values())
+    return list(infer_outputs_for_sample(wildcards).values()) + [
+        f"results/assembly/{wildcards.sample}/assembly.fasta.gz"
+    ]
 
 
 def infer_results_to_summarize_for_sample(wildcards):
