@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.1](https://github.com/cuspuk/workflow_amrWatch/compare/v2.21.0...v2.21.1) (2024-08-01)
+
+
+### Bug Fixes
+
+* added gzipping of fasta ([fdd174e](https://github.com/cuspuk/workflow_amrWatch/commit/fdd174e22ca6211695a2b9f5341be8b6cc273d2f))
+
 ## [2.21.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.20.3...v2.21.0) (2024-07-27)
 
 
