@@ -31,7 +31,6 @@ __maintainer__ = "Donovan Parks"
 __email__ = "donovan.parks@gmail.com"
 __status__ = "Development"
 
-import csv
 import gzip
 import os
 import sys
@@ -53,7 +52,7 @@ FAMILY_IDX = 4
 SPECIES_IDX = 6
 
 
-def store_histogram(histogram: dict[str, dict[str, str]], output_file: str):
+def store_histogram(histogram, output_file):
 
     with open(output_file, "w") as f:
         f.write("NCBI_taxID\tCount\tUnfiltered\n")
