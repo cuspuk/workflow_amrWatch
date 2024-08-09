@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.21.3](https://github.com/cuspuk/workflow_amrWatch/compare/v2.21.2...v2.21.3) (2024-08-09)
+
+
+### Bug Fixes
+
+* ncbi_gtdb_mappings ([d2463c9](https://github.com/cuspuk/workflow_amrWatch/commit/d2463c9e1b73f4c9d3ec0f3041d4652c410628de))
+
 ## [2.21.2](https://github.com/cuspuk/workflow_amrWatch/compare/v2.21.1...v2.21.2) (2024-08-05)
 
 
