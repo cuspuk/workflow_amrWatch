@@ -41,7 +41,8 @@ rule gtdbtk__convert_to_ncbi:
         gtdb_tsv="results/taxonomy/{sample}/classify/gtdbtk.bac120.summary.tsv",
         parsed_taxa="results/taxonomy/{sample}/parsed_taxa.txt",
     output:
-        "results/taxonomy/{sample}/ncbi_taxa.tsv",
+        tsv="results/taxonomy/{sample}/ncbi_taxa.tsv",
+        histogram="results/taxonomy/{sample}/ncbi_gtdb_mapping.tsv",
     params:
         gtdb_parent_dir=lambda wildcards, input: os.path.dirname(os.path.dirname(input.gtdb_tsv)),
         custom_dict=config.get("gtdb_ncbi_id_custom_mapping", {}),

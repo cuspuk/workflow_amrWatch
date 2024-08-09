@@ -214,6 +214,7 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
             "pointfinder": "results/amr_detect/{sample}/resfinder/PointFinder_results.txt",
             "plasmids": "results/plasmids/{sample}/mob_typer.txt",
             "qc_checks": "results/checks/{sample}/qc_summary.tsv",
+            "others_ncbi_tax": "results/taxonomy/{sample}/ncbi_gtdb_mapping.tsv",
         }
         if config["run_hamronization"]:
             outputs["hamronization"] = "results/hamronization/summary/{sample}.tsv"
