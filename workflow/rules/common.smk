@@ -352,7 +352,7 @@ def infer_profile_for_clonal_complex(wildcards):
 
 def get_taxonomy_for_resfinder(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
-    if len(taxa)<2:
+    if len(taxa) < 2:
         return "unknown species"
     return taxa.lower()
 
