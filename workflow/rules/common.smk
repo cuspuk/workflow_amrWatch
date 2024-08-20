@@ -352,6 +352,8 @@ def infer_profile_for_clonal_complex(wildcards):
 
 def get_taxonomy_for_resfinder(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
+    if len(taxa) < 2:
+        return "unknown species"
     return taxa.lower()
 
 
@@ -364,9 +366,12 @@ def infer_relevant_checks(wildcards):
     if not check_preassembly_QC_for_sample(wildcards.sample):
         return checks
 
+    checks += [
+        "results/checks/{sample}/assembly_constructed.tsv",
+    ]
+
     if check_assembly_construction_success_for_sample(wildcards.sample):
         checks += [
-            "results/checks/{sample}/assembly_constructed.tsv",
             "results/checks/{sample}/assembly_quality.tsv",
             "results/checks/{sample}/coverage_check.tsv",
             "results/checks/{sample}/self_contamination_check.tsv",
