@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.21.4](https://github.com/cuspuk/workflow_amrWatch/compare/v2.21.3...v2.21.4) (2024-08-20)
+
+
+### Bug Fixes
+
+* added assembly construction check to summary ([1cc655a](https://github.com/cuspuk/workflow_amrWatch/commit/1cc655af6954b883b85a411fa41ae11b410db0c5))
+* empty parsed taxa fixed for resfinder ([7e64085](https://github.com/cuspuk/workflow_amrWatch/commit/7e64085fd41b01262aa0fb68083501147ee53693))
+
 ## [2.21.3](https://github.com/cuspuk/workflow_amrWatch/compare/v2.21.2...v2.21.3) (2024-08-09)
 
 
