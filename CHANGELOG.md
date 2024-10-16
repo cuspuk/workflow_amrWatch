@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.22.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.21.4...v2.22.0) (2024-10-16)
+
+
+### Features
+
+* added amrfinder plus flag ([69f72d1](https://github.com/cuspuk/workflow_amrWatch/commit/69f72d137bcf5d82afb4c0869d9067c4844d1f61))
+
 ## [2.21.4](https://github.com/cuspuk/workflow_amrWatch/compare/v2.21.3...v2.21.4) (2024-08-20)
 
 
