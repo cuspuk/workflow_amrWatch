@@ -53,7 +53,10 @@ abricate:
   min_identity: 75 # Minimum identity of the query sequence to the database sequence (default: 75).
   min_coverage: 75 # Minimum coverage of the query sequence by the database sequence (default: 0).
 
-amrfinder_db_dir: "resources/amrfinder_db/2023-11-15.1"
+amrfinder:
+  db_dir: "resources/amrfinder_db/2023-11-15.1"
+  plus: false
+
 spatyper_db_dir: "resources/spatyper_db/2024-01-31"
 SCCmec_db_dir: "resources/SCCmec_db/2024-01-31"
 ncbi_plasmid_db_dir: "resources/ncbi_plasmid_db/2024-02-07" # For Mob-suite. Path to NCBI plasmid database directory. If it does not exist, the latest version will be downloaded.

@@ -66,7 +66,7 @@ rule abricate__version_db:
 
 rule amrfinder__version_db:
     input:
-        db=config["amrfinder_db_dir"],
+        db=config["amrfinder"]["db_dir"],
     output:
         "results/.versions/amrfinder_db.txt",
     conda:
