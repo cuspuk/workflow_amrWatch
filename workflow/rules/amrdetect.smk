@@ -1,12 +1,12 @@
 rule amrfinder__download_db:
     output:
-        db=directory(config["amrfinder_db_dir"]),
+        db=directory(config["amrfinder"]["db_dir"]),
     params:
         db_parent=lambda wildcards, output: os.path.dirname(output.db),
     conda:
         "../envs/amrfinder.yaml"
     log:
-        os.path.join(os.path.dirname(config["amrfinder_db_dir"]), "logs", "download.log"),
+        os.path.join(os.path.dirname(config["amrfinder"]["db_dir"]), "logs", "download.log"),
     shell:
         "(mkdir -p {params.db_parent} && amrfinder_update -d {params.db_parent}) > {log} 2>&1"
 
@@ -15,18 +15,20 @@ rule amrfinder__call:
     input:
         contigs=infer_assembly_fasta,
         taxa="results/taxonomy/{sample}/parsed_taxa.txt",
-        db=config["amrfinder_db_dir"],
+        db=config["amrfinder"]["db_dir"],
     output:
         tsv="results/amr_detect/{sample}/amrfinder.tsv",
     params:
         organism_arg=get_organism_for_amrfinder,
+        plus_arg="--plus" if config["amrfinder"]["plus"] else "",
     threads: min(config["threads"]["amrfinder"], config["max_threads"])
     conda:
         "../envs/amrfinder.yaml"
     log:
         "logs/amr_detect/amrfinder/{sample}.log",
     shell:
-        "amrfinder -d {input.db} --nucleotide {input.contigs} --threads {threads} {params.organism_arg} -o {output.tsv} > {log} 2>&1"
+        "amrfinder {params.plus_arg} -d {input.db} --nucleotide {input.contigs}"
+        " --threads {threads} {params.organism_arg} -o {output.tsv} > {log} 2>&1"
 
 
 rule mlst__call:

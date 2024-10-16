@@ -69,10 +69,13 @@ gtdb_ncbi_id_custom_mapping:
 abricate:
   db_dir: ${abricate_database_dir} # Path to abricate DB. If does not exist, will be downloaded.
   # Must end on valid abricate db_tag - Allowed: ["argannot", "ecoh", "ecoli_vf", "megares", "card", "ncbi", "plasmidfinder", "resfinder", "vfdb"].
-  min_identity: 80 # Minimum identity of the query sequence to the database sequence (default: 75).
+  min_identity: 95 # Minimum identity of the query sequence to the database sequence (default: 75).
   min_coverage: 75 # Minimum coverage of the query sequence by the database sequence (default: 0).
 
-amrfinder_db_dir: ${amrfinder_db_dir} # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
+amrfinder:
+  plus: true # If true, get results from "Plus" genes such as virulence factors, stress-response genes.
+  db_dir: ${amrfinder_db_dir} # Path to amrfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
+
 # Valid DB version must be provided. See https://ftp.ncbi.nlm.nih.gov/pathogen/Antimicrobial_resistance/AMRFinderPlus/database/latest/
 spatyper_db_dir: ${spatyper_db_dir} # Path to spatyper database directory. If it does not exist, the latest version will be downloaded. The last path element must be timestamp.
 SCCmec_db_dir: ${sccmec_db_dir} # Path to SCCmec database directory. If it does not exist, the latest version will be downloaded from https://github.com/staphopia/staphopia-sccmec.
