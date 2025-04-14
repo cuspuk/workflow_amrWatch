@@ -49,6 +49,24 @@ rule mlst__call:
         "mlst {input.contigs} --blastdb {input.blast_mlst} --datadir {input.pubmlst} {params.scheme_arg} > {output} 2> {log}"
 
 
+rule mlst__call__custom:
+    input:
+        contigs=infer_assembly_fasta,
+        taxa="results/taxonomy/{sample}/parsed_taxa.txt",
+        blast_mlst=os.path.join(config["mlst_db_dir"], "blast", "mlst.fa"),
+        pubmlst=os.path.join(config["mlst_db_dir"], "pubmlst"),
+    output:
+        "results/amr_detect/{sample}/mlst_custom.tsv"
+    params:
+        scheme_arg=get_custom_scheme_for_mlst,
+    conda:
+        "../envs/mlst.yaml"
+    log:
+        "logs/amr_detect/mlst_custom/{sample}.log",
+    shell:
+        "mlst {input.contigs} --blastdb {input.blast_mlst} --datadir {input.pubmlst} {params.scheme_arg} --legacy > {output} 2> {log}"
+
+
 rule abricate_download_db:
     output:
         db=protected(os.path.join(config["abricate"]["db_dir"], "sequences")),

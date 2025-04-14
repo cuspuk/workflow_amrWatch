@@ -200,6 +200,12 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
     return outputs
 
 
+def get_taxonomy_dependant_custom_mlst_scheme(taxa: str) -> str:
+    if taxa.startswith("Bordetella") and "pertussis" in taxa:
+        return "bpertussis_antigens"
+    return None
+
+
 def infer_outputs_for_sample(wildcards) -> dict[str, str]:
     if check_all_checks_success_for_sample(wildcards.sample):
         taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
@@ -222,6 +228,10 @@ def infer_outputs_for_sample(wildcards) -> dict[str, str]:
         if not sample_has_asssembly_as_input(wildcards.sample):
             outputs["seqkit"] = "results/assembly/{sample}/seqkit_stats.tsv"
 
+        custom_mlst_scheme = get_taxonomy_dependant_custom_mlst_scheme(taxa)
+        if custom_mlst_scheme is not None:
+            outputs["mlst_custom"] = "results/amr_detect/{sample}/mlst_custom.tsv"
+
         taxa_outputs = get_taxonomy_dependant_outputs(wildcards.sample, taxa)
         return outputs | taxa_outputs
     else:
@@ -240,6 +250,7 @@ def infer_results_to_summarize_for_sample(wildcards):
         "taxonomy",
         "ncbi_taxonomy_id",
         "mlst",
+        "mlst_custom",
         "clonal_complex",
         "spa_typer",
         "SCCmec",
@@ -335,6 +346,12 @@ def get_taxonomy_for_mlst(wildcards):
     except KeyError:
         logger.warning(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
         return ""
+
+
+def get_custom_scheme_for_mlst(wildcards):
+    taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
+    scheme = get_taxonomy_dependant_custom_mlst_scheme(taxa)
+    return f"--scheme {scheme}"
 
 
 def find_cc_profile_for_taxonomy(taxa: str):
