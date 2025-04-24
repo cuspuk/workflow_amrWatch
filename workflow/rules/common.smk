@@ -201,8 +201,9 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
 
 
 def get_taxonomy_dependant_custom_mlst_scheme(taxa: str) -> str:
-    if taxa.startswith("Bordetella") and "pertussis" in taxa:
-        return "bpertussis_antigens"
+    for scheme, organism_regex in config["mlst_custom"]["schemas"].items():
+        if re.match(organism_regex, taxa):
+            return scheme
     return None
 
 
