@@ -84,7 +84,7 @@ rgi_db_dir: "/data/genome/others/rgi_db/2024-06-03/" # Path to the RGI amr datab
 mlst_db_dir: "/data/genome/others/mlst_db/2024-06-21/" # Path to the MLST database. MUST be provided and contain blast and pubmlst data.
 
 mlst_custom:
-  db_dir: "/data/genome/others/custom_mlst_db/2025-04-24/" # Path to the custom MLST database. MUST be provided and contain pubmlst data.
+  db_dir: "/data/genome/others/custom_mlst_db/2025-04-24/" # Path to the custom MLST database. If not provided, mlst_custom is not produced.
   schemas: # Here specify taxa for custom mlst schemas included in custom MLST database. 
     bpertussis_antigens: "Bordetella.* pertussis.*"
 

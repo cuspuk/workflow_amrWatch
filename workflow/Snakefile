@@ -15,6 +15,8 @@ include: "rules/gtdb.smk"
 include: "rules/amrdetect.smk"
 include: "rules/insilico.smk"
 
+if config["mlst_custom"]["db_dir"] is not None:
+    include: "rules/mlst_custom.smk"
 
 rule all:
     input:

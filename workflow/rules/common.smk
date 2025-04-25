@@ -201,6 +201,8 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
 
 
 def get_taxonomy_dependant_custom_mlst_scheme(taxa: str) -> str:
+    if config["mlst_custom"]["db_dir"] is None or config["mlst_custom"]["schemas"] is None: 
+        return None
     for scheme, organism_regex in config["mlst_custom"]["schemas"].items():
         if re.match(organism_regex, taxa):
             return scheme
@@ -348,6 +350,12 @@ def get_taxonomy_for_mlst(wildcards):
         logger.warning(f"Could not find organism {taxa} for sample {wildcards.sample} in MLST map")
         return ""
 
+
+def infer_custom_pubmlst_schemas(wildcards):
+    schemas = []
+    for scheme in config["mlst_custom"]["schemas"]:
+        schemas.append(os.path.join(config["mlst_custom"]["db_dir"], "pubmlst", scheme))
+    return schemas
 
 def get_custom_scheme_for_mlst(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)
