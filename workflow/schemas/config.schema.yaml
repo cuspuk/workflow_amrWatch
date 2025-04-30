@@ -77,6 +77,9 @@ definitions:
       self_contamination:
         type: object
         "$ref": "#/definitions/SelfContamination"
+      mlst_custom:
+        type: object
+        "$ref": "#/definitions/MlstCustom"
       clonal_complex:
         type: object
         "$ref": "#/definitions/ClonalComplex"
@@ -311,6 +314,20 @@ definitions:
       - polymorph_rate
       - max_ambiguous_rows
       - check_level
+  MlstCustom:
+    additionalProperties: false
+    title: MlstCustom
+    properties:
+      db_dir:
+        type: [string, "null"]
+        description: "Path to the custom MLST database. If not provided, mlst_custom is not produced."
+        examples: ["/data/genome/others/custom_mlst_db/2025-04-24/"]
+      schemas:
+        type: [object, "null"]
+        description: "Here specify taxa for custom mlst schemas included in custom MLST database."
+    required:
+      - db_dir
+      - schemas
   ClonalComplex:
     additionalProperties: false
     title: SelfContamination

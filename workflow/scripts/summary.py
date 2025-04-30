@@ -133,6 +133,13 @@ def aggregate_serotypes(serotypes: dict[str, str]) -> str | None:
     return None
 
 
+def mlst_custom_parser(path: str):
+    with open(path, "r") as f:
+        header = f.readline().rstrip().split("\t")[3:]
+        row = f.readline().rstrip().split("\t")[3:]
+        return dict(zip(header, row))
+
+
 def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_name: str, amrfinder_uniq_tag: str):
 
     mapping_functions = {
@@ -141,6 +148,7 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
             column_based_parser, columns=["Majority vote NCBI classification"], recode_into_columns=["ncbi_taxonomy_id"]
         ),
         "mlst": functools.partial(index_based_parser, indexes=[2], recode_into_columns=["mlst"]),
+        "mlst_custom": functools.partial(mlst_custom_parser),
         "clonal_complex": functools.partial(column_based_parser, columns=["clonal_complex"]),
         "spa_typer": functools.partial(column_based_parser, columns=["Type"], recode_into_columns=["spa_type"]),
         "SCCmec": functools.partial(

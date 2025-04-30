@@ -63,6 +63,11 @@ ncbi_plasmid_db_dir: "resources/ncbi_plasmid_db/2024-02-07" # For Mob-suite. Pat
 rgi_db_dir: "resources/rgi_db/2024-02-09/" # Path to the RGI amr database. If it does not exist, the latest version will be downloaded.
 mlst_db_dir: "undownloadable/mlst_db/2024-01-12/" # Path to the MLST database. Must be provided and contain blast and pubmlst data.
 
+mlst_custom:
+  db_dir: null # Path to the custom MLST database. If not provided, mlst_custom is not produced.
+  schemas: # Here specify taxa for custom mlst schemas included in custom MLST database. 
+    bpertussis_antigens: "Bordetella.* pertussis.*"
+
 resfinder:
   db_dir: "resources/resfinder_db/2024-02-10" # Path to resfinder database directory. If it does not exist, will be downloaded using the dirname - DB version.
   min_coverage: 0.6 # Minimum (breadth-of) coverage of ResFinder within the range 0-1 (default: 0.6).

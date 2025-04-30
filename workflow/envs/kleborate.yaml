@@ -3,4 +3,5 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - kleborate=2.3.2
+  - kaptive=3.1.0
+  - kleborate=3.1.3

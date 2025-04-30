@@ -67,6 +67,19 @@ def run(
         "escherichia_h_antigen",
         "pneumo_capsular_type",
     ]
+    mlst_custom_columns = [
+        'ptxP',
+        'ptxA',
+        'ptxB',
+        'ptxC',
+        'ptxD',
+        'ptxE',
+        'fhaB',
+        'fim2',
+        'fim3',
+        'prn',
+        'tcfA'
+    ]
     kleborate_columns = [
         "virulence_score",
         "resistance_score",
@@ -112,6 +125,7 @@ def run(
         + technical_columns
         + salmonella_columns
         + other_serotypes_columns
+        + mlst_custom_columns
         + kleborate_columns
         + plasmids_columns
         + amrfinder_columns
