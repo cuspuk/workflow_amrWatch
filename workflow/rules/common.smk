@@ -174,7 +174,7 @@ def get_outputs():
 def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
     outputs: dict[str, str] = {}
     if taxa.startswith("Klebsiella"):
-        outputs["kleborate"] = "results/amr_detect/{sample}/kleborate.tsv"
+        outputs["kleborate"] = "results/amr_detect/{sample}/kleborate/klebsiella_pneumo_complex_output.txt"
     elif "Staphylococcus" in taxa and "aureus" in taxa:
         outputs["spa_typer"] = "results/amr_detect/{sample}/spa_typer.tsv"
         outputs["SCCmec"] = "results/amr_detect/{sample}/SCCmec.tsv"
@@ -356,6 +356,7 @@ def infer_custom_pubmlst_schemas(wildcards):
     for scheme in config["mlst_custom"]["schemas"]:
         schemas.append(os.path.join(config["mlst_custom"]["db_dir"], "pubmlst", scheme))
     return schemas
+
 
 def get_custom_scheme_for_mlst(wildcards):
     taxa = get_parsed_taxa_from_gtdbtk_for_sample(wildcards.sample)

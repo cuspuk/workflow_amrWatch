@@ -86,15 +86,17 @@ rule abricate__call:
 
 rule kleborate__call:
     input:
-        infer_assembly_fasta,
+        fasta=infer_assembly_fasta,
     output:
-        "results/amr_detect/{sample}/kleborate.tsv",
+        tsv="results/amr_detect/{sample}/kleborate/klebsiella_pneumo_complex_output.txt",
+    params:
+        outdir=lambda wildcards, output: os.path.dirname(output.tsv),
     conda:
         "../envs/kleborate.yaml"
     log:
         "logs/amr_detect/kleborate/{sample}.log",
     shell:
-        "kleborate --all -o {output} -a {input} > {log} 2>&1"
+        "kleborate -o {params.outdir} -a {input.fasta} -p kpsc --trim_headers > {log} 2>&1"
 
 
 rule spatyper__download_db:
