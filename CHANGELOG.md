@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.23.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.22.0...v2.23.0) (2025-04-30)
+
+
+### Features
+
+* added mlst_custom output ([f2b4e67](https://github.com/cuspuk/workflow_amrWatch/commit/f2b4e672764ff607cb5d0f21f3e7299971d5f1b3))
+* added mlst_custom output ([9e44d37](https://github.com/cuspuk/workflow_amrWatch/commit/9e44d37488e2e2156d124c0aeb58d37b53485de5))
+* custom mlst database and mapping schemas to taxa to be set in config ([ce0c87d](https://github.com/cuspuk/workflow_amrWatch/commit/ce0c87daeaa5f2cb2655cee8a175c1232ed0d40a))
+* updated Kleborate to v3 ([f3e6c10](https://github.com/cuspuk/workflow_amrWatch/commit/f3e6c106176c851f09d1398c548c3c2a5c8460fd))
+
+
+### Bug Fixes
+
+* mlst_cutom output is optional ([90e5dc3](https://github.com/cuspuk/workflow_amrWatch/commit/90e5dc35207d61bbf30439679c9473ad3503387b))
+
 ## [2.22.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.21.4...v2.22.0) (2024-10-16)
 
 
