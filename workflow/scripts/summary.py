@@ -133,11 +133,17 @@ def aggregate_serotypes(serotypes: dict[str, str]) -> str | None:
     return None
 
 
-def mlst_custom_parser(path: str):
+def mlst_genes_parser(path: str):
+    rename = {
+        "NEIS1320": "gyrA",
+        "NEIS1753": "penA"
+    }
+
     with open(path, "r") as f:
         header = f.readline().rstrip().split("\t")[3:]
+        header_new = [rename.get(name, name) for name in header] 
         row = f.readline().rstrip().split("\t")[3:]
-        return dict(zip(header, row))
+        return dict(zip(header_new, row))
 
 
 def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_name: str, amrfinder_uniq_tag: str):
@@ -147,8 +153,9 @@ def run(results: dict[str, str], output_file: str, out_delimiter: str, sample_na
         "ncbi_taxonomy_id": functools.partial(
             column_based_parser, columns=["Majority vote NCBI classification"], recode_into_columns=["ncbi_taxonomy_id"]
         ),
-        "mlst": functools.partial(index_based_parser, indexes=[2], recode_into_columns=["mlst"]),
-        "mlst_custom": functools.partial(mlst_custom_parser),
+        "mlst": functools.partial(column_based_parser, columns=["ST"], recode_into_columns=["mlst"]),
+        "mlst_genes": functools.partial(mlst_genes_parser),
+        "mlst_custom": functools.partial(mlst_genes_parser),
         "clonal_complex": functools.partial(column_based_parser, columns=["clonal_complex"]),
         "spa_typer": functools.partial(column_based_parser, columns=["Type"], recode_into_columns=["spa_type"]),
         "SCCmec": functools.partial(
