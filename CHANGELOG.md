@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.24.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.23.0...v2.24.0) (2025-06-10)
+
+
+### Features
+
+* added custom mlst output for Neisseria meningitidis ([0cd9bc7](https://github.com/cuspuk/workflow_amrWatch/commit/0cd9bc74e335aaee4eabcf9f38a3162147136480))
+* added custom mlst output for Neisseria meningitidis ([7e3efbc](https://github.com/cuspuk/workflow_amrWatch/commit/7e3efbc49c3cb9b945bc8d01680cf9ac15a13e7d))
+
 ## [2.23.0](https://github.com/cuspuk/workflow_amrWatch/compare/v2.22.0...v2.23.0) (2025-04-30)
 
 
