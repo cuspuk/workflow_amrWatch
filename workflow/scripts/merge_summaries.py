@@ -78,7 +78,19 @@ def run(
         'fim2',
         'fim3',
         'prn',
-        'tcfA'
+        'tcfA',
+
+        'abcZ',
+        'adk',
+        'aroE',
+        'fumC',
+        'gdh',
+        'pdhC',
+        'pgm',
+
+        'gyrA',
+        'penA',
+        'rpoB',
     ]
     kleborate_columns = [
         "virulence_score",

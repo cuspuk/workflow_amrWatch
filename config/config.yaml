@@ -87,6 +87,7 @@ mlst_custom:
   db_dir: "/data/genome/others/custom_mlst_db/2025-04-24/" # Path to the custom MLST database. If not provided, mlst_custom is not produced.
   schemas: # Here specify taxa for custom mlst schemas included in custom MLST database. 
     bpertussis_antigens: "Bordetella.* pertussis.*"
+    nmeningitidis_custom_genes: "Neisseria.* meningitidis.*"
 
 resfinder:
   db_dir: "/data/genome/others/resfinder_db/2024-06-03" # Path to resfinder database directory. If it does not exist, will be downloaded.

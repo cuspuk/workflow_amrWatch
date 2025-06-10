@@ -187,6 +187,8 @@ def get_taxonomy_dependant_outputs(sample: str, taxa: str) -> dict[str, str]:
             outputs["crispol"] = "results/amr_detect/{sample}/crispol.tsv"
     elif taxa.startswith("Streptococcus") and "pneumoniae" in taxa:
         outputs["pneumokity"] = "results/amr_detect/{sample}/pneumo_capsular_typing/{sample}_result_data.csv"
+    elif taxa.startswith("Neisseria") and "meningitidis" in taxa:
+        outputs["mlst_genes"] = "results/amr_detect/{sample}/mlst.tsv"
     try:
         matched_organism = get_key_for_value_from_db(taxa, MLST_MAP)
         outputs["mlst"] = "results/amr_detect/{sample}/mlst.tsv"
@@ -253,6 +255,7 @@ def infer_results_to_summarize_for_sample(wildcards):
         "taxonomy",
         "ncbi_taxonomy_id",
         "mlst",
+        "mlst_genes",
         "mlst_custom",
         "clonal_complex",
         "spa_typer",
